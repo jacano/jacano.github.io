@@ -6,22 +6,20 @@ This file is for agents that work on this repository. It holds all takeaways fro
 
 - This is the personal site of **Juan Antonio Cano Salado** — Head of Engineering at Dedge Security.
 - Stack is **Astro** (static) with GitHub Pages. Live site is **https://jacano.github.io/** (user site, base `/`).
-- Old project site was `jacano/website` (base `/website`, URL `https://jacano.github.io/website/`). It is now **archived** and read-only. Do not push to it. Source was moved to this repo on 2026-08-31 (`cd5b1f9`). Current work is only in `jacano/jacano.github.io` / `D:\dev\jacano.github.io`.
 - Content language is **English only**. Site text follows **ASD-STE100 Simplified Technical English** via https://github.com/AminBlg/SimpleEnglish. Rules are 20 words per instruction, 25 per description, one instruction per sentence, active voice, simple tenses, `can/will/must` only, condition before command, no contractions, one term per concept (`configuration` for build config). Footer shows `Text follows Simple English (ASD-STE100)` with link. README was simplified and does not list the rules.
 - Main sections are Home (hero, about, experience, featured projects, Work with Microsoft, blog preview), CV (printable), Blog (5 posts).
 
 ## 2. Repository state
 
 - Main repo: `jacano/jacano.github.io` — default branch `main` — has Pages enabled with `build_type: workflow`, `html_url: https://jacano.github.io/`.
-- Archived repo: `jacano/website` — `archived: true`, `has_pages: true`, still serves old build at `https://jacano.github.io/website/` but is not updated.
-- Local paths on dev machine are `D:\dev\jacano.github.io` (active) and `D:\dev\website` (archived, do not use). Git remote for both is `git@github.com:jacano/...` via SSH (`C:\Program Files\GitHub CLI\gh.exe` auth as `jacano`, key at `%USERPROFILE%\.ssh\id_ed25519`).
+- Local path on dev machine is `D:\dev\jacano.github.io`. Git remote is `git@github.com:jacano/jacano.github.io.git` via SSH (`C:\Program Files\GitHub CLI\gh.exe` auth as `jacano`, key at `%USERPROFILE%\.ssh\id_ed25519`).
 
 ## 3. Tech stack and versions
 
 - **Node:** `24.20.0` (latest LTS 2026-08-26), **npm:** `11.19.0`. Local Node was `22.15.0` and caused `EBADENGINE undici@8.10.1 requires >=22.19.0`. Fix was to install Node 24 to `C:\Program Files\nodejs` and add user PATH `C:\Users\jacano\AppData\Local\nodejs`. Enforce with `.nvmrc` (`24`) and `package.json` `engines: { "node": ">=24.0.0", "npm": ">=11.0.0" }`. Workflow uses `actions/setup-node@v5` with `node-version: 24`.
 - **Astro:** `7.2.9` (up from `4.16.18`), **@astrojs/rss:** `4.0.19`. No vulnerabilities (`npm audit` → `found 0 vulnerabilities`, `npm outdated` empty).
 - **Actions (all latest, Node 24):** `actions/checkout@v5` (was v4), `actions/setup-node@v5` (was v4), `actions/upload-pages-artifact@v5` (was v3/v4), `actions/deploy-pages@v5` (was v4). Old versions triggered `Node.js 20 is deprecated` warnings.
-- **Config:** `astro.config.mjs` has `site: 'https://jacano.github.io'` and `base: '/'`. For user site `jacano.github.io` the base must be `/`. Project site used `/website`.
+- **Config:** `astro.config.mjs` has `site: 'https://jacano.github.io'` and `base: '/'`.
 - **Build output:** `output: static`, `dist` is `output` and is gitignored (`node_modules`, `dist`, `.astro` in `.gitignore`). Do not commit `dist`.
 
 ## 4. Warnings that were fixed
@@ -31,7 +29,7 @@ This file is for agents that work on this repository. It holds all takeaways fro
 - **punycode DEP0040:** `(node:2136) [DEP0040] The punycode module is deprecated` from `undici`/`whatwg-url`. Fix is not to patch deps but to suppress via `NODE_OPTIONS=--disable-warning=DEP0040`. Use `cross-env` for Windows: scripts are `cross-env NODE_OPTIONS="--disable-warning=DEP0040 --disable-warning=DEP0169" astro dev/build/preview`.
 - **url.parse DEP0169:** `(node:2180) [DEP0169] url.parse() behavior is not standardized` — same fix, add `--disable-warning=DEP0169`. Workflow has top-level `env: NODE_OPTIONS: --disable-warning=DEP0040 --disable-warning=DEP0169` so it covers both `build` and `deploy` jobs (earlier fix only set it on `build`, deploy still warned). `cross-env@10.1.0` is in `devDependencies`.
 - **Cache hit:** `Cache hit for: node-cache-...` from `setup-node@v5` with `cache: npm` is not a warning. It means cache restored. No action.
-- All warnings are now gone. Latest workflow `33410607232` shows `✓ build 17s ✓ deploy 8s` with no Node 20 or punycode annotations.
+- All warnings are now gone. Latest workflow shows `✓ build` `✓ deploy` with no Node 20 or punycode annotations.
 
 ## 5. Content and data
 
@@ -54,8 +52,7 @@ This file is for agents that work on this repository. It holds all takeaways fro
 
 ## 6. Pages and deployment
 
-- **User site `jacano.github.io`:** `gh api repos/jacano/jacano.github.io/pages` → `build_type: workflow`, `html_url: https://jacano.github.io/`, `status: built`. Workflow is `.github/workflows/deploy.yml` with `permissions: contents: read, pages: write, id-token: write`, `concurrency: group: pages`, `env: NODE_OPTIONS: --disable-warning=DEP0040 --disable-warning=DEP0169`, jobs `build` (checkout@v5, setup-node@v5 node 24 cache npm, `npm ci`, `npm run build`, `upload-pages-artifact@v5` path `./dist`) and `deploy` (deploy-pages@v5, environment `github-pages`). Push to `main` triggers deploy. Legacy `pages build and deployment` workflow is gone after switching to `workflow` (earlier both ran and legacy overwrote the site with README).
-- **Project site `jacano/website`:** Now archived (`gh api --method PATCH repos/jacano/website -f archived=true` → `archived: true`). Final commit is redirect README. It still has Pages `has_pages: true` at `https://jacano.github.io/website/` but is read-only. Do not use.
+- **User site `jacano.github.io`:** `gh api repos/jacano/jacano.github.io/pages` → `build_type: workflow`, `html_url: https://jacano.github.io/`, `status: built`. Workflow is `.github/workflows/deploy.yml` with `permissions: contents: read, pages: write, id-token: write`, `concurrency: group: pages`, `env: NODE_OPTIONS: --disable-warning=DEP0040 --disable-warning=DEP0169`, jobs `build` (checkout@v5, setup-node@v5 node 24 cache npm, `npm ci`, `npm run build`, `upload-pages-artifact@v5` path `./dist`) and `deploy` (deploy-pages@v5, environment `github-pages`). Push to `main` triggers deploy.
 - **Local GH CLI:** `C:\Program Files\GitHub CLI\gh.exe` version `2.98.0`, auth as `jacano` via keyring, protocol `ssh` (`git@github.com:jacano/...`), `gh auth status` shows `Logged in to github.com account jacano`.
 
 ## 7. How to work on this repo
@@ -72,11 +69,10 @@ This file is for agents that work on this repository. It holds all takeaways fro
 - **Add a blog post:** Edit `src/pages/blog/[slug].astro` — add slug to `getStaticPaths` and object to `posts` with `title`, `date`, `tag`, `read`, `content` (HTML). Also edit `src/pages/blog/index.astro` to list it. Build with `npm run build` (8→9 pages). Keep English only.
 - **Add GH-verified contributions:** Use `gh api search/issues?q=author:jacano+type:pr&per_page=100` to get `total_count` and items. Add to `cv.json` `microsoftContributions` and to Home section `Work with Microsoft` in `src/pages/index.astro` if needed. Never make up data.
 - **Deploy:** `git add -A && git commit -m "..." && git push` → `gh run list --repo jacano/jacano.github.io --limit 3` → wait for `Deploy to GitHub Pages` `completed success` (about 30s). Then `gh api repos/jacano/jacano.github.io/pages --jq '{html_url, status}'` should be `built`, and `https://jacano.github.io/` shows the site.
-- **Do not touch archived repo:** `D:\dev\website` is archived. If you must, read it but do not push. Source of truth is `D:\dev\jacano.github.io`.
 
 ## 8. Gotchas
 
-- User site base must stay `/`. Do not change `astro.config.mjs` to `/website` again. Old project site used `/website`, user site uses `/`.
+- User site base must stay `/`. Do not change `astro.config.mjs`.
 - Do not commit `dist`, `node_modules`, `.astro`. They are gitignored. Pages artifact is built in Actions.
 - Do not re-enable `legacy` Pages. Keep `build_type: workflow`. If you see `pages build and deployment` legacy workflow alongside `Deploy to GitHub Pages`, the legacy one will overwrite the site with README rendering.
 - SSH key is at `%USERPROFILE%\.ssh\id_ed25519` (copied from `D:\git_keys\.ssh_personal\id_ed25519`). `gh` uses `C:\Windows\System32\OpenSSH\ssh.exe` (`core.sshcommand`).
