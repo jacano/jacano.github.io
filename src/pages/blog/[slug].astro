@@ -10,6 +10,7 @@ export function getStaticPaths() {
     { params: { slug: 'head-of-engineering-remoto' } },
     { params: { slug: 'primer-post' } },
     { params: { slug: 'realtime-mobile-object-detector-xamarin-android' } },
+    { params: { slug: 'wasm-sample-mono-webassembly-sdk' } },
   ];
 }
 
@@ -92,7 +93,7 @@ const posts: Record<string, any> = {
 <li>.NET, C++ and native interop.</li>
 <li>Architecture and technical leadership.</li>
 </ul>
-<p>The site uses Astro and GitHub Pages. Code is open at <a href="https://github.com/jacano/website">jacano/website</a>. Welcome.</p>
+<p>The site uses Astro and GitHub Pages. Code is open at <a href="https://github.com/jacano/jacano.github.io">jacano.github.io</a>. Welcome.</p>
     `
   },
   'realtime-mobile-object-detector-xamarin-android': {
@@ -145,7 +146,30 @@ const posts: Record<string, any> = {
 <p>The project is open for <a href="https://github.com/jacano/CameraTF/pulls" target="_blank">PRs</a> and improvements. Feel free to collaborate and open issues.</p>
 
 <hr />
-<p style="font-size:0.85rem; color:var(--muted)"><em>First published July 4, 2019 at geeks.ms/xamarinteam. Republished 2025 on jacano.dev via Wayback Machine. Tags: EmguTF, TailwindTraders, TensorFlow, Xamarin.Android</em></p>
+ <p style="font-size:0.85rem; color:var(--muted)"><em>First published July 4, 2019 at geeks.ms/xamarinteam. Republished 2025 on jacano.dev via Wayback Machine. Tags: EmguTF, TailwindTraders, TensorFlow, Xamarin.Android</em></p>
+    `
+  },
+  'wasm-sample-mono-webassembly-sdk': {
+    title: 'WasmSample: .NET on WebAssembly with Mono.WebAssembly.Sdk',
+    date: 'May 04, 2019',
+    tag: 'WASM · .NET',
+    read: '4 min',
+    content: `
+<p>On May 4, 2019 I published <a href="https://github.com/jacano/WasmSample" target="_blank">WasmSample</a>, a sample WASM project with Mono.WebAssembly.Sdk. The post on X is at <a href="https://x.com/jacano35/status/1124476690640572416" target="_blank">x.com/jacano35/status/1124476690640572416</a>.</p>
+<p>The sample shows how to run .NET code as WebAssembly in the browser. It uses Mono.WebAssembly.Sdk to compile C# to WASM and to run it without a plugin.</p>
+<h2>Why WASM</h2>
+<p>WASM runs in the browser at near-native speed. It allows you to use C# where you normally use JavaScript. For me it linked to the WASM work I did in <a href="https://github.com/dotnet/corert" target="_blank">dotnet/corert</a> (CLR). In CoreRT I added WASM support for IL opcodes (neg, not, switch, throw, nop) in 2017.</p>
+<h2>What the sample holds</h2>
+<ul>
+<li>It has a Shell project and a WASM project.</li>
+<li>It builds with <code>build.sh</code> and <code>scripts</code>.</li>
+<li>It runs the Mono runtime in the browser as WASM.</li>
+</ul>
+<h2>Use it</h2>
+<p>Clone the repo. Then run the build script. Then open the result in the browser. The README at <a href="https://github.com/jacano/WasmSample" target="_blank">github.com/jacano/WasmSample</a> shows the steps.</p>
+<p>Code is at <a href="https://github.com/jacano/WasmSample" target="_blank">github.com/jacano/WasmSample</a>. It is open for PRs.</p>
+<hr />
+<p style="font-size:0.85rem; color:var(--muted)"><em>First shared May 4, 2019 at x.com/jacano35. Republished 2026 on jacano.dev. Tags: WASM, Mono, .NET</em></p>
     `
   }
 };

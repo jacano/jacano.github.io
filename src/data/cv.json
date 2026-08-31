@@ -78,6 +78,12 @@
       "lang": "C#"
     },
     {
+      "name": "WasmSample",
+      "description": "It is a sample WASM project with Mono.WebAssembly.Sdk. It shows .NET on WebAssembly. Post at x.com/jacano35 on 2019-05-04.",
+      "url": "https://github.com/jacano/WasmSample",
+      "lang": "C#"
+    },
+    {
       "name": "innosetup-tool",
       "description": "It is a .NET global tool wrapper for Inno Setup 6.2.2. It has 541 downloads on NuGet. It targets .NET 6.0 and has no dependencies.",
       "url": "https://www.nuget.org/packages/innosetup-tool",
