@@ -1,0 +1,136 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = "Juan Antonio Cano Salado is Head of Engineering at Dedge Security. He has 14+ years of experience as a Software Engineer. The site shows his blog, CV and projects." } = Astro.props;
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="author" content="Juan Antonio Cano Salado" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://avatars.githubusercontent.com/u/577145?v=4" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <header class="nav">
+      <div class="container nav-inner">
+        <a href={`${base}/`} class="logo">jacano<span>.dev</span></a>
+        <nav class="nav-links">
+          <a href={`${base}/`}>Home</a>
+          <a href={`${base}/cv`}>CV</a>
+          <a href={`${base}/blog`}>Blog</a>
+          <a href="https://github.com/jacano" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/juanantoniocano/" target="_blank" rel="noreferrer" class="btn-primary">LinkedIn</a>
+        </nav>
+        <button class="hamburger" aria-label="menu" id="menuBtn">☰</button>
+      </div>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href={`${base}/`}>Home</a>
+        <a href={`${base}/cv`}>CV</a>
+        <a href={`${base}/blog`}>Blog</a>
+        <a href="https://github.com/jacano" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/juanantoniocano/" target="_blank" rel="noreferrer">LinkedIn</a>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="footer">
+      <div class="container footer-inner">
+        <p>© {new Date().getFullYear()} Juan Antonio Cano Salado · Built with Astro · <a href="https://github.com/jacano/website">Source on GitHub</a> · Text follows <a href="https://github.com/AminBlg/SimpleEnglish">Simple English (ASD-STE100)</a></p>
+        <p class="muted">Seville, Spain · <a href="mailto:jacanosalado@gmail.com">jacanosalado@gmail.com</a></p>
+      </div>
+    </footer>
+    <script>
+      const btn = document.getElementById('menuBtn');
+      const menu = document.getElementById('mobileMenu');
+      btn?.addEventListener('click', () => menu?.classList.toggle('open'));
+    </script>
+    <style is:global>
+      :root{
+        --bg:#0a0a0b;
+        --bg2:#111113;
+        --card:#1a1a1e;
+        --border:#27272a;
+        --text:#fafafa;
+        --muted:#a1a1aa;
+        --accent:#6366f1;
+        --accent2:#8b5cf6;
+        --radius:16px;
+      }
+      *{box-sizing:border-box;margin:0;padding:0}
+      html{scroll-behavior:smooth}
+      body{
+        font-family:'Inter',system-ui,-apple-system,sans-serif;
+        background:var(--bg);
+        color:var(--text);
+        line-height:1.6;
+        -webkit-font-smoothing:antialiased;
+      }
+      a{color:inherit;text-decoration:none}
+      .container{max-width:1100px;margin:0 auto;padding:0 24px}
+      .nav{
+        position:sticky;top:0;z-index:50;
+        background:rgba(10,10,11,0.8);backdrop-filter:blur(12px);
+        border-bottom:1px solid var(--border);
+      }
+      .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+      .logo{font-weight:800;font-size:1.25rem;letter-spacing:-0.02em}
+      .logo span{color:var(--accent)}
+      .nav-links{display:flex;gap:28px;align-items:center;font-size:0.95rem}
+      .nav-links a{color:var(--muted);transition:color .2s}
+      .nav-links a:hover{color:var(--text)}
+      .btn-primary{
+        background:var(--text);color:var(--bg) !important;
+        padding:8px 16px;border-radius:999px;font-weight:600;
+      }
+      .btn-primary:hover{opacity:.9}
+      .hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer}
+      .mobile-menu{display:none;flex-direction:column;padding:12px 24px 20px;gap:12px;border-top:1px solid var(--border);background:var(--bg)}
+      .mobile-menu.open{display:flex}
+      .footer{border-top:1px solid var(--border);padding:40px 0;margin-top:80px;color:var(--muted);font-size:0.9rem}
+      .footer a{color:var(--text);text-decoration:underline;text-underline-offset:4px}
+      .footer-inner{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+      .muted{color:var(--muted)}
+      .btn{
+        display:inline-flex;align-items:center;gap:8px;
+        padding:12px 20px;border-radius:999px;font-weight:600;font-size:0.95rem;
+        transition:all .2s;cursor:pointer;border:1px solid transparent;
+      }
+      .btn-dark{background:var(--text);color:var(--bg)}
+      .btn-dark:hover{transform:translateY(-1px)}
+      .btn-outline{border-color:var(--border);color:var(--text);background:transparent}
+      .btn-outline:hover{background:var(--card)}
+      .card{
+        background:var(--card);border:1px solid var(--border);
+        border-radius:var(--radius);padding:24px;
+      }
+      .badge{
+        display:inline-flex;padding:6px 12px;border-radius:999px;
+        background:rgba(99,102,241,.15);color:#a5b4fc;
+        font-size:0.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+        border:1px solid rgba(99,102,241,.3)
+      }
+      .grid{display:grid;gap:20px}
+      .mono{font-family:'JetBrains Mono',monospace}
+      @media(max-width:768px){
+        .nav-links{display:none}
+        .hamburger{display:block}
+        .footer-inner{flex-direction:column}
+      }
+    </style>
+  </body>
+</html>

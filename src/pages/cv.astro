@@ -1,0 +1,137 @@
+---
+import Layout from '../layouts/Layout.astro';
+import cv from '../data/cv.json';
+const rawBase = import.meta.env.BASE_URL; const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+---
+<Layout title={`CV — ${cv.name}`} description={`Resume of ${cv.name}, ${cv.title}. 14+ years of experience.`}>
+  <div class="container cv-wrap">
+    <div class="cv-header">
+      <div>
+        <h1>{cv.name}</h1>
+        <p class="role">{cv.title}</p>
+        <p class="muted">{cv.location} · <a href={`mailto:${cv.email}`}>{cv.email}</a> · <a href={cv.github} target="_blank">GitHub</a> · <a href={cv.linkedin} target="_blank">LinkedIn</a></p>
+      </div>
+      <div class="actions">
+        <button onclick="window.print()" class="btn btn-dark">🖨️ Print / PDF</button>
+        <a href={`${base}/`} class="btn btn-outline">← Home</a>
+      </div>
+    </div>
+
+    <div class="cv-grid">
+      <main class="cv-main">
+        <section class="card">
+          <h2>Summary</h2>
+          <p class="muted">{cv.summary}</p>
+          <p class="muted" style="margin-top:12px">{cv.about}</p>
+        </section>
+
+        <section>
+          <h2>Experience</h2>
+          <div class="grid">
+            {cv.experience.map(e => (
+              <div class="card">
+                <div class="head">
+                  <h3>{e.role} — {e.company}</h3>
+                  <span class="period">{e.period}</span>
+                </div>
+                <p class="muted small">{e.location}</p>
+                <p class="muted" style="margin:8px 0">{e.description}</p>
+                <ul>
+                  {e.highlights?.map(h => <li>{h}</li>)}
+                </ul>
+                {e.link && <a href={e.link} target="_blank" class="link small">↗ {e.link}</a>}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2>Open Source Projects</h2>
+          <div class="grid two">
+            {cv.projects.map(p => (
+              <a href={p.url} target="_blank" class="card proj">
+                <strong>{p.name} <span class="muted">· {p.lang}</span></strong>
+                <p class="muted small">{p.description}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      </main>
+
+      <aside class="cv-side">
+        <div class="card">
+          <img src={cv.avatar} alt={cv.name} class="avatar" />
+          <h3>{cv.name}</h3>
+          <p class="muted small">{cv.title}</p>
+          <div class="divider"></div>
+          <h4>Skills</h4>
+          {Object.entries(cv.skills).map(([cat, items]) => (
+            <div class="skill-group">
+              <span class="cat">{cat}</span>
+              <div class="chips">
+                {(items as string[]).map(s => <span class="chip">{s}</span>)}
+              </div>
+            </div>
+          ))}
+          <div class="divider"></div>
+          <h4>Education</h4>
+          {cv.education.map(ed => (
+            <div class="edu">
+              <strong>{ed.school}</strong>
+              <p class="muted small">{ed.degree}</p>
+              <p class="muted small">{ed.period}</p>
+              <p class="muted small">{ed.detail}</p>
+            </div>
+          ))}
+          <div class="divider"></div>
+          <h4>Languages</h4>
+          <ul class="small muted">
+            {cv.languages.map(l => <li>{l.lang} — {l.level}</li>)}
+          </ul>
+          <h4 style="margin-top:16px">Certifications</h4>
+          <ul class="small muted">
+            {cv.certifications.map(c => <li>{c}</li>)}
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <style>
+    .cv-wrap{padding:40px 0}
+    .cv-header{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:start;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+    .cv-header h1{font-size:2.4rem;letter-spacing:-0.03em}
+    .role{font-weight:600;color:var(--accent)}
+    .actions{display:flex;gap:12px;flex-wrap:wrap}
+    .cv-grid{display:grid;grid-template-columns:1.7fr .9fr;gap:24px}
+    .cv-main{display:grid;gap:24px}
+    .cv-main h2, .cv-side h2{font-size:1.25rem;margin-bottom:12px;letter-spacing:-0.02em}
+    .cv-side{position:sticky;top:80px;height:fit-content}
+    .head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .period{background:var(--bg2);border:1px solid var(--border);padding:4px 10px;border-radius:999px;font-size:.8rem;color:var(--muted);white-space:nowrap}
+    .grid{display:grid;gap:16px}
+    .two{grid-template-columns:1fr 1fr}
+    .avatar{width:100%;border-radius:12px;margin-bottom:16px}
+    .divider{height:1px;background:var(--border);margin:16px 0}
+    .skill-group{margin-bottom:12px}
+    .cat{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a5b4fc}
+    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+    .chip{padding:4px 8px;border-radius:999px;background:var(--bg2);border:1px solid var(--border);font-size:.75rem;color:var(--muted)}
+    .small{font-size:.9rem}
+    .proj{transition:border-color .2s}
+    .proj:hover{border-color:rgba(99,102,241,.4)}
+    .edu{margin-bottom:12px}
+    .link{color:var(--accent);font-size:.9rem}
+    @media(max-width:900px){
+      .cv-grid{grid-template-columns:1fr}
+      .cv-side{position:static}
+      .two{grid-template-columns:1fr}
+    }
+    @media print{
+      .nav,.footer,.actions{display:none !important}
+      .cv-wrap{padding:0}
+      .card{border:1px solid #ddd !important;background:white !important;color:black !important}
+      body{background:white !important;color:black !important}
+    }
+  </style>
+</Layout>

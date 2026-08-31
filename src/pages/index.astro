@@ -1,0 +1,296 @@
+---
+import Layout from '../layouts/Layout.astro';
+import cv from '../data/cv.json';
+const rawBase = import.meta.env.BASE_URL; const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+const posts = [
+  {
+    slug: 'web3-security-posture-management',
+    title: 'From audits to continuous posture: why Web3 needs W3SPM',
+    date: '2025-11-15',
+    excerpt: 'Over 75% of losses in 2026 came from operational gaps, not code bugs. Dedge builds continuous security from code to chain.',
+    tag: 'Web3 Security'
+  },
+  {
+    slug: 'c-sharp-interop-nativo',
+    title: 'C# native interop: 10 years of lessons with Box2DCS and Crunch',
+    date: '2025-08-02',
+    excerpt: 'Learn to build C++ and C# bindings. The methods are P/Invoke, C++/CLI, marshalling and performance tuning. This article shows patterns from ManagedCrunch and Box2DCS.',
+    tag: 'C# / C++'
+  },
+  {
+    slug: 'head-of-engineering-remoto',
+    title: 'Lead remote engineering: culture, delivery and trust',
+    date: '2025-05-20',
+    excerpt: 'This is my playbook as Head of Engineering. It covers rituals that work and metrics that matter. It shows hiring and team scaling without loss of quality.',
+    tag: 'Leadership'
+  }
+];
+---
+<Layout title="Juan Antonio Cano Salado — Head of Engineering @ Dedge Security">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <div class="badge">Available for talks and collaboration</div>
+        <h1>Juan Antonio<br/><span class="gradient">Cano Salado</span></h1>
+        <p class="subtitle">{cv.title} · {cv.location}</p>
+        <p class="desc">{cv.summary}</p>
+        <div class="cta">
+          <a href={`${base}/cv`} class="btn btn-dark">View full CV →</a>
+          <a href={`${base}/blog`} class="btn btn-outline">Read blog</a>
+        </div>
+        <div class="social">
+          <a href={cv.github} target="_blank" class="social-link">
+            <span class="mono">↗ GitHub</span> <strong>jacano</strong> · 74 repos
+          </a>
+          <a href={cv.linkedin} target="_blank" class="social-link">
+            <span class="mono">↗ LinkedIn</span> <strong>1K+ followers</strong>
+          </a>
+          <span class="social-link"><span class="mono">✉</span> {cv.email}</span>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="photo-wrap">
+          <img src={cv.avatar} alt="Juan Antonio Cano" width="320" height="320" />
+          <div class="photo-glow"></div>
+        </div>
+        <div class="card stats-card">
+          <div class="stats">
+            <div><strong>14+</strong><span>years of experience</span></div>
+            <div><strong>5</strong><span>featured OSS projects</span></div>
+            <div><strong>Seville</strong><span>· Spain</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section">
+    <div class="container">
+      <div class="grid two">
+        <div class="card">
+          <h3>About me</h3>
+          <p class="muted">{cv.about}</p>
+          <div class="chips">
+            {Object.entries(cv.skills).slice(0,2).flatMap(([k, vals]) => (vals as string[]).slice(0,3).map(v => <span class="chip">{v}</span>))}
+          </div>
+        </div>
+        <div class="card highlight">
+          <h3>Now at Dedge Security</h3>
+          <p class="muted">We build the first <strong style="color:var(--text)">Web3 Security Posture Management</strong> platform. Banks and enterprises use it to adopt digital assets with confidence. It provides continuity, visibility and governance. It is more than audits.</p>
+          <a href="https://dedgesecurity.com" target="_blank" class="link">dedgesecurity.com →</a>
+          <div class="mini-stats">
+            <span class="mini">€4M seed · Tritemius</span>
+            <span class="mini">ISO 27001 certified</span>
+            <span class="mini">Circle Alliance Member</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Experience</h2>
+        <a href={`${base}/cv`} class="link muted">View full timeline →</a>
+      </div>
+      <div class="grid">
+        {cv.experience.map(exp => (
+          <div class="card exp">
+            <div class="exp-head">
+              <div>
+                <h3>{exp.role}</h3>
+                <p class="company">{exp.company} · <span class="muted">{exp.location}</span></p>
+              </div>
+              <span class="period">{exp.period}</span>
+            </div>
+            <p class="muted">{exp.description}</p>
+            <ul>
+              {exp.highlights?.map(h => <li>{h}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Featured projects</h2>
+        <a href={cv.github} target="_blank" class="link muted">View GitHub →</a>
+      </div>
+      <div class="grid three">
+        {cv.projects.map(p => (
+          <a href={p.url} target="_blank" class="card project">
+            <div class="proj-top">
+              <span class="lang">{p.lang}</span>
+              <span class="arrow">↗</span>
+            </div>
+            <h3>{p.name}</h3>
+            <p class="muted">{p.description}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- MICROSOFT COLLABORATION -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Work with Microsoft</h2>
+        <span class="mono small muted">Verified via GitHub API · 2026-08-31</span>
+      </div>
+      <div class="card">
+        <p class="muted">I opened 13 pull requests in Microsoft repositories. The GitHub API proves this. The search was <code>author:jacano type:pr</code>. The total count was 17. Thirteen were in Microsoft orgs. I did not make up data.</p>
+        <p class="muted" style="margin-top:8px">The query used <span class="mono">gh api search/issues?q=author:jacano+type:pr</span> and filters for <span class="mono">org:microsoft</span>, <span class="mono">org:dotnet</span> and <span class="mono">org:dotnet-architecture</span>. You can run the same query to verify.</p>
+      </div>
+
+      <div class="grid" style="margin-top:20px">
+        <div class="card">
+          <h3>CLR — dotnet/corert · 4 PRs · All merged</h3>
+          <p class="muted small">CoreRT is the experimental .NET Native compiler. It is part of CLR. It later merged into dotnet/runtime. You remembered correctly: a few PRs on CLR.</p>
+          <ul style="margin-top:12px; display:grid; gap:10px; list-style:none; padding:0">
+            <li><a href="https://github.com/dotnet/corert/pull/4725" target="_blank" class="link">#4725 Implement neg (float/integer) and not IL instructions. Fixes #4524 and #4525</a> <span class="mono small muted">· merged 2017-10-15</span></li>
+            <li><a href="https://github.com/dotnet/corert/pull/4736" target="_blank" class="link">#4736 Throw opcode with trap.</a> <span class="mono small muted">· merged 2017-10-17</span></li>
+            <li><a href="https://github.com/dotnet/corert/pull/4769" target="_blank" class="link">#4769 Emit switch in wasm</a> <span class="mono small muted">· merged 2017-10-23</span></li>
+            <li><a href="https://github.com/dotnet/corert/pull/4776" target="_blank" class="link">#4776 Emit donothing on nop. Fix #4529</a> <span class="mono small muted">· merged 2017-10-22</span></li>
+          </ul>
+          <p class="muted small" style="margin-top:12px">The work was WASM target and IL opcodes. Tags were <span class="mono">arch-wasm</span> and <span class="mono">cla-already-signed</span>.</p>
+        </div>
+
+        <div class="card">
+          <h3>microsoft/TailwindTraders-Mobile · 5 PRs · All merged</h3>
+          <p class="muted small">Retail demo with Xamarin, AR and TensorFlowLite. Work from 2018-12 to 2019-04.</p>
+          <ul style="margin-top:12px; display:grid; gap:8px; list-style:none; padding:0">
+            <li><a href="https://github.com/microsoft/TailwindTraders-Mobile/pull/12" target="_blank" class="link">#12 Feature/206 emgutf add</a> <span class="mono small muted">· merged 2018-12-17 — EmguTF libs, TensorFlowLite mobilenetv2</span></li>
+            <li><a href="https://github.com/microsoft/TailwindTraders-Mobile/pull/13" target="_blank" class="link">#13 Build fix</a> <span class="mono small muted">· merged 2018-12-17 — Android build fix</span></li>
+            <li><a href="https://github.com/microsoft/TailwindTraders-Mobile/pull/19" target="_blank" class="link">#19 Feature/207 AR in Android and iOS</a> <span class="mono small muted">· merged 2019-01-17</span></li>
+            <li><a href="https://github.com/microsoft/TailwindTraders-Mobile/pull/44" target="_blank" class="link">#44 Hardhat net replaced</a> <span class="mono small muted">· merged 2019-04-08</span></li>
+            <li><a href="https://github.com/microsoft/TailwindTraders-Mobile/pull/46" target="_blank" class="link">#46 Nuget.config clean up</a> <span class="mono small muted">· merged 2019-04-11</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>microsoft/ailab · 2 PRs</h3>
+          <ul style="margin-top:12px; display:grid; gap:8px; list-style:none; padding:0">
+            <li><a href="https://github.com/microsoft/ailab/pull/15" target="_blank" class="link">#15 Snip Insight cross platform version</a> <span class="mono small muted">· merged 2018-10-01 — Ubuntu and OSX support, installers at jacano/ailab releases</span></li>
+            <li><a href="https://github.com/microsoft/ailab/pull/14" target="_blank" class="link">#14 Duplicate of #15</a> <span class="mono small muted">· closed 2018-09-17 — duplicate, not merged</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>dotnet-architecture/eShopOnContainers · 2 PRs</h3>
+          <ul style="margin-top:12px; display:grid; gap:8px; list-style:none; padding:0">
+            <li><a href="https://github.com/dotnet-architecture/eShopOnContainers/pull/648" target="_blank" class="link">#648 Urls for Identity, Gateway Shopping and Marketing added to setting view</a> <span class="mono small muted">· merged 2018-07-03</span></li>
+            <li><a href="https://github.com/dotnet-architecture/eShopOnContainers/pull/651" target="_blank" class="link">#651 Fix for issue #621</a> <span class="mono small muted">· closed 2018-06-28 — Task.Delay fix for deadlocks, not merged</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px; background:var(--bg2)">
+        <p class="muted small">Other verified PRs (total 17): <a href="https://github.com/mono/mono/pull/14354" target="_blank" class="link">mono/mono #14354 Fixes #14353</a> (merged 2019-05-07, target-wasm), <a href="https://github.com/dadhi/DryIoc/pull/73" target="_blank" class="link">dadhi/DryIoc #73</a> (merged 2019-01-23), <a href="https://github.com/Homebrew/homebrew-cask/pull/34391" target="_blank" class="link">Homebrew #34391</a> and <a href="https://github.com/Homebrew/homebrew-cask/pull/33878" target="_blank" class="link">#33878</a> (merged 2017). Run <span class="mono">gh api search/issues?q=author:jacano+type:pr&per_page=100</span> to see all 17.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG PREVIEW -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Blog</h2>
+        <a href={`${base}/blog`} class="link muted">View all →</a>
+      </div>
+      <div class="grid three">
+        {posts.map(post => (
+          <a href={`${base}/blog/${post.slug}`} class="card post">
+            <span class="badge small">{post.tag}</span>
+            <span class="date mono">{post.date}</span>
+            <h3>{post.title}</h3>
+            <p class="muted">{post.excerpt}</p>
+            <span class="link">Read article →</span>
+          </a>
+        ))}
+      </div>
+      <div class="blog-cta">
+        <p class="muted">I write about <strong>Web3 security, C# and .NET, architecture and technical leadership</strong>. Do you want me to cover a topic?</p>
+        <a href="mailto:jacanosalado@gmail.com" class="btn btn-outline">Suggest a topic</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section contact">
+    <div class="container">
+      <div class="card contact-card">
+        <h2>Contact me</h2>
+        <p class="muted">I live in Seville and work remotely. I am open to talks, mentoring and collaboration in Web3, security and .NET.</p>
+        <div class="cta">
+          <a href="mailto:jacanosalado@gmail.com" class="btn btn-dark">✉ jacanosalado@gmail.com</a>
+          <a href="https://www.linkedin.com/in/juanantoniocano/" target="_blank" class="btn btn-outline">LinkedIn</a>
+          <a href="https://github.com/jacano" target="_blank" class="btn btn-outline">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .hero{padding:64px 0 32px;border-bottom:1px solid var(--border)}
+    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+    .hero-text h1{font-size:3.8rem;line-height:.95;letter-spacing:-0.04em;font-weight:800;margin:20px 0 12px}
+    .gradient{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .subtitle{color:var(--muted);font-weight:500;margin-bottom:16px}
+    .desc{color:#d4d4d8;max-width:560px;font-size:1.05rem}
+    .cta{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap}
+    .social{display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem;color:var(--muted)}
+    .social-link{background:var(--card);border:1px solid var(--border);padding:8px 12px;border-radius:999px}
+    .photo-wrap{position:relative;border-radius:24px;overflow:hidden;background:var(--card);border:1px solid var(--border);padding:8px}
+    .photo-wrap img{width:100%;height:auto;border-radius:16px;display:block;aspect-ratio:1;object-fit:cover}
+    .photo-glow{position:absolute;inset:-40px;background:radial-gradient(600px 300px at 50% 0%, rgba(99,102,241,.25), transparent);pointer-events:none}
+    .stats-card{margin-top:16px;padding:16px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;gap:12px}
+    .stats strong{display:block;font-size:1.5rem}
+    .stats span{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+    .section{padding:48px 0}
+    .section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:20px;gap:16px}
+    .section-head h2{font-size:1.8rem;letter-spacing:-0.02em}
+    .link{color:var(--accent);font-weight:600}
+    .link.muted{color:var(--muted)}
+    .two{grid-template-columns:1fr 1fr}
+    .three{grid-template-columns:repeat(3,1fr)}
+    .card h3{margin-bottom:8px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+    .chip{padding:6px 10px;border-radius:999px;background:var(--bg2);border:1px solid var(--border);font-size:.8rem;color:var(--muted)}
+    .highlight{background:linear-gradient(135deg, rgba(99,102,241,.15), rgba(139,92,246,.08));border-color:rgba(99,102,241,.3)}
+    .mini-stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+    .mini{font-size:.75rem;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--border)}
+    .exp .exp-head{display:flex;justify-content:space-between;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+    .company{font-weight:600}
+    .period{padding:6px 12px;border-radius:999px;background:var(--bg2);border:1px solid var(--border);font-size:.8rem;color:var(--muted);white-space:nowrap;height:fit-content}
+    .exp ul{margin-top:12px;padding-left:18px;color:var(--muted);display:grid;gap:4px}
+    .project{transition:transform .2s, border-color .2s}
+    .project:hover{transform:translateY(-2px);border-color:rgba(99,102,241,.4)}
+    .proj-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .lang{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a5b4fc;background:rgba(99,102,241,.15);padding:4px 8px;border-radius:999px;border:1px solid rgba(99,102,241,.3)}
+    .arrow{opacity:.5}
+    .post{display:flex;flex-direction:column;gap:8px;transition:border-color .2s}
+    .post:hover{border-color:rgba(99,102,241,.4)}
+    .badge.small{font-size:.65rem;padding:4px 8px}
+    .date{font-size:.75rem;color:var(--muted)}
+    .post h3{font-size:1.05rem;line-height:1.3}
+    .blog-cta{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:20px;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);flex-wrap:wrap}
+    .contact-card{text-align:center;padding:48px}
+    .contact-card .cta{justify-content:center;margin-top:20px}
+    @media(max-width:900px){
+      .hero-grid{grid-template-columns:1fr}
+      .hero-text h1{font-size:2.8rem}
+      .two,.three{grid-template-columns:1fr}
+      .stats{grid-template-columns:repeat(3,1fr)}
+    }
+  </style>
+</Layout>

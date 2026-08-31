@@ -1,0 +1,249 @@
+{
+  "name": "Juan Antonio Cano Salado",
+  "title": "Head of Engineering @ Dedge Security",
+  "location": "Seville, Andalusia, Spain",
+  "email": "jacanosalado@gmail.com",
+  "website": "https://github.com/jacano",
+  "linkedin": "https://www.linkedin.com/in/juanantoniocano/",
+  "github": "https://github.com/jacano",
+  "avatar": "https://avatars.githubusercontent.com/u/577145?v=4",
+  "summary": "I am a Software Engineer with 14+ years of experience in product development, design and architecture. I design and deliver robust, scalable and secure solutions. I lead the engineering team at Dedge Security. We build the first Web3 Security Posture Management (W3SPM) platform to secure decentralized applications from code to chain.",
+  "about": "I am a highly motivated and self-confident engineer. My experience spans desktop systems in .NET and C++ to cloud-native Web3 platforms. I worked in blockchain security, intellectual property management, smart water and retail. My approach combines solid architecture, technical leadership and DevSecOps culture.",
+  "experience": [
+    {
+      "company": "Dedge Security",
+      "role": "Head of Engineering",
+      "period": "2023 — Present",
+      "location": "Seville / Remote · Spain",
+      "description": "I lead the engineering team that builds the first ASPM/W3SPM platform for Web3. I am responsible for architecture and continuous delivery. I manage software lifecycle security and engineering excellence.",
+      "highlights": [
+        "The platform provides continuous security from code to chain.",
+        "It integrates into developer workflows and CI/CD.",
+        "It meets ISO/IEC 27001 and supports institutional digital asset adoption.",
+        "The stack is Go, Kubernetes, AWS, Terraform, observability and DevSecOps."
+      ],
+      "link": "https://dedgesecurity.com"
+    },
+    {
+      "company": "Trax Retail (previous project)",
+      "role": "Senior Software Engineer",
+      "period": "2021 — 2023",
+      "location": "Remote",
+      "description": "I built large-scale computer vision and retail analytics solutions. I focused on scalability and performance.",
+      "highlights": [
+        "I designed C# and .NET architecture.",
+        "I optimized data pipelines."
+      ]
+    },
+    {
+      "company": "Open Source Projects & Consulting",
+      "role": "Software Engineer / Architect",
+      "period": "2010 — 2021",
+      "location": "Seville",
+      "description": "I shipped products for more than ten years in C#, C++ and .NET. The work focused on native interop, tooling and high-performance systems. I am the author of open source libraries with hundreds of stars.",
+      "highlights": [
+        "The projects are Box2DCS, ManagedCrunch, ManagedXZLZMA, PdbRewriter and YoloTestSharp.",
+        "I optimized C++ and C# interop and performance.",
+        "I led product architecture and technical teams."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "University of Seville",
+      "degree": "Computer Engineering",
+      "period": "2003 — 2009",
+      "detail": "The program covered software engineering, systems and architecture."
+    }
+  ],
+  "skills": {
+    "Languages": ["C#", "C++", "C", "Go", "TypeScript", "Python"],
+    "Architecture": ["DDD", "Microservices", "Event-driven", "Clean Architecture"],
+    "Cloud & DevOps": ["AWS", "Kubernetes", "Terraform", "Docker", "CI/CD", "Observability"],
+    "Security": ["Web3 Security", "ASPM / W3SPM", "DevSecOps", "Secure SDLC", "Blockchain / DLT"],
+    "Other": ["Technical leadership", "Mentoring", "Product Development", "Agile"]
+  },
+  "certifications": [
+    "ISO/IEC 27001 - Dedge Security (2025)"
+  ],
+  "languages": [
+    { "lang": "Spanish", "level": "Native" },
+    { "lang": "English", "level": "Professional" }
+  ],
+  "projects": [
+    {
+      "name": "CameraTF",
+      "description": "It is a Xamarin.Android sample for realtime object detection with TensorFlow Lite. It has 11 stars and 8 forks. It uses SSD MobileNet and native YUV to RGB.",
+      "url": "https://github.com/jacano/CameraTF",
+      "lang": "C#"
+    },
+    {
+      "name": "innosetup-tool",
+      "description": "It is a .NET global tool wrapper for Inno Setup 6.2.2. It has 541 downloads on NuGet. It targets .NET 6.0 and has no dependencies.",
+      "url": "https://www.nuget.org/packages/innosetup-tool",
+      "lang": "Inno Setup"
+    },
+    {
+      "name": "BulletCS",
+      "description": "It is a Bullet physics binding for C# with native C++. It provides 3D physics for games.",
+      "url": "https://github.com/jacano/BulletCS",
+      "lang": "C++"
+    },
+    {
+      "name": "Box2DCS",
+      "description": "It is a Box2D binding for C# with native C++. It provides high-performance 2D physics.",
+      "url": "https://github.com/jacano/Box2DCS",
+      "lang": "C++"
+    },
+    {
+      "name": "ManagedCrunch",
+      "description": "It is a managed C# wrapper for crnlib. It compresses textures.",
+      "url": "https://github.com/jacano/ManagedCrunch",
+      "lang": "C++"
+    },
+    {
+      "name": "ManagedXZLZMA",
+      "description": "It is a managed wrapper for the XZ LZMA stream decoder.",
+      "url": "https://github.com/jacano/ManagedXZLZMA",
+      "lang": "C"
+    },
+    {
+      "name": "PdbRewriter",
+      "description": "It rewrites .NET PDB files. It helps with obfuscation and tooling.",
+      "url": "https://github.com/jacano/PdbRewriter",
+      "lang": "C#"
+    },
+    {
+      "name": "YoloTestSharp",
+      "description": "It tests YOLO and computer vision in C#.",
+      "url": "https://github.com/jacano/YoloTestSharp",
+      "lang": "C#"
+    }
+  ],
+  "microsoftContributions": {
+    "verifiedVia": "GH API search/issues?q=author:jacano+type:pr (2026-08-31) — total_count 17, 13 in Microsoft orgs",
+    "summary": "I opened 13 pull requests in Microsoft repositories. The work was verified with the GitHub API. No data is made up.",
+    "groups": [
+      {
+        "org": "dotnet",
+        "repo": "dotnet/corert",
+        "note": "CoreRT is the experimental .NET Native compiler. It is part of CLR and later merged into dotnet/runtime.",
+        "count": 4,
+        "prs": [
+          {
+            "number": 4725,
+            "title": "Implement neg (float/integer) and not IL instructions. Fixes #4524 and #4525",
+            "url": "https://github.com/dotnet/corert/pull/4725",
+            "state": "merged",
+            "merged_at": "2017-10-15T00:19:25Z"
+          },
+          {
+            "number": 4736,
+            "title": "Throw opcode with trap.",
+            "url": "https://github.com/dotnet/corert/pull/4736",
+            "state": "merged",
+            "merged_at": "2017-10-17T02:12:40Z"
+          },
+          {
+            "number": 4769,
+            "title": "Emit switch in wasm",
+            "url": "https://github.com/dotnet/corert/pull/4769",
+            "state": "merged",
+            "merged_at": "2017-10-23T20:17:09Z"
+          },
+          {
+            "number": 4776,
+            "title": "Emit donothing on nop. Fix #4529",
+            "url": "https://github.com/dotnet/corert/pull/4776",
+            "state": "merged",
+            "merged_at": "2017-10-22T21:21:24Z"
+          }
+        ]
+      },
+      {
+        "org": "microsoft",
+        "repo": "microsoft/TailwindTraders-Mobile",
+        "count": 5,
+        "prs": [
+          {
+            "number": 12,
+            "title": "Feature/206 emgutf add",
+            "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/12",
+            "state": "merged",
+            "merged_at": "2018-12-17T15:13:42Z"
+          },
+          {
+            "number": 13,
+            "title": "Build fix",
+            "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/13",
+            "state": "merged",
+            "merged_at": "2018-12-17T15:43:24Z"
+          },
+          {
+            "number": 19,
+            "title": "Feature/207 AR in Android and iOS",
+            "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/19",
+            "state": "merged",
+            "merged_at": "2019-01-17T16:11:33Z"
+          },
+          {
+            "number": 44,
+            "title": "Hardhat net replaced",
+            "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/44",
+            "state": "merged",
+            "merged_at": "2019-04-08T11:44:59Z"
+          },
+          {
+            "number": 46,
+            "title": "Nuget.config clean up",
+            "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/46",
+            "state": "merged",
+            "merged_at": "2019-04-11T15:29:18Z"
+          }
+        ]
+      },
+      {
+        "org": "microsoft",
+        "repo": "microsoft/ailab",
+        "count": 2,
+        "prs": [
+          {
+            "number": 15,
+            "title": "Snip Insight cross platform version",
+            "url": "https://github.com/microsoft/ailab/pull/15",
+            "state": "merged",
+            "merged_at": "2018-10-01T17:42:52Z"
+          },
+          {
+            "number": 14,
+            "title": "Duplicate of #15",
+            "url": "https://github.com/microsoft/ailab/pull/14",
+            "state": "closed",
+            "merged_at": null
+          }
+        ]
+      },
+      {
+        "org": "dotnet-architecture",
+        "repo": "dotnet-architecture/eShopOnContainers",
+        "count": 2,
+        "prs": [
+          {
+            "number": 648,
+            "title": "Urls for Identity, Gateway Shopping and Marketing added to setting view",
+            "url": "https://github.com/dotnet-architecture/eShopOnContainers/pull/648",
+            "state": "merged",
+            "merged_at": "2018-07-03T08:11:10Z"
+          },
+          {
+            "number": 651,
+            "title": "Fix for issue #621",
+            "url": "https://github.com/dotnet-architecture/eShopOnContainers/pull/651",
+            "state": "closed",
+            "merged_at": null
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "jacano-website",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=\"--disable-warning=DEP0040 --disable-warning=DEP0169\" astro dev",
+    "start": "cross-env NODE_OPTIONS=\"--disable-warning=DEP0040 --disable-warning=DEP0169\" astro dev",
+    "build": "cross-env NODE_OPTIONS=\"--disable-warning=DEP0040 --disable-warning=DEP0169\" astro build",
+    "preview": "cross-env NODE_OPTIONS=\"--disable-warning=DEP0040 --disable-warning=DEP0169\" astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^7.2.9"
+  },
+  "devDependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "cross-env": "^10.1.0"
+  },
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=11.0.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}
