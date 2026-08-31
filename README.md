@@ -1,7 +1,7 @@
 # jacano.dev — Personal website
 
-This is the personal site of **Juan Antonio Cano Salado** — Head of Engineering at Dedge Security.
-It uses [Astro](https://astro.build) and GitHub Pages. The live site is at https://jacano.github.io/
+Personal site of **Juan Antonio Cano Salado** — Software Engineer. Blog, CV and projects.
+It uses [Astro](https://astro.build) and GitHub Pages at https://jacano.github.io/
 
 ## Sections
 
