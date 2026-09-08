@@ -29,7 +29,7 @@ const rawBase = import.meta.env.BASE_URL; const base = rawBase.endsWith('/') ? r
           <h2>Experience</h2>
           <div class="grid">
             {cv.experience.map(e => (
-              <div class="card">
+              <div class="card interactive">
                 <div class="head">
                   <h3>{e.role} — {e.company}</h3>
                   <span class="period">{e.period}</span>
@@ -49,7 +49,7 @@ const rawBase = import.meta.env.BASE_URL; const base = rawBase.endsWith('/') ? r
           <h2>Open Source Projects</h2>
           <div class="grid two">
             {cv.projects.map(p => (
-              <a href={p.url} target="_blank" class="card proj">
+              <a href={p.url} target="_blank" class="card proj interactive">
                 <strong>{p.name} <span class="muted">· {p.lang}</span></strong>
                 <p class="muted small">{p.description}</p>
               </a>
@@ -60,7 +60,7 @@ const rawBase = import.meta.env.BASE_URL; const base = rawBase.endsWith('/') ? r
 
       <aside class="cv-side">
         <div class="card">
-          <img src={cv.avatar} alt={cv.name} class="avatar" />
+          <img src={cv.avatar} alt={cv.name} class="avatar" loading="lazy" />
           <h3>{cv.name}</h3>
           <p class="muted small">{cv.title}</p>
           <div class="divider"></div>

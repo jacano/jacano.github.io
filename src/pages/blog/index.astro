@@ -58,11 +58,20 @@ const posts = [
       <h1>Blog</h1>
       <p class="muted">I write about Web3 security, architecture, .NET and leadership. I publish when I have something useful to share.</p>
       <div class="meta mono small muted">RSS coming soon · {posts.length} articles</div>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search articles..." class="search-input" />
+        <div class="search-tags">
+          <button class="tag-btn" data-tag="all">All</button>
+          <button class="tag-btn" data-tag="Web3 Security">Web3 Security</button>
+          <button class="tag-btn" data-tag="C# / C++">C# / C++</button>
+          <button class="tag-btn" data-tag="Leadership">Leadership</button>
+        </div>
+      </div>
     </div>
 
-    <div class="list">
+    <div class="list" id="postsList">
       {posts.map(p => (
-        <a href={`${base}/blog/${p.slug}`} class="card row">
+        <a href={`${base}/blog/${p.slug}`} class="card row interactive" data-title={p.title.toLowerCase()} data-excerpt={p.excerpt.toLowerCase()} data-tag={p.tag}>
           <div class="row-main">
             <div class="row-top">
               <span class="badge">{p.tag}</span>
@@ -82,13 +91,44 @@ const posts = [
       <a href="mailto:jacanosalado@gmail.com" class="btn btn-dark">Get in touch</a>
     </div>
   </div>
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const postsList = document.getElementById('postsList');
+    const tagBtns = document.querySelectorAll('.tag-btn');
+    const posts = postsList.querySelectorAll('.card');
+    let currentTag = 'all';
+
+    searchInput?.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      filterPosts(query, currentTag);
+    });
+
+    tagBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tagBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTag = btn.dataset.tag;
+        filterPosts(searchInput.value.toLowerCase(), currentTag);
+      });
+    });
+
+    function filterPosts(query, tag) {
+      posts.forEach(post => {
+        const title = post.dataset.title;
+        const excerpt = post.dataset.excerpt;
+        const postTag = post.dataset.tag;
+        const matchesQuery = title.includes(query) || excerpt.includes(query);
+        const matchesTag = tag === 'all' || postTag === tag;
+        post.style.display = matchesQuery && matchesTag ? 'block' : 'none';
+      });
+    }
+  </script>
   <style>
     .blog-wrap{padding:48px 0;max-width:800px}
     .header{margin-bottom:32px}
     .header h1{font-size:2.8rem;letter-spacing:-0.03em;margin-bottom:8px}
     .list{display:grid;gap:16px;margin-bottom:32px}
-    .row{padding:24px;transition:border-color .2s}
-    .row:hover{border-color:rgba(99,102,241,.4)}
+    .row{padding:24px}
     .row-top{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
     .badge{padding:4px 10px;border-radius:999px;background:rgba(99,102,241,.15);color:#a5b4fc;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(99,102,241,.3)}
     .small{font-size:.8rem}
@@ -96,5 +136,12 @@ const posts = [
     .link{color:var(--accent);font-weight:600;font-size:.9rem}
     .cta{padding:32px;text-align:center}
     .cta .btn{margin-top:12px}
+    .search-box{margin-top:24px;display:flex;flex-direction:column;gap:12px}
+    .search-input{width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:1rem;outline:none;transition:border-color .2s}
+    .search-input:focus{border-color:var(--accent)}
+    .search-tags{display:flex;gap:8px;flex-wrap:wrap}
+    .tag-btn{padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.8rem;cursor:pointer;transition:all .2s}
+    .tag-btn:hover{border-color:var(--accent);color:var(--text)}
+    .tag-btn.active{background:var(--accent);border-color:var(--accent);color:var(--bg)}
   </style>
 </Layout>

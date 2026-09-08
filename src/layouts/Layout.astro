@@ -18,8 +18,55 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://avatars.githubusercontent.com/u/577145?v=4" />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="400" />
+    <meta property="og:site_name" content="Juan Antonio Cano Salado" />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <title>{title}</title>
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Juan Antonio Cano Salado",
+      "jobTitle": "Head of Engineering",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Dedge Security"
+      },
+      "url": "https://jacano.github.io",
+      "sameAs": [
+        "https://github.com/jacano",
+        "https://www.linkedin.com/in/juanantoniocano/"
+      ],
+      "email": "jacanosalado@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Seville",
+        "addressRegion": "Andalusia",
+        "addressCountry": "Spain"
+      }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Juan Antonio Cano Salado",
+      "jobTitle": "Head of Engineering",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Dedge Security"
+      },
+      "url": "https://jacano.github.io",
+      "sameAs": [
+        "https://github.com/jacano",
+        "https://www.linkedin.com/in/juanantoniocano/"
+      ],
+      "email": "jacanosalado@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Seville",
+        "addressRegion": "Andalusia",
+        "addressCountry": "Spain"
+      }
+    })} />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -58,6 +105,29 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
       const btn = document.getElementById('menuBtn');
       const menu = document.getElementById('mobileMenu');
       btn?.addEventListener('click', () => menu?.classList.toggle('open'));
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+      document.querySelectorAll('.card').forEach((el, index) => {
+        el.classList.add('fade-in');
+        el.style.transitionDelay = `${Math.min(index * 50, 200)}ms`;
+        observer.observe(el);
+      });
+
+      if ('PerformanceObserver' in window) {
+        const perfObserver = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            console.log('[Core Web Vitals]', entry.name, entry.value);
+          }
+        });
+        perfObserver.observe({ entryTypes: ['largest-contentful-paint', 'first-input-delay', 'cumulative-layout-shift'] });
+      }
     </script>
     <style is:global>
       :root{
@@ -108,16 +178,20 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
       .btn{
         display:inline-flex;align-items:center;gap:8px;
         padding:12px 20px;border-radius:999px;font-weight:600;font-size:0.95rem;
-        transition:all .2s;cursor:pointer;border:1px solid transparent;
+        transition:all .2s ease;cursor:pointer;border:1px solid transparent;
       }
-      .btn-dark{background:var(--text);color:var(--bg)}
-      .btn-dark:hover{transform:translateY(-1px)}
+      .btn-dark{background:var(--text);color:var(--bg);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+      .btn-dark:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+      .btn-dark:active{transform:translateY(0)}
       .btn-outline{border-color:var(--border);color:var(--text);background:transparent}
-      .btn-outline:hover{background:var(--card)}
+      .btn-outline:hover{background:var(--card);border-color:rgba(99,102,241,.4);transform:translateY(-1px)}
+      .btn-outline:active{transform:translateY(0)}
       .card{
         background:var(--card);border:1px solid var(--border);
         border-radius:var(--radius);padding:24px;
       }
+      .card.interactive{transition:border-color .2s ease,box-shadow .2s ease}
+      .card.interactive:hover{border-color:rgba(99,102,241,.3);box-shadow:0 4px 20px rgba(0,0,0,.15)}
       .badge{
         display:inline-flex;padding:6px 12px;border-radius:999px;
         background:rgba(99,102,241,.15);color:#a5b4fc;
@@ -126,6 +200,8 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
       }
       .grid{display:grid;gap:20px}
       .mono{font-family:'JetBrains Mono',monospace}
+      .fade-in{opacity:0;transform:translateY(16px);transition:opacity 0.5s ease-out,transform 0.5s ease-out}
+      .fade-in.visible{opacity:1;transform:translateY(0)}
       @media(max-width:768px){
         .nav-links{display:none}
         .hamburger{display:block}
