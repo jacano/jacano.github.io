@@ -1,30 +1,17 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import cv from '../data/cv.json';
 const rawBase = import.meta.env.BASE_URL; const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
-const posts = [
-  {
-    slug: 'web3-security-posture-management',
-    title: 'From audits to continuous posture: why Web3 needs W3SPM',
-    date: '2025-11-15',
-    excerpt: 'Over 75% of losses in 2026 came from operational gaps, not code bugs. Dedge builds continuous security from code to chain.',
-    tag: 'Web3 Security'
-  },
-  {
-    slug: 'c-sharp-interop-nativo',
-    title: 'C# native interop: 10 years of lessons with Box2DCS and Crunch',
-    date: '2025-08-02',
-    excerpt: 'Learn to build C++ and C# bindings. The methods are P/Invoke, C++/CLI, marshalling and performance tuning. This article shows patterns from ManagedCrunch and Box2DCS.',
-    tag: 'C# / C++'
-  },
-  {
-    slug: 'head-of-engineering-remoto',
-    title: 'Lead remote engineering: culture, delivery and trust',
-    date: '2025-05-20',
-    excerpt: 'This is my playbook as Head of Engineering. It covers rituals that work and metrics that matter. It shows hiring and team scaling without loss of quality.',
-    tag: 'Leadership'
-  }
-];
+const allPosts = await getCollection('blog');
+const posts = [...allPosts].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date)).slice(0, 3);
+const slugOf = (p: { id: string }) => p.id.replace(/\.md$/, '').split('/').pop()!;
+const langColors: Record<string, string> = {
+  'C#': '#9B4F96',
+  'C++': '#f34b7d',
+  'C': '#555',
+  'Inno Setup': '#6366f1',
+};
 ---
 <Layout title="Juan Antonio Cano Salado — Head of Engineering @ Dedge Security">
   <!-- HERO -->
@@ -125,21 +112,28 @@ const posts = [
         <a href={cv.github} target="_blank" class="link muted">View GitHub →</a>
       </div>
       <div class="grid three">
-        {cv.projects.map((p, i) => (
+        {cv.projects.slice(0, 6).map((p) => (
           <a href={p.url} target="_blank" class="card project interactive">
-            <div class={`proj-image gradient-${(i % 3) + 1}`}>
-              <span class="proj-icon">{p.name.charAt(0)}</span>
+            <div class="proj-top">
+              <span class="lang"><span class="dot" style={`background:${langColors[p.lang] ?? '#6366f1'}`}></span>{p.lang}</span>
+              <span class="arrow">↗</span>
             </div>
-            <div class="proj-content">
-              <div class="proj-top">
-                <span class="lang">{p.lang}</span>
-                <span class="arrow">↗</span>
-              </div>
-              <h3>{p.name}</h3>
-              <p class="muted">{p.description}</p>
+            <h3>{p.name}</h3>
+            <p class="muted">{p.description}</p>
+            <div class="proj-meta mono">
+              <span>★ {p.stars}{p.forks ? ` · ⑂ ${p.forks}` : ''}</span>
+              {p.downloads && <span>{p.downloads}</span>}
+              {p.updated && <span>upd. {p.updated}</span>}
             </div>
           </a>
         ))}
+      </div>
+      <div class="trust-strip" aria-label="Worked with">
+        <span class="trust"><strong>Dedge Security</strong> · Head of Engineering</span>
+        <span class="trust"><strong>Microsoft</strong> · 13 PRs, verified</span>
+        <span class="trust"><strong>Trax Retail</strong> · Senior Engineer</span>
+        <span class="trust"><strong>.NET</strong> · OSS, interop</span>
+        <span class="trust">ISO/IEC 27001 · Dedge Security (2025)</span>
       </div>
     </div>
   </section>
@@ -152,10 +146,10 @@ const posts = [
         <span class="mono small muted">Verified via GitHub API · 2026-08-31</span>
       </div>
       <div class="card">
-        <p class="muted">I opened 13 pull requests in Microsoft repositories. The GitHub API proves this. The search was <code>author:jacano type:pr</code>. The total count was 17. Thirteen were in Microsoft orgs. I did not make up data.</p>
+        <p class="muted">I opened 13 pull requests in Microsoft repositories. All data is verified via the GitHub API. The search was <code>author:jacano type:pr</code> with 17 total results. Thirteen are in Microsoft orgs. <a href="https://github.com/search?q=author%3Ajacano+type%3Apr&type=pullrequests" target="_blank" class="link">View on GitHub →</a></p>
         <details>
           <summary class="link">View verification details</summary>
-          <p class="muted" style="margin-top:12px">The query used <span class="mono">gh api search/issues?q=author:jacano+type:pr</span> and filters for <span class="mono">org:microsoft</span>, <span class="mono">org:dotnet</span> and <span class="mono">org:dotnet-architecture</span>. You can run the same query to verify.</p>
+          <p class="muted" style="margin-top:12px">Run <span class="mono">gh api search/issues?q=author:jacano+type:pr</span> and filter for <span class="mono">org:microsoft</span>, <span class="mono">org:dotnet</span> and <span class="mono">org:dotnet-architecture</span>.</p>
         </details>
       </div>
 
@@ -227,11 +221,11 @@ const posts = [
       </div>
       <div class="grid three">
         {posts.map(post => (
-          <a href={`${base}/blog/${post.slug}`} class="card post interactive">
-            <span class="badge small">{post.tag}</span>
-            <span class="date mono">{post.date}</span>
-            <h3>{post.title}</h3>
-            <p class="muted">{post.excerpt}</p>
+          <a href={`${base}/blog/${slugOf(post)}`} class="card post interactive">
+            <span class="badge small">{post.data.tag}</span>
+            <span class="date mono">{post.data.date}</span>
+            <h3>{post.data.title}</h3>
+            <p class="muted">{post.data.excerpt}</p>
             <span class="link">Read article →</span>
           </a>
         ))}
@@ -292,18 +286,16 @@ const posts = [
     .company{font-weight:600}
     .period{padding:6px 12px;border-radius:999px;background:var(--bg2);border:1px solid var(--border);font-size:.8rem;color:var(--muted);white-space:nowrap;height:fit-content}
     .exp ul{margin-top:12px;padding-left:18px;color:var(--muted);display:grid;gap:4px}
-    .project{transition:transform .2s, border-color .2s;display:flex;flex-direction:column}
+    .project{transition:transform .2s, border-color .2s;display:flex;flex-direction:column;gap:4px}
     .project:hover{transform:translateY(-2px);border-color:rgba(99,102,241,.4)}
-    .proj-image{width:100%;height:140px;border-radius:12px;overflow:hidden;margin-bottom:16px;display:flex;align-items:center;justify-content:center;transition:transform .3s}
-    .gradient-1{background:linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)}
-    .gradient-2{background:linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)}
-    .gradient-3{background:linear-gradient(135deg, #6366f1 0%, #3b82f6 100%)}
-    .project:hover .proj-image{transform:scale(1.02)}
-    .proj-icon{font-size:3rem;font-weight:800;color:rgba(255,255,255,.9);text-shadow:0 2px 8px rgba(0,0,0,.2)}
-    .proj-content{flex:1}
     .proj-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-    .lang{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a5b4fc;background:rgba(99,102,241,.15);padding:4px 8px;border-radius:999px;border:1px solid rgba(99,102,241,.3)}
+    .lang{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a5b4fc;background:rgba(99,102,241,.15);padding:4px 8px;border-radius:999px;border:1px solid rgba(99,102,241,.3)}
+    .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+    .proj-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:.75rem;color:var(--muted)}
     .arrow{opacity:.5}
+    .trust-strip{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+    .trust{font-size:.75rem;padding:6px 12px;border-radius:999px;background:var(--card);border:1px solid var(--border);color:var(--muted)}
+    .trust strong{color:var(--text)}
     .post{display:flex;flex-direction:column;gap:8px;transition:border-color .2s}
     .post:hover{border-color:rgba(99,102,241,.4)}
     .badge.small{font-size:.65rem;padding:4px 8px}

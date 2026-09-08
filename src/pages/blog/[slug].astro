@@ -1,193 +1,46 @@
 ---
+import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+const slugOf = (p: { id: string }) => p.id.replace(/\.md$/, '').split('/').pop()!;
 
-export function getStaticPaths() {
-  return [
-    { params: { slug: 'web3-security-posture-management' } },
-    { params: { slug: 'c-sharp-interop-nativo' } },
-    { params: { slug: 'head-of-engineering-remoto' } },
-    { params: { slug: 'primer-post' } },
-    { params: { slug: 'realtime-mobile-object-detector-xamarin-android' } },
-    { params: { slug: 'wasm-sample-mono-webassembly-sdk' } },
-  ];
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.md$/, '').split('/').pop() },
+    props: { post },
+  }));
 }
 
-const { slug } = Astro.params;
-
-const posts: Record<string, any> = {
-  'web3-security-posture-management': {
-    title: 'From audits to continuous posture: why Web3 needs W3SPM',
-    date: 'Nov 15, 2025',
-    tag: 'Web3 Security',
-    read: '7 min',
-    content: `
-<p>In 2026 the threat moved from code to operations. The State of Digital Asset Security for H1 2026 shows this. More than 75% of losses came from operational and configuration gaps. The gaps were not code bugs. The mean time from exploit to irreversible loss was 12 minutes.</p>
-<h2>Audits are not enough</h2>
-<p>Smart contract audits, formal verification and key management each secure one part. But on-chain systems change after every check. Signers, timelocks, oracles and permissions change. Who monitors the live state?</p>
-<h2>What is W3SPM</h2>
-<p>W3SPM is Web3 Security Posture Management. It maintains continuous visibility. It turns policy into guardrails. At Dedge we deliver it as a Web3-native ASPM platform. The platform integrates the following:</p>
-<ul>
-<li>It discovers assets from code to chain.</li>
-<li>It detects risk automatically.</li>
-<li>It monitors production and integrates into CI/CD.</li>
-</ul>
-<h2>From code to chain</h2>
-<p>At Dedge Security we help banks and institutions scale Web3. We do not slow delivery. Security becomes culture, not an event. ISO 27001, Circle Alliance and our work with LF Decentralized Trust support this direction.</p>
-<blockquote>True security is not a one-time effort — it is a culture that grows alongside the technology.</blockquote>
-<p>If you build DeFi or institutional custody, talk with us about posture.</p>
-    `
-  },
-  'c-sharp-interop-nativo': {
-    title: 'C# native interop: 10 years of lessons with Box2DCS and Crunch',
-    date: 'Aug 02, 2025',
-    tag: 'C# / C++',
-    read: '10 min',
-    content: `
-<p>I maintained C++ and C# bindings in production for more than ten years. The bindings are Box2DCS (Box2D), ManagedCrunch (crnlib) and ManagedXZLZMA. This article shows patterns that reduced pain.</p>
-<h2>1. Select the right method</h2>
-<ul>
-<li>P/Invoke with a flat C API is simple and portable. It is ideal if you control the library. Expose extern C and avoid classes.</li>
-<li>C++/CLI is powerful but Windows-only. It helps with quick wrappers for complex C++.</li>
-<li>DNNE and NativeAOT are modern for .NET 7 and later.</li>
-</ul>
-<h2>2. Marshall data with care</h2>
-<p>Do not copy large buffers. Use <code>Span&lt;T&gt;</code>, <code>Memory&lt;T&gt;</code> and pointers with <code>fixed</code> when you need them. Measure with BenchmarkDotNet. Do not guess.</p>
-<h2>3. Manage lifetime</h2>
-<p>Define who frees the memory. Define ownership clearly. I prefer the native side to allocate. C# then disposes with <code>IDisposable</code> and <code>SafeHandle</code>.</p>
-<h2>4. Package for all runtimes</h2>
-<p>Provide runtimes per RID (win-x64, linux-x64, osx-arm64). Test in real CI. PdbRewriter helped me understand PDBs when obfuscation broke stacks.</p>
-<p>Code is at <a href="https://github.com/jacano" target="_blank">github.com/jacano</a>. For a deep dive, contact me.</p>
-    `
-  },
-  'head-of-engineering-remoto': {
-    title: 'Lead remote engineering: culture, delivery and trust',
-    date: 'May 20, 2025',
-    tag: 'Leadership',
-    read: '6 min',
-    content: `
-<p>As Head of Engineering at Dedge Security I lead a distributed team. The team builds a critical Web3 platform. This is my playbook.</p>
-<h2>Rituals that add value</h2>
-<ul>
-<li>Do weekly demos, not endless status updates.</li>
-<li>Write ADRs (Architecture Decision Records) for collective memory.</li>
-<li>Provide on-call with blameless postmortems.</li>
-</ul>
-<h2>Metrics that matter</h2>
-<p>We use DORA and developer experience. Lead time, CFR and MTTR are useful if you do not gamify them. Ask this question: how long does a critical fix need to reach production?</p>
-<h2>Hiring</h2>
-<p>We look for Platform Engineers with energy and ambition. If you like IaC, K8s and security, contact us.</p>
-    `
-  },
-  'primer-post': {
-    title: 'Hello world: why I started this blog',
-    date: 'Apr 10, 2025',
-    tag: 'Personal',
-    read: '3 min',
-    content: `
-<p>I built software for 14 years. Now I document what I learned.</p>
-<p>This blog covers the following topics:</p>
-<ul>
-<li>Web3 security and posture management.</li>
-<li>.NET, C++ and native interop.</li>
-<li>Architecture and technical leadership.</li>
-</ul>
-<p>The site uses Astro and GitHub Pages. Code is open at <a href="https://github.com/jacano/jacano.github.io">jacano.github.io</a>. Welcome.</p>
-    `
-  },
-  'realtime-mobile-object-detector-xamarin-android': {
-    title: 'Realtime mobile object detector in Xamarin.Android',
-    date: 'Jul 04, 2019',
-    tag: 'Xamarin · Mobile',
-    read: '8 min',
-    content: `
-<div style="background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.3); border-radius:12px; padding:16px; margin-bottom:24px">
-<p style="margin:0; font-size:0.9rem"><strong>Archive note:</strong> This article was first published on <strong>July 4, 2019</strong> at <a href="https://geeks.ms/xamarinteam/2019/07/04/realtime-mobile-object-detector-in-xamarin-android/" target="_blank">geeks.ms/xamarinteam</a> (Plain Concepts Xamarin Team). It is republished here from the <a href="https://web.archive.org/web/20240518135953/https://geeks.ms/xamarinteam/2019/07/04/realtime-mobile-object-detector-in-xamarin-android/" target="_blank">Wayback Machine archive 2024-05-18</a>. Original author: <strong>Juan Antonio Cano</strong>. Code at <a href="https://github.com/jacano/CameraTF" target="_blank">github.com/jacano/CameraTF</a>.</p>
-</div>
-
-<p>Last year the Xamarin team took part in <a href="https://github.com/Microsoft/TailwindTraders-Mobile" target="_blank">TailwindTraders</a>, a set of reference samples for Microsoft Build.</p>
-<p>We were responsible for the Xamarin.Forms demos. We showed the main features of Forms, in particular Shell and more.</p>
-<p>TailwindTraders is a fictitious DIY brand. It sells tools for work, gardening and more.</p>
-<p>One part of the app was an AR experience. It took pictures from the rear camera of Android or iPhone in real time. It detected a product and showed details and purchase recommendations.</p>
-
-<p>On Android we used the Xamarin Binding of <a href="https://developer.android.com/reference/android/hardware/camera2/package-summary" target="_blank">android.hardware.camera2</a> to show the rear camera preview. We used a custom version of <a href="https://github.com/emgucv/emgutf" target="_blank">EmguTF</a> to detect objects. We agreed to detect three objects to show characteristics and make recommendations.</p>
-<p>We first agreed to detect three objects. As a demo we used one: a white hardhat.</p>
-
-<p>This article presents a sample project <a href="https://github.com/jacano/CameraTF" target="_blank">CameraTF</a> in Xamarin.Android. It uses the white hardhat detection model from TailwindTraders for a didactic purpose.</p>
-<p>Let us begin.</p>
-
-<h2>The model</h2>
-<p>The heart of the app is an offline deep learning model. We needed to prioritize inference speed over accuracy. The model must run on a mobile device. For that reason we chose <a href="https://www.tensorflow.org/lite" target="_blank">TensorFlow Lite</a>.</p>
-<p>EmguTF is a C# binding for TensorFlow Lite. TensorFlow Lite is for Mobile and IoT. It is a C++ library that parses a serialized deep learning model from FlatBuffer. It runs inference with the <a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/lite/interpreter.h" target="_blank">Interpreter</a> class.</p>
-<p>The .NET Standard project Emgu.TF.Lite is a simplified version of EmguTF. It exposes an Interpreter class in C#. You provide the input tensors of the model. You then get the output tensors.</p>
-<p>We used an SSD MobileNet model. We did transfer learning over <a href="http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03.tar.gz" target="_blank">ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03</a>. We used this <a href="https://github.com/tensorflow/models/blob/master/research/object_detection/samples/configs/ssd_mobilenet_v1_0.75_depth_quantized_300x300_pets_sync.config" target="_blank">pipeline config</a> to train it on Google Cloud TPUs. The training was fast and easy.</p>
-<p>For more on this process see this post: <a href="https://medium.com/tensorflow/training-and-serving-a-realtime-mobile-object-detector-in-30-minutes-with-cloud-tpus-b78971cf1193" target="_blank">Training and serving a realtime mobile object detector in 30 minutes with Cloud TPUs</a>.</p>
-<p>After the dataset was ready and training finished, we got <a href="https://github.com/jacano/CameraTF/blob/master/src/Resources/hardhat/hardhat_detect.tflite" target="_blank">hardhat_detect.tflite</a> and <a href="https://github.com/jacano/CameraTF/blob/master/src/Resources/hardhat/hardhat_labels_list.txt" target="_blank">hardhat_labels_list.txt</a>.</p>
-
-<h2>Camera setup</h2>
-<p>In this sample we used Xamarin Binding for android.hardware.camera. This helps to understand camera setup code and to get each frame for processing.</p>
-<p>CameraTF is an Android Activity. It shows a CameraSurfaceView with the rear camera preview. To get each frame we used <a href="https://github.com/jamesathey/FastAndroidCamera" target="_blank">FastAndroidCamera</a>.</p>
-<p>On tested devices (Nokia 6.1, Google Pixel XL, LG G4), the <a href="https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Camera/CameraEventsListener.cs" target="_blank">OnPreviewFrame</a> callback of INonMarshalingPreviewCallback gave about 30 fps for analysis. The preview in <a href="https://github.com/jacano/CameraTF/blob/master/src/CameraTF/CameraSurfaceView.cs" target="_blank">CameraSurfaceView</a> stayed smooth.</p>
-<p>The class <a href="https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Camera/CameraController.cs" target="_blank">CameraController</a> controls camera init. It sets the preview format to NV21. It sets fps range and resolution with SetPreviewFpsRange and SetPreviewSize.</p>
-<p>One of the most important steps for real-time is to convert NV21 (YUV420sp) to RGB in native code.</p>
-<p>For details see <a href="https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Helpers/YuvHelper.cs" target="_blank">YuvHelper</a> and <a href="https://github.com/jacano/CameraTF/tree/master/src/CameraTF/Libs/YUV" target="_blank">yuv2rgb.cc</a>.</p>
-
-<h2>Image processing and inference</h2>
-<p>In <a href="https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Camera/CameraAnalyzer.cs" target="_blank">CameraAnalyzer</a> you can track the stages to generate the input tensor. Once we get the RGB frame, we scale it to the SSD MobileNet input size (300×300) and rotate it to fix camera orientation. All operations run with <a href="https://github.com/mono/SkiaSharp" target="_blank">SkiaSharp</a> to use native image processing performance.</p>
-<p>The last step is to set RGB colors in the input tensor. Then invoke the interpreter and get the output tensors. This model returns 4 output tensors as float arrays for each invocation.</p>
-<ul>
-<li>The first holds bounding boxes of detected entities.</li>
-<li>The second is an index to hardhat_labels_list.txt for the class.</li>
-<li>The third is the confidence percentage for each object.</li>
-<li>The fourth is the number of detected objects.</li>
-</ul>
-<p>This was a screen recording from the app on a Pixel XL. It showed about 7 fps in the processingTask inside the CameraAnalyzer class. The image was a GIF from the original article and is not republished here.</p>
-<p>The project is open for <a href="https://github.com/jacano/CameraTF/pulls" target="_blank">PRs</a> and improvements. Feel free to collaborate and open issues.</p>
-
-<hr />
- <p style="font-size:0.85rem; color:var(--muted)"><em>First published July 4, 2019 at geeks.ms/xamarinteam. Republished 2025 on jacano.dev via Wayback Machine. Tags: EmguTF, TailwindTraders, TensorFlow, Xamarin.Android</em></p>
-    `
-  },
-  'wasm-sample-mono-webassembly-sdk': {
-    title: 'WasmSample: .NET on WebAssembly with Mono.WebAssembly.Sdk',
-    date: 'May 04, 2019',
-    tag: 'WASM · .NET',
-    read: '4 min',
-    content: `
-<p>On May 4, 2019 I published <a href="https://github.com/jacano/WasmSample" target="_blank">WasmSample</a>, a sample WASM project with Mono.WebAssembly.Sdk. The post on X is at <a href="https://x.com/jacano35/status/1124476690640572416" target="_blank">x.com/jacano35/status/1124476690640572416</a>.</p>
-<p>The sample shows how to run .NET code as WebAssembly in the browser. It uses Mono.WebAssembly.Sdk to compile C# to WASM and to run it without a plugin.</p>
-<h2>Why WASM</h2>
-<p>WASM runs in the browser at near-native speed. It allows you to use C# where you normally use JavaScript. For me it linked to the WASM work I did in <a href="https://github.com/dotnet/corert" target="_blank">dotnet/corert</a> (CLR). In CoreRT I added WASM support for IL opcodes (neg, not, switch, throw, nop) in 2017.</p>
-<h2>What the sample holds</h2>
-<ul>
-<li>It has a Shell project and a WASM project.</li>
-<li>It builds with <code>build.sh</code> and <code>scripts</code>.</li>
-<li>It runs the Mono runtime in the browser as WASM.</li>
-</ul>
-<h2>Use it</h2>
-<p>Clone the repo. Then run the build script. Then open the result in the browser. The README at <a href="https://github.com/jacano/WasmSample" target="_blank">github.com/jacano/WasmSample</a> shows the steps.</p>
-<p>Code is at <a href="https://github.com/jacano/WasmSample" target="_blank">github.com/jacano/WasmSample</a>. It is open for PRs.</p>
-<hr />
-<p style="font-size:0.85rem; color:var(--muted)"><em>First shared May 4, 2019 at x.com/jacano35. Republished 2026 on jacano.dev. Tags: WASM, Mono, .NET</em></p>
-    `
-  }
-};
-
-const post = posts[slug as string];
-if (!post) throw new Error(`Post not found: ${slug}`);
+const { post } = Astro.props;
+const { Content } = await render(post);
+const allPosts = await getCollection('blog');
+const sorted = [...allPosts].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
+const idx = sorted.findIndex((p) => p.id === post.id);
+const prev = sorted[idx + 1];
+const next = sorted[idx - 1];
+const postSlug = slugOf(post);
 ---
-<Layout title={`${post.title} — Juan Antonio Cano`} description={post.title}>
+<Layout title={`${post.data.title} — Juan Antonio Cano`} description={post.data.excerpt} canonicalPath={`/blog/${postSlug}/`}>
   <article class="container post-wrap">
     <div class="meta">
       <a href={`${base}/blog`} class="link">← Back to blog</a>
       <div class="tags">
-        <span class="badge">{post.tag}</span>
-        <span class="mono muted">{post.date} · {post.read}</span>
+        <span class="badge">{post.data.tag}</span>
+        <span class="mono muted">{post.data.date} · {post.data.read}</span>
       </div>
     </div>
-    <h1>{post.title}</h1>
-    <div class="prose" set:html={post.content}></div>
+    <h1>{post.data.title}</h1>
+    <div class="prose">
+      <Content />
+    </div>
+    {(prev || next) && (
+      <nav class="pager">
+        {prev ? <a href={`${base}/blog/${slugOf(prev)}`} class="card pager-link"><span class="mono small muted">← Older</span><strong>{prev.data.title}</strong></a> : <span />}
+        {next ? <a href={`${base}/blog/${slugOf(next)}`} class="card pager-link right"><span class="mono small muted">Newer →</span><strong>{next.data.title}</strong></a> : <span />}
+      </nav>
+    )}
     <div class="share card">
       <p class="muted">Was this useful? Share it or contact me.</p>
       <div class="actions">
@@ -203,18 +56,26 @@ if (!post) throw new Error(`Post not found: ${slug}`);
     .badge{padding:4px 10px;border-radius:999px;background:rgba(99,102,241,.15);color:#a5b4fc;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(99,102,241,.3)}
     .muted{color:var(--muted)}
     .mono{font-family:'JetBrains Mono',monospace;font-size:.8rem}
+    .small{font-size:.75rem}
     h1{font-size:2.2rem;line-height:1.15;letter-spacing:-0.03em;margin-bottom:24px}
     .prose{color:#d4d4d8;line-height:1.8}
-    .prose :global(h2){color:var(--text);margin:32px 0 12px;font-size:1.35rem;letter-spacing:-0.02em}
-    .prose :global(p){margin:12px 0}
-    .prose :global(ul){margin:12px 0 12px 20px;display:grid;gap:6px}
-    .prose :global(blockquote){border-left:3px solid var(--accent);padding-left:16px;margin:20px 0;color:#a1a1aa;font-style:italic;background:rgba(99,102,241,.06);padding:16px;border-radius:0 12px 12px 0}
-    .prose :global(a){color:var(--accent);text-decoration:underline;text-underline-offset:3px}
-    .prose :global(code){background:var(--card);border:1px solid var(--border);padding:2px 6px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:.9em}
-    .share{margin-top:40px;padding:24px;text-align:center}
+    .prose h2{color:var(--text);margin:32px 0 12px;font-size:1.35rem;letter-spacing:-0.02em}
+    .prose p{margin:12px 0}
+    .prose ul{margin:12px 0 12px 20px;display:grid;gap:6px}
+    .prose blockquote{border-left:3px solid var(--accent);margin:20px 0;color:#a1a1aa;font-style:italic;background:rgba(99,102,241,.06);padding:16px;border-radius:0 12px 12px 0}
+    .prose a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+    .prose code{background:var(--card);border:1px solid var(--border);padding:2px 6px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:.9em}
+    .prose hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+    .prose em{color:var(--muted)}
+    .pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
+    .pager-link{display:flex;flex-direction:column;gap:6px}
+    .pager-link.right{text-align:right}
+    .pager-link strong{font-size:.95rem;line-height:1.4}
+    .share{margin-top:24px;padding:24px;text-align:center}
     .share .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
     .btn{display:inline-flex;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.9rem;border:1px solid var(--border)}
     .btn-dark{background:var(--text);color:var(--bg)}
     .btn-outline{background:transparent;color:var(--text)}
+    @media(max-width:640px){.pager{grid-template-columns:1fr}}
   </style>
 </Layout>

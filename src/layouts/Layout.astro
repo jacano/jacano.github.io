@@ -2,10 +2,19 @@
 interface Props {
   title: string;
   description?: string;
+  canonicalPath?: string;
+  ogImage?: string;
 }
-const { title, description = "Juan Antonio Cano Salado is Head of Engineering at Dedge Security. He has 14+ years of experience as a Software Engineer. The site shows his blog, CV and projects." } = Astro.props;
+const { title, description = "Juan Antonio Cano Salado is Head of Engineering at Dedge Security. He has 14+ years of experience as a Software Engineer. The site shows his blog, CV and projects.", canonicalPath, ogImage = "https://jacano.github.io/og-image.svg" } = Astro.props;
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+const canonicalURL = new URL(canonicalPath ?? Astro.url.pathname, 'https://jacano.github.io').toString();
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) => {
+  const full = `${base}${href}`;
+  if (href === '/') return currentPath === '/' || currentPath === full || currentPath === `${full}/`;
+  return currentPath.startsWith(full);
+};
 ---
 <!doctype html>
 <html lang="en">
@@ -14,14 +23,23 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="author" content="Juan Antonio Cano Salado" />
+    <link rel="canonical" href={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://avatars.githubusercontent.com/u/577145?v=4" />
-    <meta property="og:image:width" content="400" />
-    <meta property="og:image:height" content="400" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content="Juan Antonio Cano Salado" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="theme-color" content="#0a0a0b" />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.svg`} />
+    <link rel="alternate" type="application/rss+xml" title="Juan Antonio Cano Salado — Blog" href={`${base}/rss.xml`} />
     <title>{title}</title>
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -30,41 +48,21 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
       "jobTitle": "Head of Engineering",
       "worksFor": {
         "@type": "Organization",
-        "name": "Dedge Security"
+        "name": "Dedge Security",
+        "url": "https://dedgesecurity.com"
       },
       "url": "https://jacano.github.io",
+      "image": "https://jacano.github.io/og-image.svg",
       "sameAs": [
         "https://github.com/jacano",
         "https://www.linkedin.com/in/juanantoniocano/"
       ],
-      "email": "jacanosalado@gmail.com",
+      "email": "mailto:jacanosalado@gmail.com",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Seville",
         "addressRegion": "Andalusia",
-        "addressCountry": "Spain"
-      }
-    })} />
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Juan Antonio Cano Salado",
-      "jobTitle": "Head of Engineering",
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Dedge Security"
-      },
-      "url": "https://jacano.github.io",
-      "sameAs": [
-        "https://github.com/jacano",
-        "https://www.linkedin.com/in/juanantoniocano/"
-      ],
-      "email": "jacanosalado@gmail.com",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Seville",
-        "addressRegion": "Andalusia",
-        "addressCountry": "Spain"
+        "addressCountry": "ES"
       }
     })} />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,17 +70,20 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   </head>
   <body>
+    <a href="#main" class="skip-link">Skip to content</a>
     <header class="nav">
       <div class="container nav-inner">
-        <a href={`${base}/`} class="logo">jacano<span>.dev</span></a>
-        <nav class="nav-links">
-          <a href={`${base}/`}>Home</a>
-          <a href={`${base}/cv`}>CV</a>
-          <a href={`${base}/blog`}>Blog</a>
+        <a href={`${base}/`} class="logo" aria-label="jacano.dev home">jacano<span>.dev</span></a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href={`${base}/`} aria-current={isActive('/') ? 'page' : undefined} class={isActive('/') ? 'active' : undefined}>Home</a>
+          <a href={`${base}/cv`} aria-current={isActive('/cv') ? 'page' : undefined} class={isActive('/cv') ? 'active' : undefined}>CV</a>
+          <a href={`${base}/blog`} aria-current={isActive('/blog') ? 'page' : undefined} class={isActive('/blog') ? 'active' : undefined}>Blog</a>
           <a href="https://github.com/jacano" target="_blank" rel="noreferrer">GitHub</a>
           <a href="https://www.linkedin.com/in/juanantoniocano/" target="_blank" rel="noreferrer" class="btn-primary">LinkedIn</a>
         </nav>
-        <button class="hamburger" aria-label="menu" id="menuBtn">☰</button>
+        <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" id="menuBtn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
       </div>
       <div class="mobile-menu" id="mobileMenu">
         <a href={`${base}/`}>Home</a>
@@ -92,7 +93,7 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
         <a href="https://www.linkedin.com/in/juanantoniocano/" target="_blank" rel="noreferrer">LinkedIn</a>
       </div>
     </header>
-    <main>
+    <main id="main">
       <slot />
     </main>
     <footer class="footer">
@@ -104,29 +105,34 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
     <script>
       const btn = document.getElementById('menuBtn');
       const menu = document.getElementById('mobileMenu');
-      btn?.addEventListener('click', () => menu?.classList.toggle('open'));
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
+      btn?.addEventListener('click', () => {
+        const open = menu?.classList.toggle('open') ?? false;
+        btn?.setAttribute('aria-expanded', String(open));
+        btn?.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      });
+      menu?.querySelectorAll('a').forEach((a) => {
+        a.addEventListener('click', () => {
+          menu.classList.remove('open');
+          btn?.setAttribute('aria-expanded', 'false');
         });
-      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-      document.querySelectorAll('.card').forEach((el, index) => {
-        el.classList.add('fade-in');
-        el.style.transitionDelay = `${Math.min(index * 50, 200)}ms`;
-        observer.observe(el);
       });
 
-      if ('PerformanceObserver' in window) {
-        const perfObserver = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            console.log('[Core Web Vitals]', entry.name, entry.value);
-          }
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduceMotion) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.card').forEach((el, index) => {
+          el.classList.add('fade-in');
+          (el as HTMLElement).style.transitionDelay = `${Math.min(index * 50, 200)}ms`;
+          observer.observe(el);
         });
-        perfObserver.observe({ entryTypes: ['largest-contentful-paint', 'first-input-delay', 'cumulative-layout-shift'] });
       }
     </script>
     <style is:global>
@@ -143,6 +149,10 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
       }
       *{box-sizing:border-box;margin:0;padding:0}
       html{scroll-behavior:smooth}
+      ::selection{background:rgba(99,102,241,.35);color:#fff}
+      :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+      .skip-link{position:absolute;left:-9999px;top:0;background:var(--text);color:var(--bg);padding:10px 16px;border-radius:0 0 12px 0;font-weight:700;z-index:100}
+      .skip-link:focus{left:0}
       body{
         font-family:'Inter',system-ui,-apple-system,sans-serif;
         background:var(--bg);
@@ -163,12 +173,13 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
       .nav-links{display:flex;gap:28px;align-items:center;font-size:0.95rem}
       .nav-links a{color:var(--muted);transition:color .2s}
       .nav-links a:hover{color:var(--text)}
+      .nav-links a.active{color:var(--text);font-weight:600}
       .btn-primary{
         background:var(--text);color:var(--bg) !important;
         padding:8px 16px;border-radius:999px;font-weight:600;
       }
       .btn-primary:hover{opacity:.9}
-      .hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer}
+      .hamburger{display:none;background:none;border:1px solid var(--border);border-radius:10px;color:var(--text);cursor:pointer;padding:6px;line-height:0}
       .mobile-menu{display:none;flex-direction:column;padding:12px 24px 20px;gap:12px;border-top:1px solid var(--border);background:var(--bg)}
       .mobile-menu.open{display:flex}
       .footer{border-top:1px solid var(--border);padding:40px 0;margin-top:80px;color:var(--muted);font-size:0.9rem}
@@ -202,6 +213,11 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
       .mono{font-family:'JetBrains Mono',monospace}
       .fade-in{opacity:0;transform:translateY(16px);transition:opacity 0.5s ease-out,transform 0.5s ease-out}
       .fade-in.visible{opacity:1;transform:translateY(0)}
+      @media(prefers-reduced-motion:reduce){
+        html{scroll-behavior:auto}
+        .fade-in{opacity:1;transform:none;transition:none}
+        *{animation:none !important;transition:none !important}
+      }
       @media(max-width:768px){
         .nav-links{display:none}
         .hamburger{display:block}

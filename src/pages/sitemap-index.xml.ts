@@ -1,14 +1,5 @@
 import type { APIRoute } from 'astro';
 
-const posts = [
-  'web3-security-posture-management',
-  'c-sharp-interop-nativo',
-  'head-of-engineering-remoto',
-  'primer-post',
-  'realtime-mobile-object-detector-xamarin-android',
-  'wasm-sample-mono-webassembly-sdk'
-];
-
 export const GET: APIRoute = () => {
   const baseUrl = 'https://jacano.github.io';
   const currentDate = new Date().toISOString();

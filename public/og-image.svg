@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0a0b"/>
+      <stop offset="1" stop-color="#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1020" cy="120" r="260" fill="#6366f1" opacity="0.18"/>
+  <circle cx="180" cy="540" r="200" fill="#8b5cf6" opacity="0.12"/>
+  <text x="80" y="200" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="600" fill="#a5b4fc" letter-spacing="2">JUAN ANTONIO CANO SALADO</text>
+  <text x="80" y="330" font-family="Inter, Arial, sans-serif" font-size="96" font-weight="800" fill="#fafafa">Head of Engineering</text>
+  <text x="80" y="430" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="500" fill="#a1a1aa">Web3 Security · .NET · Architecture</text>
+  <rect x="80" y="480" width="360" height="56" rx="28" fill="url(#accent)"/>
+  <text x="260" y="517" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" fill="#ffffff" text-anchor="middle">jacano.github.io</text>
+</svg>

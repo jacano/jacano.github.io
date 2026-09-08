@@ -128,10 +128,17 @@ const rawBase = import.meta.env.BASE_URL; const base = rawBase.endsWith('/') ? r
       .two{grid-template-columns:1fr}
     }
     @media print{
+      @page{size:A4;margin:15mm}
       .nav,.footer,.actions{display:none !important}
-      .cv-wrap{padding:0}
-      .card{border:1px solid #ddd !important;background:white !important;color:black !important}
-      body{background:white !important;color:black !important}
+      .cv-wrap{padding:0;max-width:100%}
+      .cv-grid{grid-template-columns:1fr !important;gap:16px}
+      .cv-side{position:static !important}
+      .cv-side .avatar{display:none !important}
+      body{background:#fff !important;color:#000 !important}
+      .card{border:1px solid #ddd !important;background:#fff !important;color:#000 !important;box-shadow:none !important;break-inside:avoid}
+      .muted,.role,.cat,.link{color:#000 !important}
+      .chip,.period{background:#fff !important;border-color:#999 !important;color:#000 !important}
+      a{text-decoration:none;color:#000 !important}
     }
   </style>
 </Layout>

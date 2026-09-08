@@ -1,89 +1,46 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 const rawBase = import.meta.env.BASE_URL; const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
-const posts = [
-  {
-    slug: 'web3-security-posture-management',
-    title: 'From audits to continuous posture: why Web3 needs W3SPM',
-    date: '2025-11-15',
-    excerpt: 'Over 75% of losses in 2026 came from operational gaps, not code bugs. Dedge builds continuous security from code to chain.',
-    tag: 'Web3 Security',
-    read: '7 min'
-  },
-  {
-    slug: 'c-sharp-interop-nativo',
-    title: 'C# native interop: 10 years of lessons with Box2DCS and Crunch',
-    date: '2025-08-02',
-    excerpt: 'Learn to build C++ and C# bindings. The methods are P/Invoke, C++/CLI, marshalling and performance tuning. This article shows patterns from ManagedCrunch and Box2DCS.',
-    tag: 'C# / C++',
-    read: '10 min'
-  },
-  {
-    slug: 'head-of-engineering-remoto',
-    title: 'Lead remote engineering: culture, delivery and trust',
-    date: '2025-05-20',
-    excerpt: 'This is my playbook as Head of Engineering. It covers rituals that work and metrics that matter. It shows hiring and team scaling without loss of quality.',
-    tag: 'Leadership',
-    read: '6 min'
-  },
-  {
-    slug: 'primer-post',
-    title: 'Hello world: why I started this blog',
-    date: '2025-04-10',
-    excerpt: 'I built software for 14 years. Now I document what I learned. The topics are architecture, Web3 security and technical leadership.',
-    tag: 'Personal',
-    read: '3 min'
-  },
-  {
-    slug: 'realtime-mobile-object-detector-xamarin-android',
-    title: 'Realtime mobile object detector in Xamarin.Android',
-    date: '2019-07-04',
-    excerpt: 'How we built TailwindTraders AR with Xamarin.Android, EmguTF and TensorFlow Lite. SSD MobileNet, NV21 to RGB in native code, SkiaSharp and 7 fps on Pixel XL.',
-    tag: 'Archive · Xamarin',
-    read: '8 min'
-  },
-  {
-    slug: 'wasm-sample-mono-webassembly-sdk',
-    title: 'WasmSample: .NET on WebAssembly with Mono.WebAssembly.Sdk',
-    date: '2019-05-04',
-    excerpt: 'Sample WASM project with Mono.WebAssembly.Sdk. It shows .NET on WebAssembly and links to my WASM work in dotnet/corert (CLR).',
-    tag: 'Archive · WASM',
-    read: '4 min'
-  }
-];
+const allPosts = await getCollection('blog');
+const posts = [...allPosts].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
+const tags = [...new Set(posts.map((p) => p.data.tag))];
+const slugOf = (p: { id: string }) => p.id.replace(/\.md$/, '').split('/').pop()!;
 ---
-<Layout title="Blog — Juan Antonio Cano Salado" description="Articles on Web3 security, C# and .NET, architecture and technical leadership by Juan Antonio Cano Salado.">
+<Layout title="Blog — Juan Antonio Cano Salado" description="Articles on Web3 security, C# and .NET, architecture and technical leadership by Juan Antonio Cano Salado." canonicalPath="/blog/">
   <div class="container blog-wrap">
     <div class="header">
       <h1>Blog</h1>
       <p class="muted">I write about Web3 security, architecture, .NET and leadership. I publish when I have something useful to share.</p>
-      <div class="meta mono small muted">RSS coming soon · {posts.length} articles</div>
+      <div class="meta mono small muted"><a href={`${base}/rss.xml`} class="link">RSS feed</a> · {posts.length} articles</div>
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search articles..." class="search-input" />
-        <div class="search-tags">
-          <button class="tag-btn" data-tag="all">All</button>
-          <button class="tag-btn" data-tag="Web3 Security">Web3 Security</button>
-          <button class="tag-btn" data-tag="C# / C++">C# / C++</button>
-          <button class="tag-btn" data-tag="Leadership">Leadership</button>
+        <label class="visually-hidden" for="searchInput">Search articles</label>
+        <input type="search" id="searchInput" placeholder="Search articles..." class="search-input" autocomplete="off" />
+        <div class="search-tags" role="group" aria-label="Filter by tag">
+          <button class="tag-btn active" data-tag="all">All</button>
+          {tags.map((t) => (
+            <button class="tag-btn" data-tag={t}>{t}</button>
+          ))}
         </div>
       </div>
     </div>
 
     <div class="list" id="postsList">
-      {posts.map(p => (
-        <a href={`${base}/blog/${p.slug}`} class="card row interactive" data-title={p.title.toLowerCase()} data-excerpt={p.excerpt.toLowerCase()} data-tag={p.tag}>
+      {posts.map((p) => (
+        <a href={`${base}/blog/${slugOf(p)}`} class="card row interactive" data-title={(p.data.title + ' ' + p.data.excerpt).toLowerCase()} data-tag={p.data.tag}>
           <div class="row-main">
             <div class="row-top">
-              <span class="badge">{p.tag}</span>
-              <span class="mono small muted">{p.date} · {p.read}</span>
+              <span class="badge">{p.data.tag}</span>
+              <span class="mono small muted">{p.data.date} · {p.data.read}</span>
             </div>
-            <h2>{p.title}</h2>
-            <p class="muted">{p.excerpt}</p>
+            <h2>{p.data.title}</h2>
+            <p class="muted">{p.data.excerpt}</p>
             <span class="link">Read →</span>
           </div>
         </a>
       ))}
     </div>
+    <p class="mono small muted" id="noResults" hidden>No articles match your search.</p>
 
     <div class="card cta">
       <h3>Want to collaborate?</h3>
@@ -94,39 +51,42 @@ const posts = [
   <script>
     const searchInput = document.getElementById('searchInput');
     const postsList = document.getElementById('postsList');
+    const noResults = document.getElementById('noResults');
     const tagBtns = document.querySelectorAll('.tag-btn');
-    const posts = postsList.querySelectorAll('.card');
+    const cards = postsList?.querySelectorAll('.card') ?? [];
     let currentTag = 'all';
 
-    searchInput?.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
-      filterPosts(query, currentTag);
-    });
-
-    tagBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        tagBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentTag = btn.dataset.tag;
-        filterPosts(searchInput.value.toLowerCase(), currentTag);
+    function filterPosts() {
+      const query = (searchInput?.value ?? '').toLowerCase().trim();
+      let visible = 0;
+      cards.forEach((post) => {
+        const text = post.dataset.title ?? '';
+        const postTag = post.dataset.tag ?? '';
+        const matchesQuery = !query || text.includes(query);
+        const matchesTag = currentTag === 'all' || postTag === currentTag;
+        const show = matchesQuery && matchesTag;
+        post.style.display = show ? 'block' : 'none';
+        if (show) visible++;
       });
-    });
-
-    function filterPosts(query, tag) {
-      posts.forEach(post => {
-        const title = post.dataset.title;
-        const excerpt = post.dataset.excerpt;
-        const postTag = post.dataset.tag;
-        const matchesQuery = title.includes(query) || excerpt.includes(query);
-        const matchesTag = tag === 'all' || postTag === tag;
-        post.style.display = matchesQuery && matchesTag ? 'block' : 'none';
-      });
+      if (noResults) noResults.hidden = visible !== 0;
     }
+
+    searchInput?.addEventListener('input', filterPosts);
+
+    tagBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        tagBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTag = btn.dataset.tag ?? 'all';
+        filterPosts();
+      });
+    });
   </script>
   <style>
     .blog-wrap{padding:48px 0;max-width:800px}
     .header{margin-bottom:32px}
     .header h1{font-size:2.8rem;letter-spacing:-0.03em;margin-bottom:8px}
+    .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
     .list{display:grid;gap:16px;margin-bottom:32px}
     .row{padding:24px}
     .row-top{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
@@ -142,6 +102,6 @@ const posts = [
     .search-tags{display:flex;gap:8px;flex-wrap:wrap}
     .tag-btn{padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.8rem;cursor:pointer;transition:all .2s}
     .tag-btn:hover{border-color:var(--accent);color:var(--text)}
-    .tag-btn.active{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+    .tag-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
   </style>
 </Layout>

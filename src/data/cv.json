@@ -6,7 +6,7 @@
   "website": "https://github.com/jacano",
   "linkedin": "https://www.linkedin.com/in/juanantoniocano/",
   "github": "https://github.com/jacano",
-  "avatar": "https://avatars.githubusercontent.com/u/577145?v=4",
+  "avatar": "/avatar.jpg",
   "summary": "I am a Software Engineer with 14+ years of experience in product development, design and architecture. I design and deliver robust, scalable and secure solutions. I lead the engineering team at Dedge Security. We build the first Web3 Security Posture Management (W3SPM) platform to secure decentralized applications from code to chain.",
   "about": "I am a highly motivated and self-confident engineer. My experience spans desktop systems in .NET and C++ to cloud-native Web3 platforms. I worked in blockchain security, intellectual property management, smart water and retail. My approach combines solid architecture, technical leadership and DevSecOps culture.",
   "experience": [
@@ -73,62 +73,90 @@
   "projects": [
     {
       "name": "CameraTF",
-      "description": "It is a Xamarin.Android sample for realtime object detection with TensorFlow Lite. It has 11 stars and 8 forks. It uses SSD MobileNet and native YUV to RGB.",
+      "description": "It is a Xamarin.Android sample for realtime object detection with TensorFlow Lite. It uses SSD MobileNet and native YUV to RGB.",
       "url": "https://github.com/jacano/CameraTF",
-      "lang": "C#"
+      "lang": "C#",
+      "stars": 11,
+      "forks": 8,
+      "updated": "2022"
     },
     {
       "name": "WasmSample",
-      "description": "It is a sample WASM project with Mono.WebAssembly.Sdk. It shows .NET on WebAssembly. Post at x.com/jacano35 on 2019-05-04.",
+      "description": "It is a sample WASM project with Mono.WebAssembly.Sdk. It shows .NET on WebAssembly in the browser.",
       "url": "https://github.com/jacano/WasmSample",
-      "lang": "C#"
+      "lang": "C#",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2019"
     },
     {
       "name": "innosetup-tool",
-      "description": "It is a .NET global tool wrapper for Inno Setup 6.2.2. It has 541 downloads on NuGet. It targets .NET 6.0 and has no dependencies.",
+      "description": "It is a .NET global tool wrapper for Inno Setup 6.2.2. It targets .NET 6.0 and has no dependencies.",
       "url": "https://www.nuget.org/packages/innosetup-tool",
-      "lang": "Inno Setup"
+      "lang": "Inno Setup",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2023",
+      "downloads": "541 on NuGet"
     },
     {
       "name": "BulletCS",
       "description": "It is a Bullet physics binding for C# with native C++. It provides 3D physics for games.",
       "url": "https://github.com/jacano/BulletCS",
-      "lang": "C++"
+      "lang": "C++",
+      "stars": 1,
+      "forks": 0,
+      "updated": "2015"
     },
     {
       "name": "Box2DCS",
       "description": "It is a Box2D binding for C# with native C++. It provides high-performance 2D physics.",
       "url": "https://github.com/jacano/Box2DCS",
-      "lang": "C++"
+      "lang": "C++",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2014"
     },
     {
       "name": "ManagedCrunch",
       "description": "It is a managed C# wrapper for crnlib. It compresses textures.",
       "url": "https://github.com/jacano/ManagedCrunch",
-      "lang": "C++"
+      "lang": "C++",
+      "stars": 4,
+      "forks": 2,
+      "updated": "2018"
     },
     {
       "name": "ManagedXZLZMA",
       "description": "It is a managed wrapper for the XZ LZMA stream decoder.",
       "url": "https://github.com/jacano/ManagedXZLZMA",
-      "lang": "C"
+      "lang": "C",
+      "stars": 1,
+      "forks": 0,
+      "updated": "2018"
     },
     {
       "name": "PdbRewriter",
       "description": "It rewrites .NET PDB files. It helps with obfuscation and tooling.",
       "url": "https://github.com/jacano/PdbRewriter",
-      "lang": "C#"
+      "lang": "C#",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2017"
     },
     {
       "name": "YoloTestSharp",
       "description": "It tests YOLO and computer vision in C#.",
       "url": "https://github.com/jacano/YoloTestSharp",
-      "lang": "C#"
+      "lang": "C#",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2018"
     }
   ],
   "microsoftContributions": {
-    "verifiedVia": "GH API search/issues?q=author:jacano+type:pr (2026-08-31) — total_count 17, 13 in Microsoft orgs",
-    "summary": "I opened 13 pull requests in Microsoft repositories. The work was verified with the GitHub API. No data is made up.",
+    "verifiedVia": "GitHub API search/issues?q=author:jacano+type:pr (2026-08-31) — total 17, 13 in Microsoft orgs",
+    "summary": "I opened 13 pull requests in Microsoft repositories. All data is verified via the GitHub API.",
     "groups": [
       {
         "org": "dotnet",
