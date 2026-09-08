@@ -7,7 +7,7 @@ It uses [Astro](https://astro.build) and GitHub Pages at https://jacano.github.i
 
 - **Home**: hero, about, experience, open source projects and blog preview.
 - **CV**: printable resume. Use the Print button to create a PDF.
-- **Blog**: 4 starter articles in HTML. Extend them via `src/pages/blog/[slug].astro` or content collections.
+- **Blog**: 6 articles in Markdown via content collections (`src/content/blog/*.md`). Search, tag filter, RSS at `/rss.xml`, prev/next navigation.
 
 ## Data
 
@@ -20,9 +20,11 @@ Install dependencies. Then run the site.
 ```bash
 npm install
 npm run dev      # http://localhost:4321/
-npm run build    # creates /dist
+npm run build    # creates /dist (10 pages + rss.xml + sitemaps)
 npm run preview
 ```
+
+Needs Node `>=24` and npm `>=11` (see `.nvmrc`).
 
 ## Deploy
 
@@ -30,7 +32,7 @@ A push to `main` triggers `.github/workflows/deploy.yml`. The workflow builds th
 
 ## Add a post
 
-Add an entry in `src/pages/blog/[slug].astro`. Update `getStaticPaths` and the `posts` object. Or migrate to `src/content/blog/*.md` with content collections.
+Create `src/content/blog/<slug>.md` with frontmatter (`title`, `date`, `tag`, `excerpt`, `read`). The schema lives in `src/content.config.ts`. Home preview, blog list, RSS and sitemap pick the post up automatically. Slugs must stay English-only.
 
 ## License
 
