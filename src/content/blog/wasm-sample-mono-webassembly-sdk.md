@@ -10,15 +10,21 @@ On May 4, 2019 I published [WasmSample](https://github.com/jacano/WasmSample), a
 
 The sample shows how to run .NET code as WebAssembly in the browser. It uses Mono.WebAssembly.Sdk to compile C# to WASM and to run it without a plugin.
 
+---
+
 ## Why WASM
 
 WASM runs in the browser at near-native speed. It allows you to use C# where you normally use JavaScript. For me it linked to the WASM work I did in [dotnet/corert](https://github.com/dotnet/corert) (CLR). In CoreRT I added WASM support for IL opcodes (neg, not, switch, throw, nop) in 2017.
+
+---
 
 ## What the sample holds
 
 - It has a Shell project and a WASM project.
 - It builds with `build.sh` and `scripts`.
 - It runs the Mono runtime in the browser as WASM.
+
+---
 
 ## Use it
 

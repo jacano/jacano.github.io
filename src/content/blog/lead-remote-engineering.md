@@ -8,15 +8,21 @@ read: '6 min'
 
 As Head of Engineering at Dedge Security I lead a distributed team. The team builds a critical Web3 platform. This is my playbook.
 
+---
+
 ## Rituals that add value
 
 - Do weekly demos, not endless status updates.
 - Write ADRs (Architecture Decision Records) for collective memory.
 - Provide on-call with blameless postmortems.
 
+---
+
 ## Metrics that matter
 
 We use DORA and developer experience. Lead time, CFR and MTTR are useful if you do not gamify them. Ask this question: how long does a critical fix need to reach production?
+
+---
 
 ## Hiring
 

@@ -16,13 +16,15 @@ TailwindTraders is a fictitious DIY brand. It sells tools for work, gardening an
 
 One part of the app was an AR experience. It took pictures from the rear camera of Android or iPhone in real time. It detected a product and showed details and purchase recommendations.
 
-On Android we used the Xamarin Binding of [android.hardware.camera2](https://developer.android.com/reference/android/hardware/camera2/package-summary) to show the rear camera preview. We used a custom version of [EmguTF](https://github.com/emgucv/emgutf) to detect objects. We agreed to detect three objects to show characteristics and make recommendations.
+On Android we used the Xamarin Binding of [android.hardware.camera2](https://developer.android.com/reference/android/hardware/camera2/package-summary) to show the rear camera preview. We used a custom version of [EmguTF](https://github.com/emgucv/emgutf) to detect objects.
 
-We first agreed to detect three objects. As a demo we used one: a white hardhat.
+We agreed to detect three objects. As a demo we used one: a white hardhat.
 
 This article presents a sample project [CameraTF](https://github.com/jacano/CameraTF) in Xamarin.Android. It uses the white hardhat detection model from TailwindTraders for a didactic purpose.
 
 Let us begin.
+
+---
 
 ## The model
 
@@ -38,6 +40,8 @@ For more on this process see this post: [Training and serving a realtime mobile 
 
 After the dataset was ready and training finished, we got [hardhat_detect.tflite](https://github.com/jacano/CameraTF/blob/master/src/Resources/hardhat/hardhat_detect.tflite) and [hardhat_labels_list.txt](https://github.com/jacano/CameraTF/blob/master/src/Resources/hardhat/hardhat_labels_list.txt).
 
+---
+
 ## Camera setup
 
 In this sample we used Xamarin Binding for android.hardware.camera. This helps to understand camera setup code and to get each frame for processing.
@@ -51,6 +55,8 @@ The class [CameraController](https://github.com/jacano/CameraTF/blob/master/src/
 One of the most important steps for real-time is to convert NV21 (YUV420sp) to RGB in native code.
 
 For details see [YuvHelper](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Helpers/YuvHelper.cs) and [yuv2rgb.cc](https://github.com/jacano/CameraTF/tree/master/src/CameraTF/Libs/YUV).
+
+---
 
 ## Image processing and inference
 
