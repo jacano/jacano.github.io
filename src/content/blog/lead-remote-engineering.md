@@ -13,7 +13,8 @@ As Head of Engineering at Dedge Security I lead a distributed team. The team bui
 ## Rituals that add value
 
 - Do weekly demos, not endless status updates.
-- Write ADRs (Architecture Decision Records) for collective memory.
+- Ask the team to draw architecture diagrams. A diagram is the fastest way for another person to understand a system.
+- Keep the diagrams in the repository and update them with the code.
 - Provide on-call with blameless postmortems.
 
 ---
