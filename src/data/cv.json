@@ -5,15 +5,15 @@
   "email": "jacanosalado@gmail.com",
   "linkedin": "https://www.linkedin.com/in/juanantoniocano/",
   "github": "https://github.com/jacano",
-  "summary": "I am a Software Engineer with 15+ years of experience in product development, design and architecture. I lead the engineering team at Dedge Security. We build a Web3 Security Posture Management (W3SPM) platform. I design and review software with AI every day.",
-  "about": "My experience spans .NET and C++ desktop systems and cloud-native Web3 platforms. I worked in blockchain security, intellectual property, smart water and retail. I use AI to move from an idea to a working tool in days. The edistribucion client is an example: a public Python tool that reads your real electricity use.",
+  "summary": "I am a Software Engineer with 15+ years of experience in product development, design and architecture. I design and deliver robust, scalable and secure solutions. I lead the engineering team at Dedge Security. We build a Web3 Security Posture Management (W3SPM) platform. I design and review software with AI every day.",
+  "about": "I am a highly motivated and self-confident engineer. My experience spans .NET and C++ desktop systems and cloud-native Web3 platforms. I worked in blockchain security, intellectual property, smart water and retail. My approach combines solid architecture, technical leadership and DevSecOps culture. I use AI to move from an idea to a working tool in days. The edistribucion client is an example: a public Python tool that reads your real electricity use.",
   "experience": [
     {
       "company": "Dedge Security",
       "role": "Head of Engineering",
       "period": "2023 — Present",
       "location": "Seville / Remote · Spain",
-      "description": "I lead the engineering team that builds an ASPM/W3SPM platform for Web3. I own the architecture, the continuous delivery and the security of the software lifecycle.",
+      "description": "I lead the engineering team that builds an ASPM/W3SPM platform for Web3. I own the architecture and the continuous delivery. I manage the security of the software lifecycle and engineering excellence.",
       "highlights": [
         "The platform provides continuous security from code to chain.",
         "It integrates into developer workflows and CI/CD.",
