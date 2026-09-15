@@ -42,7 +42,7 @@
       "location": "Seville",
       "description": "I shipped products for more than ten years in C#, C++ and .NET. The work focused on native interop, tooling and high-performance systems. I am the author of open source libraries with hundreds of stars.",
       "highlights": [
-        "The projects are Box2DCS, ManagedCrunch, ManagedXZLZMA, PdbRewriter and YoloTestSharp.",
+        "The projects are CameraTF, WasmSample, ManagedCrunch, ManagedXZLZMA and PdbRewriter.",
         "I optimized C++ and C# interop and performance.",
         "I led product architecture and technical teams."
       ]
