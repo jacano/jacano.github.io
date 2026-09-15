@@ -6,12 +6,14 @@ excerpt: 'I built software for 15 years. Now I document what I learned. The topi
 read: '1 min'
 ---
 
-I built software for 15 years. Now I document what I learned.
+I have built software for 15 years. Along the way I learned a lot, and I kept explaining the same things to the next teammate. This blog is where I write those lessons down once.
 
-This blog covers the following topics:
+The topics:
 
 - Web3 security and posture management.
 - .NET, C++ and native interop.
 - Architecture and technical leadership.
 
-The site uses Astro and GitHub Pages. Code is open at [jacano.github.io](https://github.com/jacano/jacano.github.io). Welcome.
+Some posts are technical. Some are about leading a team. All of them are things I would have liked to read earlier.
+
+The site uses Astro and GitHub Pages. The code is open at [jacano.github.io](https://github.com/jacano/jacano.github.io). Thanks for reading.

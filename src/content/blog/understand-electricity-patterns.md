@@ -6,31 +6,31 @@ excerpt: 'An unofficial Python client for the e-distribucion private area. It do
 read: '3 min'
 ---
 
-The bill shows one number per month. It does not show *when* you used the energy. Without the hours, you cannot compare tariffs with real numbers.
+Your electricity bill tells you one number per month. It does not tell you *when* you used the energy. And without the hours, you cannot compare tariffs with real numbers. You can only guess.
 
-In Spain, the distributor keeps the data, and not the retailer. **e-distribucion** (the Endesa group) covers part of Spain. Your bill shows the name of your distributor.
+Here is the problem. In Spain, the distributor keeps the data, not the retailer. Each area has its own distributor, and **e-distribucion** (the Endesa group) covers part of Spain. Your bill shows the name of yours.
 
-If the distributor is e-distribucion, the private area has every hour of your history. The portal shows the data in small parts, so you cannot see the full picture.
+If yours is e-distribucion, you are in luck. The private area holds every hour of your history. The bad news is the portal: it shows the data in small parts, so you never see the full picture.
 
-So I wrote a tool. It reads the full history and gives one report per CUPS.
+So I wrote a tool. It reads the whole history and gives you one clean report per CUPS.
 
 ---
 
 ## The three periods
 
-Since 2021 the home tariff is 2.0TD. The grid fee changes with the hour:
+Since 2021 the home tariff is 2.0TD, and the grid fee changes with the hour:
 
 - **P1 (peak):** the most expensive. Monday to Friday, 10:00-14:00 and 18:00-22:00.
 - **P2 (flat):** in between.
 - **P3 (off-peak):** the cheapest. Weekdays 00:00-08:00, plus all weekend and national holidays.
 
-A retailer sells the same energy at a different price for each period. The tool adds your hours into P1, P2 and P3.
+Retailers sell the same energy at a different price for each period, so your bill is a mix of the three. The tool does the mix for you: it adds your hours into P1, P2 and P3.
 
 ---
 
 ## Choose the tariff
 
-The split by period tells you which tariff fits you:
+Once you see the split, the choice gets easier:
 
 - mostly **P3**: look for a low off-peak price,
 - a lot in **P1**: look for a low peak price, or a flat price,
@@ -42,23 +42,23 @@ There are many comparators, and [luzfija.es](https://github.com/almax-es/luzfija
 
 ## Adjust the contracted power
 
-The **contracted power** is the fixed part of the bill. Two errors are common:
+The **contracted power** is the fixed part of the bill. Two mistakes are common:
 
 - Too high: you pay for a power that you never use.
 - Too low: the ICP trips and the supply goes off.
 
-The 2.0TD tariff has two power periods. P1 covers the peak and flat hours. P2 covers the off-peak hours. The tool gives the **maximum demanded power** for each period, and it lists the months where the demand passed the contract.
+The 2.0TD tariff has two power periods. P1 covers the peak and flat hours, P2 the off-peak hours. The tool gives the **maximum demanded power** for each period, and it lists the months where you passed the contract.
 
 ### kWh and kW are not the same
 
 In one hour you use the oven (2 kW), the air conditioner (2 kW) and the washing machine (0.5 kW). That hour is 4.5 kWh.
 
-For 15 minutes you add a machine of 5 kW. The demanded power is then 9.5 kW.
+Now add a machine of 5 kW for 15 minutes. The demanded power jumps to 9.5 kW.
 
 - **kWh** = how much you used.
 - **kW** = how hard you pulled at one moment.
 
-Use the maximum demanded power for the contract. Use the top hour for the tariff.
+So use the maximum demanded power to pick the contract, and the top hour to pick the tariff.
 
 ---
 
@@ -66,9 +66,7 @@ Use the maximum demanded power for the contract. Use the top hour for the tariff
 
 The portal gives some hours as **estimated**, not real. The distributor has no reading yet. The number can be close, but it is not a measure.
 
-The tool marks every day as real, estimated or pending. It finds the **longest period in a row with real data only** and gives the totals.
-
-Use that period in a comparator. Then the result comes from real measures.
+The tool marks every day as real, estimated or pending, and it finds the **longest period in a row with real data only**. Use that period in a comparator, and the result comes from real measures.
 
 ---
 
