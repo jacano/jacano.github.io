@@ -14,9 +14,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-env:
-  NODE_OPTIONS: --disable-warning=DEP0040 --disable-warning=DEP0169
-
 jobs:
   build:
     runs-on: ubuntu-latest
