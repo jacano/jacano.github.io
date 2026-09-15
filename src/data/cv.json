@@ -11,8 +11,8 @@
     {
       "company": "Dedge Security",
       "role": "Head of Engineering",
-      "period": "2023 — Present",
-      "location": "Seville / Remote · Spain",
+      "period": "2025 — Present",
+      "location": "Remote",
       "description": "I lead the engineering team that builds an ASPM/W3SPM platform for Web3. I own the architecture and the continuous delivery. I manage the security of the software lifecycle and engineering excellence.",
       "highlights": [
         "The platform provides continuous security from code to chain.",
@@ -23,27 +23,69 @@
       "link": "https://dedgesecurity.com"
     },
     {
-      "company": "Trax Retail (previous project)",
-      "role": "Senior Software Engineer",
-      "period": "2021 — 2023",
+      "company": "Schneider Electric",
+      "role": "Software Architect, R&D Smart Water team",
+      "period": "2024 — 2025",
       "location": "Remote",
-      "description": "I built large-scale computer vision and retail analytics systems. I focused on scalability and performance.",
+      "description": "I worked on a hydraulic simulator app. I handled the architecture, the maintenance and the cybersecurity.",
       "highlights": [
-        "I designed C# and .NET architecture.",
-        "I optimized data pipelines."
+        "I extended a .NET desktop app on Azure.",
+        "I ran POC validation and cybersecurity checks.",
+        "I reviewed code and triaged issues."
       ]
     },
     {
-      "company": "Open Source Projects & Consulting",
-      "role": "Software Engineer / Architect",
-      "period": "2010 — 2021",
-      "location": "Seville",
-      "description": "I shipped products for more than ten years in C#, C++ and .NET. The work focused on native interop, tooling and high-performance systems.",
+      "company": "Trax Retail",
+      "role": "Engineering Manager, DMX Supply and Recruitment",
+      "period": "2021 — 2023",
+      "location": "Remote",
+      "description": "I managed the DMX Supply and Recruitment team.",
       "highlights": [
-        "The projects are CameraTF, WasmSample, ManagedCrunch, ManagedXZLZMA and PdbRewriter.",
-        "I optimized C++ and C# interop and performance.",
-        "I led product architecture and technical teams."
+        "I led a team of 4 engineers.",
+        "I worked with PostgreSQL and AWS services.",
+        "I designed new features and fixed the production issues."
       ]
+    },
+    {
+      "company": "Copyright Clearance Center (CCC)",
+      "role": "Technical Lead, Right Find Enterprise",
+      "period": "2020 — 2021",
+      "location": "Remote",
+      "description": "I led an enterprise content management system through its full life cycle.",
+      "highlights": [
+        "I led a team of 6 engineers.",
+        "I hired the team and set up the process."
+      ]
+    },
+    {
+      "company": "FORWARD by Iturri",
+      "role": "Technical Lead, Springter",
+      "period": "2019 — 2020",
+      "location": "Seville, Spain",
+      "description": "I led the architecture and the development of Springter, a personal equipment management product, at a startup.",
+      "highlights": [
+        "I led a team of 2 engineers.",
+        "I built secure backend services and APIs."
+      ]
+    },
+    {
+      "company": "Plain Concepts",
+      "role": "Senior Software Engineer, R&D team",
+      "period": "2013 — 2019",
+      "location": "Seville, Spain",
+      "description": "I designed, built and delivered software for clients, alone or in small teams. The work was mobile apps in Xamarin and .NET.",
+      "highlights": [
+        "I built open source samples, for example CameraTF.",
+        "I applied agile methods to the process.",
+        "I gathered the requirements with the clients and gave technical advice."
+      ]
+    },
+    {
+      "company": "Icinetic",
+      "role": "Junior Software Engineer",
+      "period": "2012 — 2013",
+      "location": "Seville, Spain",
+      "description": "My first professional role. I built mobile apps during a work-experience contract."
     }
   ],
   "education": [

@@ -95,7 +95,7 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
         <a href={`${base}/cv`} class="link muted">View full timeline →</a>
       </div>
       <div class="grid">
-        {cv.experience.map(exp => (
+        {cv.experience.slice(0, 4).map(exp => (
           <div class="card exp interactive">
             <div class="exp-head">
               <div>
