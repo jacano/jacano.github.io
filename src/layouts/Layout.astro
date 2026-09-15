@@ -94,8 +94,8 @@ const blogPosting = ogType === "article" ? {
     <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.svg`} />
     <link rel="alternate" type="application/rss+xml" title="Juan Antonio Cano Salado — Blog" href={`${base}/rss.xml`} />
     <title>{title}</title>
-    <script type="application/ld+json" set:html={JSON.stringify(person)} />
-    {blogPosting && <script type="application/ld+json" set:html={JSON.stringify(blogPosting)} />}
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(person)} />
+    {blogPosting && <script is:inline type="application/ld+json" set:html={JSON.stringify(blogPosting)} />}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
