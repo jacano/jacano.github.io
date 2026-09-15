@@ -3,10 +3,8 @@
   "title": "Head of Engineering @ Dedge Security",
   "location": "Seville, Andalusia, Spain",
   "email": "jacanosalado@gmail.com",
-  "website": "https://github.com/jacano",
   "linkedin": "https://www.linkedin.com/in/juanantoniocano/",
   "github": "https://github.com/jacano",
-  "avatar": "/avatar.jpg",
   "summary": "I am a Software Engineer with 14+ years of experience in product development, design and architecture. I design and deliver robust, scalable and secure solutions. I lead the engineering team at Dedge Security. We build the first Web3 Security Posture Management (W3SPM) platform to secure decentralized applications from code to chain. I also pair with AI every day to design, build and review software.",
   "about": "I am a highly motivated and self-confident engineer. My experience spans desktop systems in .NET and C++ to cloud-native Web3 platforms. I worked in blockchain security, intellectual property management, smart water and retail. My approach combines solid architecture, technical leadership and DevSecOps culture. I use AI as a development partner, not as a shortcut. It helps me move from an idea to a working tool in days. The edistribucion client is an example: a public Python tool that reads your real electricity use, built with AI as a partner.",
   "experience": [
@@ -135,131 +133,5 @@
       "forks": 0,
       "updated": "2018"
     }
-  ],
-  "microsoftContributions": {
-    "verifiedVia": "GitHub API search/issues?q=author:jacano+type:pr (2026-08-31) — total 17, 13 in Microsoft orgs",
-    "summary": "I opened 13 pull requests in Microsoft repositories. All data is verified via the GitHub API.",
-    "groups": [
-      {
-        "org": "dotnet",
-        "repo": "dotnet/corert",
-        "note": "CoreRT is the experimental .NET Native compiler. It is part of CLR and later merged into dotnet/runtime.",
-        "count": 4,
-        "prs": [
-          {
-            "number": 4725,
-            "title": "Implement neg (float/integer) and not IL instructions. Fixes #4524 and #4525",
-            "url": "https://github.com/dotnet/corert/pull/4725",
-            "state": "merged",
-            "merged_at": "2017-10-15T00:19:25Z"
-          },
-          {
-            "number": 4736,
-            "title": "Throw opcode with trap.",
-            "url": "https://github.com/dotnet/corert/pull/4736",
-            "state": "merged",
-            "merged_at": "2017-10-17T02:12:40Z"
-          },
-          {
-            "number": 4769,
-            "title": "Emit switch in wasm",
-            "url": "https://github.com/dotnet/corert/pull/4769",
-            "state": "merged",
-            "merged_at": "2017-10-23T20:17:09Z"
-          },
-          {
-            "number": 4776,
-            "title": "Emit donothing on nop. Fix #4529",
-            "url": "https://github.com/dotnet/corert/pull/4776",
-            "state": "merged",
-            "merged_at": "2017-10-22T21:21:24Z"
-          }
-        ]
-      },
-      {
-        "org": "microsoft",
-        "repo": "microsoft/TailwindTraders-Mobile",
-        "count": 5,
-        "prs": [
-          {
-            "number": 12,
-            "title": "Feature/206 emgutf add",
-            "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/12",
-            "state": "merged",
-            "merged_at": "2018-12-17T15:13:42Z"
-          },
-          {
-            "number": 13,
-            "title": "Build fix",
-            "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/13",
-            "state": "merged",
-            "merged_at": "2018-12-17T15:43:24Z"
-          },
-          {
-            "number": 19,
-            "title": "Feature/207 AR in Android and iOS",
-            "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/19",
-            "state": "merged",
-            "merged_at": "2019-01-17T16:11:33Z"
-          },
-          {
-            "number": 44,
-            "title": "Hardhat net replaced",
-            "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/44",
-            "state": "merged",
-            "merged_at": "2019-04-08T11:44:59Z"
-          },
-          {
-            "number": 46,
-            "title": "Nuget.config clean up",
-            "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/46",
-            "state": "merged",
-            "merged_at": "2019-04-11T15:29:18Z"
-          }
-        ]
-      },
-      {
-        "org": "microsoft",
-        "repo": "microsoft/ailab",
-        "count": 2,
-        "prs": [
-          {
-            "number": 15,
-            "title": "Snip Insight cross platform version",
-            "url": "https://github.com/microsoft/ailab/pull/15",
-            "state": "merged",
-            "merged_at": "2018-10-01T17:42:52Z"
-          },
-          {
-            "number": 14,
-            "title": "Duplicate of #15",
-            "url": "https://github.com/microsoft/ailab/pull/14",
-            "state": "closed",
-            "merged_at": null
-          }
-        ]
-      },
-      {
-        "org": "dotnet-architecture",
-        "repo": "dotnet-architecture/eShopOnContainers",
-        "count": 2,
-        "prs": [
-          {
-            "number": 648,
-            "title": "Urls for Identity, Gateway Shopping and Marketing added to setting view",
-            "url": "https://github.com/dotnet-architecture/eShopOnContainers/pull/648",
-            "state": "merged",
-            "merged_at": "2018-07-03T08:11:10Z"
-          },
-          {
-            "number": 651,
-            "title": "Fix for issue #621",
-            "url": "https://github.com/dotnet-architecture/eShopOnContainers/pull/651",
-            "state": "closed",
-            "merged_at": null
-          }
-        ]
-      }
-    ]
-  }
+  ]
 }

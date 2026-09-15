@@ -7,11 +7,11 @@ const posts = [...allPosts].sort((a, b) => +new Date(b.data.date) - +new Date(a.
 const tags = [...new Set(posts.map((p) => p.data.tag))];
 const slugOf = (p: { id: string }) => p.id.replace(/\.md$/, '').split('/').pop()!;
 ---
-<Layout title="Blog — Juan Antonio Cano Salado" description="Articles on Web3 security, C# and .NET, architecture and technical leadership by Juan Antonio Cano Salado." canonicalPath="/blog/">
+<Layout title="Blog — Juan Antonio Cano Salado" description="Articles on Web3 security, C# and .NET, architecture, technical leadership and hands-on data tools by Juan Antonio Cano Salado." canonicalPath="/blog/">
   <div class="container blog-wrap">
     <div class="header">
       <h1>Blog</h1>
-      <p class="muted">I write about Web3 security, architecture, .NET and leadership. I publish when I have something useful to share.</p>
+      <p class="muted">I write about Web3 security, architecture, .NET, leadership and hands-on data tools. I publish when I have something useful to share.</p>
       <div class="meta mono small muted"><a href={`${base}/rss.xml`} class="link">RSS feed</a> · {posts.length} articles</div>
       <div class="search-box">
         <label class="visually-hidden" for="searchInput">Search articles</label>

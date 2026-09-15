@@ -6,7 +6,7 @@ export async function GET(context) {
   const sorted = [...posts].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
   return rss({
     title: 'Juan Antonio Cano Salado — Blog',
-    description: 'Articles on Web3 security, C# and .NET, architecture and technical leadership.',
+    description: 'Articles on Web3 security, C# and .NET, architecture, technical leadership and hands-on data tools.',
     site: context.site ?? 'https://jacano.github.io',
     items: sorted.map((post) => ({
       title: post.data.title,

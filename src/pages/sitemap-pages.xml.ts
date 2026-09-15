@@ -5,8 +5,8 @@ export const GET: APIRoute = () => {
 
   const pages = [
     { loc: '/', priority: '1.0', changefreq: 'weekly' },
-    { loc: '/cv', priority: '0.8', changefreq: 'monthly' },
-    { loc: '/blog', priority: '0.9', changefreq: 'weekly' },
+    { loc: '/cv/', priority: '0.8', changefreq: 'monthly' },
+    { loc: '/blog/', priority: '0.9', changefreq: 'weekly' },
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
