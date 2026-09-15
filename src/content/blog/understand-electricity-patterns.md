@@ -10,7 +10,7 @@ The electricity bill shows one number per month. It does not tell you *when* you
 
 In Spain, the distributor keeps the real data, and not the retailer. Each area has its own distributor. **e-distribucion** (the Endesa group) works in some areas of Spain only. Look at your bill: it shows the name of your distributor.
 
-If your distributor is e-distribucion, you are lucky. Its private area has an hourly history for every supply point (CUPS). But the portal shows the data in small pages, so a long study is hard.
+If your distributor is e-distribucion, you are lucky. Its private area has an hourly history for every supply point (CUPS). But the portal gives the data in small parts, so you cannot see the full picture.
 
 So I wrote a small tool. It reads your full history and gives one clean report.
 
