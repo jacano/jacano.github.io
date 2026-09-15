@@ -48,16 +48,7 @@ The **contracted power** is the fixed part of the bill. Two mistakes are common:
 
 The 2.0TD tariff has two power periods. P1 covers the peak and flat hours, P2 the off-peak hours. The tool gives the **maximum demanded power** for each period, and it lists the months where you passed the contract.
 
-### kWh and kW are not the same
-
-In one hour you use the oven (2 kW), the air conditioner (2 kW) and the washing machine (0.5 kW). That hour is 4.5 kWh.
-
-Now add a machine of 5 kW for 15 minutes. The demanded power jumps to 9.5 kW.
-
-- **kWh** = how much you used.
-- **kW** = how hard you pulled at one moment.
-
-So use the maximum demanded power to pick the contract, and the top hour to pick the tariff.
+**kWh** is how much you used. **kW** is how strong you pulled at one moment. Pick the contract with the maximum demanded power, and the tariff with the split by period.
 
 ---
 
