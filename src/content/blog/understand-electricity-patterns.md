@@ -1,5 +1,5 @@
 ---
-title: 'Read your real electricity use for years, not months'
+title: 'Understand your electricity patterns over a year'
 date: '2026-09-14'
 tag: 'Energy'
 excerpt: 'An unofficial Python client for the e-distribucion private area. It downloads your full hourly history, so you can compare tariffs, set the contracted power and cut your bill.'
