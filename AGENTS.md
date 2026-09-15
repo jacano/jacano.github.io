@@ -23,6 +23,7 @@ Read this before you change code.
 - **Site text** follows **Simple English (ASD-STE100)** via https://github.com/AminBlg/SimpleEnglish. Short sentences, active voice, no contractions.
 - **Social image:** `public/og-image.png` (1200×630). Use PNG or JPG. Social sites do not show an SVG.
 - **Avatar:** `public/avatar.jpg` plus `public/avatar.webp`. The pages use `<picture>`. Keep both files small.
+- **Icons:** `public/favicon.svg` plus `public/apple-touch-icon.png` at 180x180. iOS does not take an SVG for the touch icon.
 
 ## Commits
 

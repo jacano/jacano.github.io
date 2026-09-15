@@ -37,4 +37,4 @@ Create `src/content/blog/<slug>.md` with frontmatter (`title`, `date`, `tag`, `e
 
 ## License
 
-MIT © Juan Antonio Cano Salado
+MIT. See the LICENSE file.
