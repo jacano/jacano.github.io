@@ -7,7 +7,7 @@ excerpt: 'An unofficial Python client for the e-distribucion private area. It do
 
 Your electricity bill tells you one number per month. It does not tell you *when* you used the energy. And without the hours, you cannot compare tariffs with real numbers. You can only guess.
 
-Here is the problem. In Spain, the distributor keeps the data, not the retailer. Each area has its own distributor, and **e-distribucion** (the Endesa group) covers part of Spain. Your bill shows the name of yours.
+Here is the problem. In Spain, the distributor keeps the data, not the retailer. Each area has its own distributor, and [e-distribucion](https://www.edistribucion.com/) (the Endesa group) covers part of Spain. Your bill shows the name of yours.
 
 If yours is e-distribucion, you are in luck. The private area holds every hour of your history. The bad news is the portal: it shows the data in small parts, so you never see the full picture.
 
@@ -17,7 +17,7 @@ So I wrote a tool. It reads the whole history and gives you one clean report per
 
 ## The three periods
 
-Since 2021 the home tariff is 2.0TD, and the grid fee changes with the hour:
+Since 2021 the home tariff is [2.0TD](https://www.boe.es/buscar/act.php?id=BOE-A-2020-1066), and the grid fee changes with the hour:
 
 - **P1 (peak):** the most expensive. Monday to Friday, 10:00-14:00 and 18:00-22:00.
 - **P2 (flat):** in between.
@@ -86,6 +86,14 @@ The code and the guide are here:
 It uses HTTP only, with no browser and no third-party package. It is not connected to e-distribucion or Endesa.
 
 The tool works only when your distributor is e-distribucion. It reads the 2.0TD tariff.
+
+---
+
+## Where to read more
+
+- The distributor: [edistribucion.com](https://www.edistribucion.com/). Your data lives in the private area, at [zonaprivada.edistribucion.com](https://zonaprivada.edistribucion.com/).
+- The 2.0TD periods: [Circular 3/2020 of the CNMC](https://www.boe.es/buscar/act.php?id=BOE-A-2020-1066), article 7.
+- The tool and the period rules: [github.com/jacano/edistribucion-client](https://github.com/jacano/edistribucion-client).
 
 ---
 
