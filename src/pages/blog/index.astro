@@ -12,7 +12,7 @@ const slugOf = (p: { id: string }) => p.id.replace(/\.md$/, '').split('/').pop()
     <div class="header">
       <h1>Blog</h1>
       <p class="muted">I write about Web3 security, architecture, .NET, leadership and hands-on data tools. I publish when I have something useful to share.</p>
-      <div class="meta mono small muted"><a href={`${base}/rss.xml`} class="link">RSS feed</a> · {posts.length} articles</div>
+      <div class="mono small muted"><a href={`${base}/rss.xml`} class="link">RSS feed</a> · {posts.length} articles</div>
       <div class="search-box">
         <label class="visually-hidden" for="searchInput">Search articles</label>
         <input type="search" id="searchInput" placeholder="Search articles..." class="search-input" autocomplete="off" />
@@ -28,7 +28,7 @@ const slugOf = (p: { id: string }) => p.id.replace(/\.md$/, '').split('/').pop()
     <div class="list" id="postsList">
       {posts.map((p) => (
         <a href={`${base}/blog/${slugOf(p)}`} class="card row interactive" data-title={(p.data.title + ' ' + p.data.excerpt).toLowerCase()} data-tag={p.data.tag}>
-          <div class="row-main">
+          <div>
             <div class="row-top">
               <span class="badge">{p.data.tag}</span>
               <span class="mono small muted">{p.data.date} · {p.data.read}</span>
