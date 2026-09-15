@@ -133,5 +133,61 @@
       "forks": 0,
       "updated": "2018"
     }
-  ]
+  ],
+  "microsoftContributions": {
+    "verified": "2026-08-31",
+    "total": 17,
+    "inMicrosoft": 13,
+    "summary": "I opened 13 pull requests in Microsoft repositories. All data is verified via the GitHub API.",
+    "searchUrl": "https://github.com/search?q=author%3Ajacano+type%3Apr&type=pullrequests",
+    "command": "gh api search/issues?q=author:jacano+type:pr",
+    "commandAll": "gh api search/issues?q=author:jacano+type:pr&per_page=100",
+    "groups": [
+      {
+        "title": "CLR",
+        "repo": "dotnet/corert",
+        "description": "CoreRT is the experimental .NET Native compiler. It compiles .NET code to native code for better performance and smaller apps. It is part of CLR and later merged into dotnet/runtime.",
+        "note": "The work was WASM target and IL opcodes. Tags were arch-wasm and cla-already-signed.",
+        "prs": [
+          { "number": 4725, "title": "Implement neg (float/integer) and not IL instructions. Fixes #4524 and #4525", "url": "https://github.com/dotnet/corert/pull/4725", "state": "merged", "date": "2017-10-15" },
+          { "number": 4736, "title": "Throw opcode with trap.", "url": "https://github.com/dotnet/corert/pull/4736", "state": "merged", "date": "2017-10-17" },
+          { "number": 4769, "title": "Emit switch in wasm", "url": "https://github.com/dotnet/corert/pull/4769", "state": "merged", "date": "2017-10-23" },
+          { "number": 4776, "title": "Emit donothing on nop. Fix #4529", "url": "https://github.com/dotnet/corert/pull/4776", "state": "merged", "date": "2017-10-22" }
+        ]
+      },
+      {
+        "repo": "microsoft/TailwindTraders-Mobile",
+        "description": "Tailwind Traders is a reference application for Xamarin.Forms 4. It is a fictitious DIY retail brand demonstrating intelligent application experiences powered by Azure cloud, AI and .NET. It includes AR features with TensorFlowLite for product recognition.",
+        "prs": [
+          { "number": 12, "title": "Feature/206 emgutf add", "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/12", "state": "merged", "date": "2018-12-17", "note": "EmguTF libs, TensorFlowLite mobilenetv2" },
+          { "number": 13, "title": "Build fix", "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/13", "state": "merged", "date": "2018-12-17", "note": "Android build fix" },
+          { "number": 19, "title": "Feature/207 AR in Android and iOS", "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/19", "state": "merged", "date": "2019-01-17" },
+          { "number": 44, "title": "Hardhat net replaced", "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/44", "state": "merged", "date": "2019-04-08" },
+          { "number": 46, "title": "Nuget.config clean up", "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/46", "state": "merged", "date": "2019-04-11" }
+        ]
+      },
+      {
+        "repo": "microsoft/ailab",
+        "description": "Snip Insights is an open source cross-platform AI tool for intelligent screen capture. It leverages Microsoft Azure Cognitive Services APIs to automatically convert images to translated text, detect and tag image content, and provide smart image suggestions.",
+        "prs": [
+          { "number": 15, "title": "Snip Insight cross platform version", "url": "https://github.com/microsoft/ailab/pull/15", "state": "merged", "date": "2018-10-01", "note": "Ubuntu and OSX support, installers at jacano/ailab releases" },
+          { "number": 14, "title": "Duplicate of #15", "url": "https://github.com/microsoft/ailab/pull/14", "state": "closed", "date": "2018-09-17", "note": "duplicate, not merged" }
+        ]
+      },
+      {
+        "repo": "dotnet-architecture/eShopOnContainers",
+        "description": "eShopOnContainers is a cross-platform .NET sample microservices and container-based application. It runs on Linux, Windows and macOS. It is a reference application for building cloud-native microservices architecture using .NET, Docker containers and Azure Kubernetes Services.",
+        "prs": [
+          { "number": 648, "title": "Urls for Identity, Gateway Shopping and Marketing added to setting view", "url": "https://github.com/dotnet-architecture/eShopOnContainers/pull/648", "state": "merged", "date": "2018-07-03" },
+          { "number": 651, "title": "Fix for issue #621", "url": "https://github.com/dotnet-architecture/eShopOnContainers/pull/651", "state": "closed", "date": "2018-06-28", "note": "Task.Delay fix for deadlocks, not merged" }
+        ]
+      }
+    ],
+    "other": [
+      { "label": "mono/mono #14354 Fixes #14353", "url": "https://github.com/mono/mono/pull/14354", "note": "merged 2019-05-07, target-wasm" },
+      { "label": "dadhi/DryIoc #73", "url": "https://github.com/dadhi/DryIoc/pull/73", "note": "merged 2019-01-23" },
+      { "label": "Homebrew #34391", "url": "https://github.com/Homebrew/homebrew-cask/pull/34391", "note": "merged 2017" },
+      { "label": "Homebrew #33878", "url": "https://github.com/Homebrew/homebrew-cask/pull/33878", "note": "merged 2017" }
+    ]
+  }
 }

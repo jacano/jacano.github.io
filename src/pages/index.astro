@@ -13,6 +13,13 @@ const langColors: Record<string, string> = {
   'Inno Setup': '#6366f1',
   'Python': '#3572A5',
 };
+const ms = cv.microsoftContributions;
+type MsPr = { number: number; title: string; url: string; state: string; date: string; note?: string };
+type MsGroup = { title?: string; repo: string; description: string; note?: string; prs: MsPr[] };
+const msGroups = ms.groups as MsGroup[];
+const msOther = ms.other as { label: string; url: string; note: string }[];
+const msOrgs = [...new Set(msGroups.map((group) => group.repo.split('/')[0]))];
+const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merged');
 ---
 <Layout title="Juan Antonio Cano Salado — Head of Engineering @ Dedge Security">
   <!-- HERO -->
@@ -64,7 +71,7 @@ const langColors: Record<string, string> = {
           <h3>About me</h3>
           <p class="muted">{cv.about}</p>
           <div class="chips">
-            {Object.entries(cv.skills).slice(0,2).flatMap(([k, vals]) => (vals as string[]).slice(0,3).map(v => <span class="chip">{v}</span>))}
+            {Object.entries(cv.skills).slice(0,2).flatMap(([, vals]) => (vals as string[]).slice(0,3).map(v => <span class="chip">{v}</span>))}
           </div>
         </div>
         <div class="card highlight interactive">
@@ -134,7 +141,7 @@ const langColors: Record<string, string> = {
       </div>
       <div class="trust-strip" aria-label="Worked with">
         <span class="trust"><strong>Dedge Security</strong> · Head of Engineering</span>
-        <span class="trust"><strong>Microsoft</strong> · 13 PRs, verified</span>
+        <span class="trust"><strong>Microsoft</strong> · {ms.inMicrosoft} PRs, verified</span>
         <span class="trust"><strong>Trax Retail</strong> · Senior Engineer</span>
         <span class="trust"><strong>.NET</strong> · OSS, interop</span>
         <span class="trust">ISO/IEC 27001 · Dedge Security (2025)</span>
@@ -147,71 +154,36 @@ const langColors: Record<string, string> = {
     <div class="container">
       <div class="section-head">
         <h2>Work with Microsoft</h2>
-        <span class="mono small muted">Verified via GitHub API · 2026-08-31</span>
+        <span class="mono small muted">Verified via GitHub API · {ms.verified}</span>
       </div>
       <div class="card">
-        <p class="muted">I opened 13 pull requests in Microsoft repositories. All data is verified via the GitHub API. The search was <code>author:jacano type:pr</code> with 17 total results. Thirteen are in Microsoft orgs. <a href="https://github.com/search?q=author%3Ajacano+type%3Apr&type=pullrequests" target="_blank" class="link">View on GitHub →</a></p>
+        <p class="muted">{ms.summary} The search was <code>author:jacano type:pr</code> with {ms.total} total results. {ms.inMicrosoft} are in Microsoft orgs. <a href={ms.searchUrl} target="_blank" class="link">View on GitHub →</a></p>
         <details>
           <summary class="link">View verification details</summary>
-          <p class="muted" style="margin-top:12px">Run <span class="mono">gh api search/issues?q=author:jacano+type:pr</span> and filter for <span class="mono">org:microsoft</span>, <span class="mono">org:dotnet</span> and <span class="mono">org:dotnet-architecture</span>.</p>
+          <p class="muted" style="margin-top:12px">Run <span class="mono">{ms.command}</span> and filter for {msOrgs.map((org, i) => (<span class="mono">org:{org}{i < msOrgs.length - 1 ? ', ' : ''}</span>))}.</p>
         </details>
       </div>
 
       <div class="grid" style="margin-top:20px">
-        <details class="card expandable interactive">
-          <summary>
-            <h3>CLR — dotnet/corert · 4 PRs · All merged</h3>
-          </summary>
-          <p class="muted small">CoreRT is the experimental .NET Native compiler. It compiles .NET code to native code for better performance and smaller apps. It is part of CLR and later merged into dotnet/runtime.</p>
-          <ul style="margin-top:12px; display:grid; gap:10px; list-style:none; padding:0">
-            <li><a href="https://github.com/dotnet/corert/pull/4725" target="_blank" class="link">#4725 Implement neg (float/integer) and not IL instructions. Fixes #4524 and #4525</a> <span class="mono small muted">· merged 2017-10-15</span></li>
-            <li><a href="https://github.com/dotnet/corert/pull/4736" target="_blank" class="link">#4736 Throw opcode with trap.</a> <span class="mono small muted">· merged 2017-10-17</span></li>
-            <li><a href="https://github.com/dotnet/corert/pull/4769" target="_blank" class="link">#4769 Emit switch in wasm</a> <span class="mono small muted">· merged 2017-10-23</span></li>
-            <li><a href="https://github.com/dotnet/corert/pull/4776" target="_blank" class="link">#4776 Emit donothing on nop. Fix #4529</a> <span class="mono small muted">· merged 2017-10-22</span></li>
-          </ul>
-          <p class="muted small" style="margin-top:12px">The work was WASM target and IL opcodes. Tags were <span class="mono">arch-wasm</span> and <span class="mono">cla-already-signed</span>.</p>
-        </details>
-
-        <details class="card expandable interactive">
-          <summary>
-            <h3>microsoft/TailwindTraders-Mobile · 5 PRs · All merged</h3>
-          </summary>
-          <p class="muted small">Tailwind Traders is a reference application for Xamarin.Forms 4. It is a fictitious DIY retail brand demonstrating intelligent application experiences powered by Azure cloud, AI and .NET. It includes AR features with TensorFlowLite for product recognition.</p>
-          <ul style="margin-top:12px; display:grid; gap:8px; list-style:none; padding:0">
-            <li><a href="https://github.com/microsoft/TailwindTraders-Mobile/pull/12" target="_blank" class="link">#12 Feature/206 emgutf add</a> <span class="mono small muted">· merged 2018-12-17 — EmguTF libs, TensorFlowLite mobilenetv2</span></li>
-            <li><a href="https://github.com/microsoft/TailwindTraders-Mobile/pull/13" target="_blank" class="link">#13 Build fix</a> <span class="mono small muted">· merged 2018-12-17 — Android build fix</span></li>
-            <li><a href="https://github.com/microsoft/TailwindTraders-Mobile/pull/19" target="_blank" class="link">#19 Feature/207 AR in Android and iOS</a> <span class="mono small muted">· merged 2019-01-17</span></li>
-            <li><a href="https://github.com/microsoft/TailwindTraders-Mobile/pull/44" target="_blank" class="link">#44 Hardhat net replaced</a> <span class="mono small muted">· merged 2019-04-08</span></li>
-            <li><a href="https://github.com/microsoft/TailwindTraders-Mobile/pull/46" target="_blank" class="link">#46 Nuget.config clean up</a> <span class="mono small muted">· merged 2019-04-11</span></li>
-          </ul>
-        </details>
-
-        <details class="card expandable interactive">
-          <summary>
-            <h3>microsoft/ailab · 2 PRs</h3>
-          </summary>
-          <p class="muted small">Snip Insights is an open source cross-platform AI tool for intelligent screen capture. It leverages Microsoft Azure Cognitive Services APIs to automatically convert images to translated text, detect and tag image content, and provide smart image suggestions.</p>
-          <ul style="margin-top:12px; display:grid; gap:8px; list-style:none; padding:0">
-            <li><a href="https://github.com/microsoft/ailab/pull/15" target="_blank" class="link">#15 Snip Insight cross platform version</a> <span class="mono small muted">· merged 2018-10-01 — Ubuntu and OSX support, installers at jacano/ailab releases</span></li>
-            <li><a href="https://github.com/microsoft/ailab/pull/14" target="_blank" class="link">#14 Duplicate of #15</a> <span class="mono small muted">· closed 2018-09-17 — duplicate, not merged</span></li>
-          </ul>
-        </details>
-
-        <details class="card expandable interactive">
-          <summary>
-            <h3>dotnet-architecture/eShopOnContainers · 2 PRs</h3>
-          </summary>
-          <p class="muted small">eShopOnContainers is a cross-platform .NET sample microservices and container-based application. It runs on Linux, Windows and macOS. It is a reference application for building cloud-native microservices architecture using .NET, Docker containers and Azure Kubernetes Services.</p>
-          <ul style="margin-top:12px; display:grid; gap:8px; list-style:none; padding:0">
-            <li><a href="https://github.com/dotnet-architecture/eShopOnContainers/pull/648" target="_blank" class="link">#648 Urls for Identity, Gateway Shopping and Marketing added to setting view</a> <span class="mono small muted">· merged 2018-07-03</span></li>
-            <li><a href="https://github.com/dotnet-architecture/eShopOnContainers/pull/651" target="_blank" class="link">#651 Fix for issue #621</a> <span class="mono small muted">· closed 2018-06-28 — Task.Delay fix for deadlocks, not merged</span></li>
-          </ul>
-        </details>
+        {msGroups.map((group) => (
+          <details class="card expandable interactive">
+            <summary>
+              <h3>{group.title ? `${group.title} — ${group.repo}` : group.repo} · {group.prs.length} PRs{allMerged(group) ? ' · All merged' : ''}</h3>
+            </summary>
+            <p class="muted small">{group.description}</p>
+            <ul style="margin-top:12px; display:grid; gap:10px; list-style:none; padding:0">
+              {group.prs.map((pr) => (
+                <li><a href={pr.url} target="_blank" class="link">#{pr.number} {pr.title}</a> <span class="mono small muted">· {pr.state} {pr.date}{pr.note ? ` — ${pr.note}` : ''}</span></li>
+              ))}
+            </ul>
+            {group.note && <p class="muted small" style="margin-top:12px">{group.note}</p>}
+          </details>
+        ))}
       </div>
 
       <details class="card expandable" style="margin-top:20px; background:var(--bg2)">
-        <summary class="link">Other verified PRs (total 17)</summary>
-        <p class="muted small"><a href="https://github.com/mono/mono/pull/14354" target="_blank" class="link">mono/mono #14354 Fixes #14353</a> (merged 2019-05-07, target-wasm), <a href="https://github.com/dadhi/DryIoc/pull/73" target="_blank" class="link">dadhi/DryIoc #73</a> (merged 2019-01-23), <a href="https://github.com/Homebrew/homebrew-cask/pull/34391" target="_blank" class="link">Homebrew #34391</a> and <a href="https://github.com/Homebrew/homebrew-cask/pull/33878" target="_blank" class="link">#33878</a> (merged 2017). Run <span class="mono">gh api search/issues?q=author:jacano+type:pr&per_page=100</span> to see all 17.</p>
+        <summary class="link">Other verified PRs (total {ms.total})</summary>
+        <p class="muted small">{msOther.map((pr, i) => (<span><a href={pr.url} target="_blank" class="link">{pr.label}</a> ({pr.note}){i < msOther.length - 1 ? ', ' : '. '}</span>))}Run <span class="mono">{ms.commandAll}</span> to see all {ms.total}.</p>
       </details>
     </div>
   </section>
