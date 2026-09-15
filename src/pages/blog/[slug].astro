@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { base, slugOf } from '../../utils/site';
+import { base, slugOf, readTime } from '../../utils/site';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -33,7 +33,7 @@ const postSlug = slugOf(post);
       <a href={`${base}/blog`} class="link">← Back to blog</a>
       <div class="tags">
         <span class="badge">{post.data.tag}</span>
-        <span class="mono muted">{post.data.date} · {post.data.read}</span>
+        <span class="mono muted">{post.data.date} · {readTime(post.body)}</span>
       </div>
     </div>
     <h1>{post.data.title}</h1>

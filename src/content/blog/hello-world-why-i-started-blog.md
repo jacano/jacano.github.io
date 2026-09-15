@@ -3,7 +3,6 @@ title: 'Hello world: why I started this blog'
 date: '2025-04-10'
 tag: 'Personal'
 excerpt: 'I built software for 15 years. Now I document what I learned. The topics are architecture, Web3 security and technical leadership.'
-read: '1 min'
 ---
 
 I have built software for 15 years. Along the way I learned a lot, and I kept explaining the same things to the next teammate. This blog is where I write those lessons down once.

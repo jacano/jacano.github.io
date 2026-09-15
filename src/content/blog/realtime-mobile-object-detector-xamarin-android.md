@@ -3,7 +3,6 @@ title: 'Realtime mobile object detector in Xamarin.Android'
 date: '2019-07-04'
 tag: 'Archive · Xamarin'
 excerpt: 'How we built TailwindTraders AR with Xamarin.Android, EmguTF and TensorFlow Lite. SSD MobileNet, NV21 to RGB in native code, SkiaSharp and 7 fps on Pixel XL.'
-read: '3 min'
 ---
 
 > **Archive note:** This article was first published on **July 4, 2019** at [geeks.ms/xamarinteam](https://geeks.ms/xamarinteam/2019/07/04/realtime-mobile-object-detector-in-xamarin-android/) (Plain Concepts Xamarin Team). It is republished here from the [Wayback Machine archive 2024-05-18](https://web.archive.org/web/20240518135953/https://geeks.ms/xamarinteam/2019/07/04/realtime-mobile-object-detector-in-xamarin-android/). Original author: **Juan Antonio Cano**. Code at [github.com/jacano/CameraTF](https://github.com/jacano/CameraTF).

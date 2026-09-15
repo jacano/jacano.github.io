@@ -3,7 +3,6 @@ title: 'WasmSample: .NET on WebAssembly with Mono.WebAssembly.Sdk'
 date: '2019-05-04'
 tag: 'Archive · WASM'
 excerpt: 'Sample WASM project with Mono.WebAssembly.Sdk. It shows .NET on WebAssembly and links to my WASM work in dotnet/corert (CLR).'
-read: '1 min'
 ---
 
 On May 4, 2019 I published [WasmSample](https://github.com/jacano/WasmSample). It is a small project that proves one big thing: .NET can run in the browser as WebAssembly, with no plugin. The original post is at [x.com/jacano35/status/1124476690640572416](https://x.com/jacano35/status/1124476690640572416).

@@ -3,7 +3,6 @@ title: 'Understand your electricity patterns over a year'
 date: '2026-09-14'
 tag: 'Energy'
 excerpt: 'An unofficial Python client for the e-distribucion private area. It downloads your full hourly history, so you can compare tariffs, set the contracted power and cut your bill.'
-read: '3 min'
 ---
 
 Your electricity bill tells you one number per month. It does not tell you *when* you used the energy. And without the hours, you cannot compare tariffs with real numbers. You can only guess.

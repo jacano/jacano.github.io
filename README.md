@@ -33,7 +33,7 @@ A push to `main` triggers `.github/workflows/deploy.yml`. The workflow builds th
 
 ## Add a post
 
-Create `src/content/blog/<slug>.md` with frontmatter (`title`, `date`, `tag`, `excerpt`, `read`). The schema lives in `src/content.config.ts`. Home preview, blog list, RSS and sitemap pick the post up automatically. Slugs must stay English-only.
+Create `src/content/blog/<slug>.md` with frontmatter (`title`, `date`, `tag`, `excerpt`). The schema lives in `src/content.config.ts`. Home preview, blog list, RSS and sitemap pick the post up automatically. Slugs must stay English-only. The reading time comes from the words of the post, so you do not set it by hand.
 
 ## License
 

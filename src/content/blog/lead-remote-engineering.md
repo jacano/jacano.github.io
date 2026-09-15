@@ -3,7 +3,6 @@ title: 'Lead remote engineering: culture, delivery and trust'
 date: '2025-05-20'
 tag: 'Leadership'
 excerpt: 'This is my playbook as Head of Engineering. It covers rituals that work, the oxygen that a team needs, and hiring without loss of quality.'
-read: '2 min'
 ---
 
 As Head of Engineering at Dedge Security I lead a distributed team. The team builds a critical Web3 platform. Remote work is not a detail here. It is how we work. This is the playbook I follow.
