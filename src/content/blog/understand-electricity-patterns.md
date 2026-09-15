@@ -40,7 +40,7 @@ Your split by period tells you which tariff fits you:
 - a lot in **P1**: look for a low peak price, or a flat price,
 - the three periods close: a flat price is simpler.
 
-Copy the split into any comparator and compare with *your* numbers. I checked the 2.0TD calculation of this tool against [luzfija.es](https://github.com/almax-es/luzfija.es).
+There are many comparators, and [luzfija.es](https://github.com/almax-es/luzfija.es) is one of them. Copy the split into the one that you like, and compare with *your* numbers.
 
 ---
 
@@ -70,7 +70,9 @@ Use the top demanded power for the contract. Use the top hour for the tariff.
 
 The portal gives some hours as **estimated**, not real. The distributor has no reading yet. The number can be close, but it is not a measure.
 
-The tool marks every day as real, estimated or pending. For a fair comparison it finds the **longest period in a row with real data only** and gives the totals. Use that period, and the comparison is clean.
+The tool marks every day as real, estimated or pending. It finds the **longest period in a row with real data only** and gives the totals.
+
+Give that period to a comparator. It is the most interesting number that you can give it. Then the comparison is clean, and it is fair.
 
 ---
 
