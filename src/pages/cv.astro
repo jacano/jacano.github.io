@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import cv from '../data/cv.json';
-const rawBase = import.meta.env.BASE_URL; const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+import { base } from '../utils/site';
 ---
 <Layout title={`CV — ${cv.name}`} description={`Resume of ${cv.name}, ${cv.title}. 14+ years of experience.`}>
   <div class="container cv-wrap">

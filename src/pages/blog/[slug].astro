@@ -1,9 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-const rawBase = import.meta.env.BASE_URL;
-const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
-const slugOf = (p: { id: string }) => p.id.replace(/\.md$/, '').split('/').pop()!;
+import { base, slugOf } from '../../utils/site';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -62,7 +60,6 @@ const postSlug = slugOf(post);
     .tags{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
     .link{color:var(--accent);font-weight:600}
     .badge{padding:4px 10px;border-radius:999px;background:rgba(99,102,241,.15);color:#a5b4fc;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(99,102,241,.3)}
-    .muted{color:var(--muted)}
     .mono{font-family:'JetBrains Mono',monospace;font-size:.8rem}
     .small{font-size:.75rem}
     h1{font-size:2.2rem;line-height:1.15;letter-spacing:-0.03em;margin-bottom:24px}
