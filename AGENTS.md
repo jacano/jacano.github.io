@@ -11,7 +11,7 @@ Read this before you change code.
 ## Stack
 
 - **Node** `>=24`, **npm** `>=11` (see `.nvmrc` and `package.json` `engines`). Workflow uses `actions/setup-node@v5` with `node-version: 24`.
-- **Astro** `7.2.9`, **@astrojs/rss** `4.0.19`.
+- **Astro** `^7.3.1`, **@astrojs/rss** `^4.0.19`.
 - **Config:** `astro.config.mjs` has `site: 'https://jacano.github.io'` and `base: '/'`. Do not change the base.
 - **Build:** `output: static`. `dist`, `node_modules`, `.astro` are gitignored. Do not commit `dist`.
 
@@ -19,10 +19,36 @@ Read this before you change code.
 
 - **Source of truth for CV:** `src/data/cv.json`. It drives Home, CV and Featured projects.
 - **Featured projects** are in `src/data/cv.json` `projects` array. Keep descriptions short, one sentence.
-- **Blog posts** are in `src/pages/blog/[slug].astro` (`getStaticPaths` + `posts` object) and listed in `src/pages/blog/index.astro`. Keep English only.
+- **Blog posts** are Markdown files in `src/content/blog/*.md` (a content collection). The home preview, the blog list, `rss.xml` and the sitemap read them. Keep English only.
 - **Site text** follows **Simple English (ASD-STE100)** via https://github.com/AminBlg/SimpleEnglish. Short sentences, active voice, no contractions.
 - **Social image:** `public/og-image.png` (1200×630). Use PNG or JPG. Social sites do not show an SVG.
 - **Avatar:** `public/avatar.jpg` plus `public/avatar.webp`. The pages use `<picture>`. Keep both files small.
+
+## Commits
+
+Use Conventional Commits. Keep the subject in one line. Add a body only when it
+helps.
+
+```
+type(scope): short description
+```
+
+- Type: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `chore`, `ci`,
+  `build`, `style` or `revert`.
+- The scope is optional. Use it for one part, for example `blog` or `seo`.
+- Write the description in the imperative and in the lowercase. Do not end it
+  with a period. Keep the subject under 72 characters.
+- Add `!` after the type or the scope for a breaking change.
+
+Examples:
+
+```
+feat(blog): add the article on real electricity use
+fix(blog): add space between the tag and the date
+fix(seo): use a PNG social image
+perf: compress the avatar
+docs: fix the agent guide
+```
 
 ## Deployment
 
