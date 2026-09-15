@@ -7,8 +7,8 @@
   "linkedin": "https://www.linkedin.com/in/juanantoniocano/",
   "github": "https://github.com/jacano",
   "avatar": "/avatar.jpg",
-  "summary": "I am a Software Engineer with 14+ years of experience in product development, design and architecture. I design and deliver robust, scalable and secure solutions. I lead the engineering team at Dedge Security. We build the first Web3 Security Posture Management (W3SPM) platform to secure decentralized applications from code to chain.",
-  "about": "I am a highly motivated and self-confident engineer. My experience spans desktop systems in .NET and C++ to cloud-native Web3 platforms. I worked in blockchain security, intellectual property management, smart water and retail. My approach combines solid architecture, technical leadership and DevSecOps culture.",
+  "summary": "I am a Software Engineer with 14+ years of experience in product development, design and architecture. I design and deliver robust, scalable and secure solutions. I lead the engineering team at Dedge Security. We build the first Web3 Security Posture Management (W3SPM) platform to secure decentralized applications from code to chain. I also pair with AI every day to design, build and review software.",
+  "about": "I am a highly motivated and self-confident engineer. My experience spans desktop systems in .NET and C++ to cloud-native Web3 platforms. I worked in blockchain security, intellectual property management, smart water and retail. My approach combines solid architecture, technical leadership and DevSecOps culture. I use AI as a development partner, not as a shortcut. It helps me move from an idea to a working tool in days. The edistribucion client is an example: a public Python tool that reads your real electricity use, built with AI as a partner.",
   "experience": [
     {
       "company": "Dedge Security",
@@ -61,7 +61,7 @@
     "Architecture": ["DDD", "Microservices", "Event-driven", "Clean Architecture"],
     "Cloud & DevOps": ["AWS", "Kubernetes", "Terraform", "Docker", "CI/CD", "Observability"],
     "Security": ["Web3 Security", "ASPM / W3SPM", "DevSecOps", "Secure SDLC", "Blockchain / DLT"],
-    "Other": ["Technical leadership", "Mentoring", "Product Development", "Agile"]
+    "Other": ["Technical leadership", "Mentoring", "Product Development", "AI-assisted development", "Agile"]
   },
   "certifications": [
     "ISO/IEC 27001 - Dedge Security (2025)"
@@ -71,6 +71,15 @@
     { "lang": "English", "level": "Professional" }
   ],
   "projects": [
+    {
+      "name": "edistribucion-client",
+      "description": "It is an unofficial Python client for the e-distribucion portal. It reads your real hourly electricity use, so you can compare tariffs and cut your bill.",
+      "url": "https://github.com/jacano/edistribucion-client",
+      "lang": "Python",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2026"
+    },
     {
       "name": "CameraTF",
       "description": "It is a Xamarin.Android sample for realtime object detection with TensorFlow Lite. It uses SSD MobileNet and native YUV to RGB.",

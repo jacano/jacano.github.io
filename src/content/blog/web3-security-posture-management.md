@@ -3,7 +3,7 @@ title: 'From audits to continuous posture: why Web3 needs W3SPM'
 date: '2026-07-15'
 tag: 'Web3 Security'
 excerpt: 'Over 75% of losses in 2026 came from operational gaps, not code bugs. Dedge builds continuous security from code to chain.'
-read: '7 min'
+read: '1 min'
 ---
 
 In 2026 the threat moved from code to operations. The State of Digital Asset Security for H1 2026 shows this. More than 75% of losses came from operational and configuration gaps. The gaps were not code bugs. The mean time from exploit to irreversible loss was 12 minutes.

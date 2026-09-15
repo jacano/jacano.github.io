@@ -3,7 +3,7 @@ title: 'Read your real electricity use for years, not months'
 date: '2026-09-14'
 tag: 'Energy'
 excerpt: 'An unofficial Python client for the e-distribucion private area. It downloads your full hourly history, so you can compare tariffs and cut your bill.'
-read: '6 min'
+read: '3 min'
 ---
 
 The electricity bill shows one number per month. It does not tell you *when* you use the energy. Without the hourly data you cannot compare tariffs with real numbers. You can only guess.

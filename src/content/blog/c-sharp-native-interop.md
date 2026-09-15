@@ -3,7 +3,7 @@ title: 'C# native interop: 10 years of lessons with Box2DCS and Crunch'
 date: '2025-08-02'
 tag: 'C# / C++'
 excerpt: 'Learn to build C++ and C# bindings. The methods are P/Invoke, C++/CLI, marshalling and performance tuning. This article shows patterns from ManagedCrunch and Box2DCS.'
-read: '10 min'
+read: '1 min'
 ---
 
 I maintained C++ and C# bindings in production for more than ten years. The bindings are Box2DCS (Box2D), ManagedCrunch (crnlib) and ManagedXZLZMA. This article shows patterns that reduced pain.
