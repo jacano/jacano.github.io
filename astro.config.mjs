@@ -5,9 +5,6 @@ export default defineConfig({
   site: 'https://jacano.github.io',
   base: '/',
   output: 'static',
-  viewTransitions: {
-    prefer: 'navigate'
-  },
   markdown: {
     shikiConfig: {
       theme: 'github-dark',

@@ -10,7 +10,7 @@ export const GET: APIRoute = async () => {
     .map((post) => {
       const slug = post.id.replace(/\.md$/, '').split('/').pop();
       return `  <url>
-    <loc>${baseUrl}/blog/${slug}</loc>
+    <loc>${baseUrl}/blog/${slug}/</loc>
     <lastmod>${post.data.date}</lastmod>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>

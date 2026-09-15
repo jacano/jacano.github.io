@@ -7,7 +7,7 @@ It uses [Astro](https://astro.build) and GitHub Pages at https://jacano.github.i
 
 - **Home**: hero, about, experience, open source projects and blog preview.
 - **CV**: printable resume. Use the Print button to create a PDF.
-- **Blog**: 6 articles in Markdown via content collections (`src/content/blog/*.md`). Search, tag filter, RSS at `/rss.xml`, prev/next navigation.
+- **Blog**: articles in Markdown via content collections (`src/content/blog/*.md`). Search, tag filter, RSS at `/rss.xml`, prev/next navigation.
 
 ## Data
 
@@ -20,7 +20,8 @@ Install dependencies. Then run the site.
 ```bash
 npm install
 npm run dev      # http://localhost:4321/
-npm run build    # creates /dist (10 pages + rss.xml + sitemaps)
+npm run check    # astro check (types and Astro diagnostics)
+npm run build    # creates /dist (pages + rss.xml + sitemaps)
 npm run preview
 ```
 

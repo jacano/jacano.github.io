@@ -4,8 +4,19 @@ interface Props {
   description?: string;
   canonicalPath?: string;
   ogImage?: string;
+  ogType?: string;
+  publishedTime?: string;
+  tags?: string[];
 }
-const { title, description = "Juan Antonio Cano Salado is Head of Engineering at Dedge Security. He has 14+ years of experience as a Software Engineer. The site shows his blog, CV and projects.", canonicalPath, ogImage = "https://jacano.github.io/og-image.svg" } = Astro.props;
+const {
+  title,
+  description = "Juan Antonio Cano Salado is Head of Engineering at Dedge Security. He has 14+ years of experience as a Software Engineer. The site shows his blog, CV and projects.",
+  canonicalPath,
+  ogImage = "https://jacano.github.io/og-image.png",
+  ogType = "website",
+  publishedTime,
+  tags = [],
+} = Astro.props;
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
 const canonicalURL = new URL(canonicalPath ?? Astro.url.pathname, 'https://jacano.github.io').toString();
@@ -15,6 +26,43 @@ const isActive = (href: string) => {
   if (href === '/') return currentPath === '/' || currentPath === full || currentPath === `${full}/`;
   return currentPath.startsWith(full);
 };
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Juan Antonio Cano Salado",
+  "jobTitle": "Head of Engineering",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Dedge Security",
+    "url": "https://dedgesecurity.com"
+  },
+  "url": "https://jacano.github.io",
+  "image": ogImage,
+  "sameAs": [
+    "https://github.com/jacano",
+    "https://www.linkedin.com/in/juanantoniocano/"
+  ],
+  "email": "mailto:jacanosalado@gmail.com",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Seville",
+    "addressRegion": "Andalusia",
+    "addressCountry": "ES"
+  }
+};
+const blogPosting = ogType === "article" ? {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": title,
+  "description": description,
+  "datePublished": publishedTime,
+  "dateModified": publishedTime,
+  "author": { "@type": "Person", "name": "Juan Antonio Cano Salado", "url": "https://jacano.github.io" },
+  "publisher": { "@type": "Person", "name": "Juan Antonio Cano Salado" },
+  "mainEntityOfPage": canonicalURL,
+  "image": ogImage,
+  "keywords": tags.join(", ")
+} : null;
 ---
 <!doctype html>
 <html lang="en">
@@ -26,48 +74,31 @@ const isActive = (href: string) => {
     <link rel="canonical" href={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
     <meta property="og:site_name" content="Juan Antonio Cano Salado" />
+    <meta property="og:locale" content="en_US" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {tags.map((tag) => <meta property="article:tag" content={tag} />)}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={title} />
     <meta name="theme-color" content="#0a0a0b" />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.svg`} />
     <link rel="alternate" type="application/rss+xml" title="Juan Antonio Cano Salado — Blog" href={`${base}/rss.xml`} />
     <title>{title}</title>
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Juan Antonio Cano Salado",
-      "jobTitle": "Head of Engineering",
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Dedge Security",
-        "url": "https://dedgesecurity.com"
-      },
-      "url": "https://jacano.github.io",
-      "image": "https://jacano.github.io/og-image.svg",
-      "sameAs": [
-        "https://github.com/jacano",
-        "https://www.linkedin.com/in/juanantoniocano/"
-      ],
-      "email": "mailto:jacanosalado@gmail.com",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Seville",
-        "addressRegion": "Andalusia",
-        "addressCountry": "ES"
-      }
-    })} />
+    <script type="application/ld+json" set:html={JSON.stringify(person)} />
+    {blogPosting && <script type="application/ld+json" set:html={JSON.stringify(blogPosting)} />}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>

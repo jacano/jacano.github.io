@@ -22,7 +22,14 @@ const prev = sorted[idx + 1];
 const next = sorted[idx - 1];
 const postSlug = slugOf(post);
 ---
-<Layout title={`${post.data.title} — Juan Antonio Cano`} description={post.data.excerpt} canonicalPath={`/blog/${postSlug}/`}>
+<Layout
+  title={`${post.data.title} — Juan Antonio Cano`}
+  description={post.data.excerpt}
+  canonicalPath={`/blog/${postSlug}/`}
+  ogType="article"
+  publishedTime={post.data.date}
+  tags={[post.data.tag]}
+>
   <article class="container post-wrap">
     <div class="meta">
       <a href={`${base}/blog`} class="link">← Back to blog</a>

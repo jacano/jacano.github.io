@@ -29,23 +29,26 @@ const langColors: Record<string, string> = {
         </div>
         <div class="social">
           <a href={cv.github} target="_blank" class="social-link">
-            <span class="mono">↗ GitHub</span> <strong>jacano</strong> · 74 repos
+            <span class="mono">↗ GitHub</span> <strong>jacano</strong>
           </a>
           <a href={cv.linkedin} target="_blank" class="social-link">
-            <span class="mono">↗ LinkedIn</span> <strong>1K+ followers</strong>
+            <span class="mono">↗ LinkedIn</span> <strong>juanantoniocano</strong>
           </a>
           <span class="social-link"><span class="mono">✉</span> {cv.email}</span>
         </div>
       </div>
       <div class="hero-card">
         <div class="photo-wrap">
-          <img src={cv.avatar} alt="Juan Antonio Cano" width="320" height="320" loading="eager" fetchpriority="high" />
+          <picture>
+            <source srcset={`${base}/avatar.webp`} type="image/webp" />
+            <img src={`${base}/avatar.jpg`} alt="Juan Antonio Cano Salado" width="320" height="320" loading="eager" fetchpriority="high" />
+          </picture>
           <div class="photo-glow"></div>
         </div>
         <div class="card stats-card">
           <div class="stats">
             <div><strong>14+</strong><span>years of experience</span></div>
-            <div><strong>6</strong><span>featured OSS projects</span></div>
+            <div><strong>{Math.min(cv.projects.length, 6)}</strong><span>featured OSS projects</span></div>
             <div><strong>Seville</strong><span>· Spain</span></div>
           </div>
         </div>

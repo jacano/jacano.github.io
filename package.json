@@ -8,14 +8,17 @@
     "start": "cross-env NODE_OPTIONS=\"--disable-warning=DEP0040 --disable-warning=DEP0169\" astro dev",
     "build": "cross-env NODE_OPTIONS=\"--disable-warning=DEP0040 --disable-warning=DEP0169\" astro build",
     "preview": "cross-env NODE_OPTIONS=\"--disable-warning=DEP0040 --disable-warning=DEP0169\" astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check"
   },
   "dependencies": {
     "astro": "^7.3.1"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@astrojs/rss": "^4.0.19",
-    "cross-env": "^10.1.0"
+    "cross-env": "^10.1.0",
+    "typescript": "^6.0.3"
   },
   "engines": {
     "node": ">=24.0.0",

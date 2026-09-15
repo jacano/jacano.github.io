@@ -60,7 +60,10 @@ const rawBase = import.meta.env.BASE_URL; const base = rawBase.endsWith('/') ? r
 
       <aside class="cv-side">
         <div class="card">
-          <img src={cv.avatar} alt={cv.name} class="avatar" loading="lazy" />
+          <picture>
+            <source srcset={`${base}/avatar.webp`} type="image/webp" />
+            <img src={`${base}/avatar.jpg`} alt={cv.name} class="avatar" width="460" height="460" loading="lazy" />
+          </picture>
           <h3>{cv.name}</h3>
           <p class="muted small">{cv.title}</p>
           <div class="divider"></div>

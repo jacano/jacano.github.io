@@ -21,6 +21,8 @@ Read this before you change code.
 - **Featured projects** are in `src/data/cv.json` `projects` array. Keep descriptions short, one sentence.
 - **Blog posts** are in `src/pages/blog/[slug].astro` (`getStaticPaths` + `posts` object) and listed in `src/pages/blog/index.astro`. Keep English only.
 - **Site text** follows **Simple English (ASD-STE100)** via https://github.com/AminBlg/SimpleEnglish. Short sentences, active voice, no contractions.
+- **Social image:** `public/og-image.png` (1200×630). Use PNG or JPG. Social sites do not show an SVG.
+- **Avatar:** `public/avatar.jpg` plus `public/avatar.webp`. The pages use `<picture>`. Keep both files small.
 
 ## Deployment
 
@@ -33,7 +35,8 @@ Read this before you change code.
   ```
   npm install
   npm run dev      # http://localhost:4321/
-  npm run build    # 8 pages
+  npm run check    # astro check
+  npm run build
   ```
 - **Add a featured project:** Edit `src/data/cv.json` `projects` array, then `npm run build` and `git push`.
 - **Add a blog post:** Edit `src/pages/blog/[slug].astro` and `src/pages/blog/index.astro`, then `npm run build`.

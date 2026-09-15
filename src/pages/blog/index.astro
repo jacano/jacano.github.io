@@ -49,11 +49,11 @@ const slugOf = (p: { id: string }) => p.id.replace(/\.md$/, '').split('/').pop()
     </div>
   </div>
   <script>
-    const searchInput = document.getElementById('searchInput');
+    const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
     const postsList = document.getElementById('postsList');
-    const noResults = document.getElementById('noResults');
-    const tagBtns = document.querySelectorAll('.tag-btn');
-    const cards = postsList?.querySelectorAll('.card') ?? [];
+    const noResults = document.getElementById('noResults') as HTMLElement | null;
+    const tagBtns = document.querySelectorAll<HTMLElement>('.tag-btn');
+    const cards = postsList?.querySelectorAll<HTMLElement>('.card') ?? [];
     let currentTag = 'all';
 
     function filterPosts() {
