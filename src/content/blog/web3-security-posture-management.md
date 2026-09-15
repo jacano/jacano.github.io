@@ -28,8 +28,6 @@ W3SPM is Web3 Security Posture Management. It maintains continuous visibility. I
 
 ## From code to chain
 
-At Dedge Security we help banks and institutions scale Web3. We do not slow delivery. Security becomes culture, not an event. ISO 27001, Circle Alliance and our work with LF Decentralized Trust support this direction.
-
-> True security is not a one-time effort — it is a culture that grows alongside the technology.
+At Dedge Security we help banks and institutions scale Web3. ISO 27001, Circle Alliance and our work with LF Decentralized Trust support this direction.
 
 If you build DeFi or institutional custody, talk with us about posture.

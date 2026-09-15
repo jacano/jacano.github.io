@@ -5,15 +5,15 @@
   "email": "jacanosalado@gmail.com",
   "linkedin": "https://www.linkedin.com/in/juanantoniocano/",
   "github": "https://github.com/jacano",
-  "summary": "I am a Software Engineer with 15+ years of experience in product development, design and architecture. I design and deliver robust, scalable and secure solutions. I lead the engineering team at Dedge Security. We build the first Web3 Security Posture Management (W3SPM) platform to secure decentralized applications from code to chain. I also pair with AI every day to design, build and review software.",
-  "about": "I am a highly motivated and self-confident engineer. My experience spans desktop systems in .NET and C++ to cloud-native Web3 platforms. I worked in blockchain security, intellectual property management, smart water and retail. My approach combines solid architecture, technical leadership and DevSecOps culture. I use AI as a development partner, not as a shortcut. It helps me move from an idea to a working tool in days. The edistribucion client is an example: a public Python tool that reads your real electricity use, built with AI as a partner.",
+  "summary": "I am a Software Engineer with 15+ years of experience in product development, design and architecture. I lead the engineering team at Dedge Security. We build a Web3 Security Posture Management (W3SPM) platform. I design and review software with AI every day.",
+  "about": "My experience spans .NET and C++ desktop systems and cloud-native Web3 platforms. I worked in blockchain security, intellectual property, smart water and retail. I use AI to move from an idea to a working tool in days. The edistribucion client is an example: a public Python tool that reads your real electricity use.",
   "experience": [
     {
       "company": "Dedge Security",
       "role": "Head of Engineering",
       "period": "2023 — Present",
       "location": "Seville / Remote · Spain",
-      "description": "I lead the engineering team that builds the first ASPM/W3SPM platform for Web3. I am responsible for architecture and continuous delivery. I manage software lifecycle security and engineering excellence.",
+      "description": "I lead the engineering team that builds an ASPM/W3SPM platform for Web3. I own the architecture, the continuous delivery and the security of the software lifecycle.",
       "highlights": [
         "The platform provides continuous security from code to chain.",
         "It integrates into developer workflows and CI/CD.",
@@ -27,7 +27,7 @@
       "role": "Senior Software Engineer",
       "period": "2021 — 2023",
       "location": "Remote",
-      "description": "I built large-scale computer vision and retail analytics solutions. I focused on scalability and performance.",
+      "description": "I built large-scale computer vision and retail analytics systems. I focused on scalability and performance.",
       "highlights": [
         "I designed C# and .NET architecture.",
         "I optimized data pipelines."
@@ -38,7 +38,7 @@
       "role": "Software Engineer / Architect",
       "period": "2010 — 2021",
       "location": "Seville",
-      "description": "I shipped products for more than ten years in C#, C++ and .NET. The work focused on native interop, tooling and high-performance systems. I am the author of open source libraries with hundreds of stars.",
+      "description": "I shipped products for more than ten years in C#, C++ and .NET. The work focused on native interop, tooling and high-performance systems.",
       "highlights": [
         "The projects are CameraTF, WasmSample, ManagedCrunch, ManagedXZLZMA and PdbRewriter.",
         "I optimized C++ and C# interop and performance.",
@@ -146,7 +146,7 @@
       {
         "title": "CLR",
         "repo": "dotnet/corert",
-        "description": "CoreRT is the experimental .NET Native compiler. It compiles .NET code to native code for better performance and smaller apps. It is part of CLR and later merged into dotnet/runtime.",
+        "description": "CoreRT is the experimental .NET Native compiler. It compiles .NET code to native code for better performance and smaller apps. It was part of CLR and merged into dotnet/runtime later.",
         "note": "The work was WASM target and IL opcodes. Tags were arch-wasm and cla-already-signed.",
         "prs": [
           { "number": 4725, "title": "Implement neg (float/integer) and not IL instructions. Fixes #4524 and #4525", "url": "https://github.com/dotnet/corert/pull/4725", "state": "merged", "date": "2017-10-15" },
@@ -157,7 +157,7 @@
       },
       {
         "repo": "microsoft/TailwindTraders-Mobile",
-        "description": "Tailwind Traders is a reference application for Xamarin.Forms 4. It is a fictitious DIY retail brand demonstrating intelligent application experiences powered by Azure cloud, AI and .NET. It includes AR features with TensorFlowLite for product recognition.",
+        "description": "Tailwind Traders is a reference application for Xamarin.Forms 4 from Microsoft. It is a fictitious DIY retail brand. It includes AR features with TensorFlowLite for product recognition.",
         "prs": [
           { "number": 12, "title": "Feature/206 emgutf add", "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/12", "state": "merged", "date": "2018-12-17", "note": "EmguTF libs, TensorFlowLite mobilenetv2" },
           { "number": 13, "title": "Build fix", "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/13", "state": "merged", "date": "2018-12-17", "note": "Android build fix" },
@@ -168,7 +168,7 @@
       },
       {
         "repo": "microsoft/ailab",
-        "description": "Snip Insights is an open source cross-platform AI tool for intelligent screen capture. It leverages Microsoft Azure Cognitive Services APIs to automatically convert images to translated text, detect and tag image content, and provide smart image suggestions.",
+        "description": "Snip Insights is an open source cross-platform AI tool for screen capture. It uses Microsoft Azure Cognitive Services APIs to convert images to translated text, detect and tag image content, and suggest images.",
         "prs": [
           { "number": 15, "title": "Snip Insight cross platform version", "url": "https://github.com/microsoft/ailab/pull/15", "state": "merged", "date": "2018-10-01", "note": "Ubuntu and OSX support, installers at jacano/ailab releases" },
           { "number": 14, "title": "Duplicate of #15", "url": "https://github.com/microsoft/ailab/pull/14", "state": "closed", "date": "2018-09-17", "note": "duplicate, not merged" }

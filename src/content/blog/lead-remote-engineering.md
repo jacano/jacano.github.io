@@ -31,16 +31,14 @@ As a manager you see the good problems first. You know the hard bug, the new too
 - Your job is to remove the blockers and to give the context. The team does the work.
 - Give a person the space to solve a problem their own way. The result can be better than yours.
 
-A manager who keeps all the good tasks is a bottleneck. A manager who shares them builds a team that grows.
-
 ---
 
 ## Metrics that matter
 
-Measure delivery, but do not gamify it. Ask this question: how long does a critical fix need to reach production? Look at the trend, not at one number. The team must feel safe to report a bad number.
+Measure delivery. Do not turn one number into a game. Ask this question: how long does a critical fix need to reach production? Look at the trend, not at one number. The team must feel safe to report a bad number.
 
 ---
 
 ## Hiring
 
-We look for Platform Engineers with energy and ambition. If you like IaC, K8s and security, contact us.
+We look for Platform Engineers. If you like IaC, K8s and security, contact us.

@@ -6,7 +6,7 @@ excerpt: 'Learn to build C++ and C# bindings. The methods are P/Invoke, C++/CLI,
 read: '1 min'
 ---
 
-I maintained C++ and C# bindings in production for more than ten years. The bindings are Box2DCS (Box2D), ManagedCrunch (crnlib) and ManagedXZLZMA. This article shows patterns that reduced pain.
+I maintained C++ and C# bindings in production for more than ten years: Box2DCS (Box2D), ManagedCrunch (crnlib) and ManagedXZLZMA. This article shows the patterns that worked.
 
 ---
 
@@ -34,4 +34,4 @@ Define who frees the memory. Define ownership clearly. I prefer the native side 
 
 Provide runtimes per RID (win-x64, linux-x64, osx-arm64). Test in real CI. PdbRewriter helped me understand PDBs when obfuscation broke stacks.
 
-Code is at [github.com/jacano](https://github.com/jacano). For a deep dive, contact me.
+Code is at [github.com/jacano](https://github.com/jacano).

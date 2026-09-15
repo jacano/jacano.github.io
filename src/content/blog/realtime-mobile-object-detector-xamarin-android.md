@@ -20,9 +20,7 @@ On Android we used the Xamarin Binding of [android.hardware.camera2](https://dev
 
 We agreed to detect three objects. As a demo we used one: a white hardhat.
 
-This article presents a sample project [CameraTF](https://github.com/jacano/CameraTF) in Xamarin.Android. It uses the white hardhat detection model from TailwindTraders for a didactic purpose.
-
-Let us begin.
+This article presents a sample project [CameraTF](https://github.com/jacano/CameraTF) in Xamarin.Android. It uses the white hardhat detection model from TailwindTraders.
 
 ---
 
@@ -34,7 +32,7 @@ EmguTF is a C# binding for TensorFlow Lite. TensorFlow Lite is for Mobile and Io
 
 The .NET Standard project Emgu.TF.Lite is a simplified version of EmguTF. It exposes an Interpreter class in C#. You provide the input tensors of the model. You then get the output tensors.
 
-We used an SSD MobileNet model. We did transfer learning over [ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03.tar.gz). We used this [pipeline config](https://github.com/tensorflow/models/blob/master/research/object_detection/samples/configs/ssd_mobilenet_v1_0.75_depth_quantized_300x300_pets_sync.config) to train it on Google Cloud TPUs. The training was fast and easy.
+We used an SSD MobileNet model. We did transfer learning over [ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03.tar.gz). We used this [pipeline config](https://github.com/tensorflow/models/blob/master/research/object_detection/samples/configs/ssd_mobilenet_v1_0.75_depth_quantized_300x300_pets_sync.config) to train it on Google Cloud TPUs.
 
 For more on this process see this post: [Training and serving a realtime mobile object detector in 30 minutes with Cloud TPUs](https://medium.com/tensorflow/training-and-serving-a-realtime-mobile-object-detector-in-30-minutes-with-cloud-tpus-b78971cf1193).
 
@@ -71,7 +69,7 @@ The last step is to set RGB colors in the input tensor. Then invoke the interpre
 
 This was a screen recording from the app on a Pixel XL. It showed about 7 fps in the processingTask inside the CameraAnalyzer class. The image was a GIF from the original article and is not republished here.
 
-The project is open for [PRs](https://github.com/jacano/CameraTF/pulls) and improvements. Feel free to collaborate and open issues.
+The project is open for [pull requests](https://github.com/jacano/CameraTF/pulls) and issues.
 
 ---
 
