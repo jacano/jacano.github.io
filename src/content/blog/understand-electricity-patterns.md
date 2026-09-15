@@ -83,9 +83,7 @@ The code and the guide are here:
 
 <https://github.com/jacano/edistribucion-client>
 
-It uses HTTP only, with no browser and no third-party package. It is not connected to e-distribucion or Endesa.
-
-The tool works only when your distributor is e-distribucion. It reads the 2.0TD tariff.
+It uses HTTP only, with no browser and no third-party package. It is unofficial: Endesa does not support it. It needs the 2.0TD tariff and the e-distribucion distributor, so check your bill first.
 
 ---
 
