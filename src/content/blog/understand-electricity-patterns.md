@@ -50,6 +50,18 @@ This is the part that a monthly bill hides from you.
 
 ---
 
+## Choose the tariff
+
+The top hour tells you *when* your biggest hour of energy happens. That hour is in one period: P1, P2 or P3. With your full split by period you can see the tariff that fits you:
+
+- mostly **P3**: a tariff with a low off-peak price is for you,
+- a lot in **P1**: look for a low peak price, or a flat price,
+- the three periods close: a flat price is simpler to compare.
+
+The day of the week also helps. Most homes use more energy on the weekend, and all the weekend hours are P3. Your P3 total shows the result of this.
+
+---
+
 ## Adjust the contracted power
 
 The tool helps with the price of the energy. It also helps with the **contracted power**, the fixed part of the bill. Many homes pay too much for it, or too little.
@@ -61,10 +73,21 @@ The 2.0TD tariff has two power periods: peak-flat and off-peak. You can contract
 
 With that real value you can set each period to the power that you need. Example: if your top demand is 4.0 kW in the peak-flat period and 3.0 kW in the off-peak period, you can keep 4.0 kW in one and lower the other. The saving comes every month.
 
-Do not use the top hour to choose the power. They are two different measures, and they can fall on different days:
+### kWh and kW are not the same
 
-- the **top hour** is energy: the most kWh in one hour. Use it for the tariff and your habits.
-- the **top demanded power** is power: the highest average power in 15 minutes. Use it for the contracted power.
+An example makes it clear. In one hour you use the oven (2 kW), the air conditioner (2 kW), the washing machine (0.5 kW) and other things (0.5 kW). The energy of that hour is about 5 kWh.
+
+But for 15 minutes you also connect a machine of 5 kW. The demanded power is then 10 kW. So you can have:
+
+- top hour = 5 kWh (energy),
+- top demanded power = 10 kW (power).
+
+They can fall on different days. A simple way to remember:
+
+- **kWh** = how much you used,
+- **kW** = how hard you pulled at one moment.
+
+Do not use the top hour to choose the power. Use the **top demanded power** for the contracted power, and the **top hour** with its period for the tariff and your habits.
 
 ---
 
