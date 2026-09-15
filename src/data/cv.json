@@ -99,34 +99,6 @@
       "updated": "2019"
     },
     {
-      "name": "innosetup-tool",
-      "description": "It is a .NET global tool wrapper for Inno Setup 6.2.2. It targets .NET 6.0 and has no dependencies.",
-      "url": "https://www.nuget.org/packages/innosetup-tool",
-      "lang": "Inno Setup",
-      "stars": 0,
-      "forks": 0,
-      "updated": "2023",
-      "downloads": "541 on NuGet"
-    },
-    {
-      "name": "BulletCS",
-      "description": "It is a Bullet physics binding for C# with native C++. It provides 3D physics for games.",
-      "url": "https://github.com/jacano/BulletCS",
-      "lang": "C++",
-      "stars": 1,
-      "forks": 0,
-      "updated": "2015"
-    },
-    {
-      "name": "Box2DCS",
-      "description": "It is a Box2D binding for C# with native C++. It provides high-performance 2D physics.",
-      "url": "https://github.com/jacano/Box2DCS",
-      "lang": "C++",
-      "stars": 0,
-      "forks": 0,
-      "updated": "2014"
-    },
-    {
       "name": "ManagedCrunch",
       "description": "It is a managed C# wrapper for crnlib. It compresses textures.",
       "url": "https://github.com/jacano/ManagedCrunch",
@@ -136,13 +108,14 @@
       "updated": "2018"
     },
     {
-      "name": "ManagedXZLZMA",
-      "description": "It is a managed wrapper for the XZ LZMA stream decoder.",
-      "url": "https://github.com/jacano/ManagedXZLZMA",
-      "lang": "C",
-      "stars": 1,
+      "name": "innosetup-tool",
+      "description": "It is a .NET global tool wrapper for Inno Setup 6.2.2. It targets .NET 6.0 and has no dependencies.",
+      "url": "https://www.nuget.org/packages/innosetup-tool",
+      "lang": "Inno Setup",
+      "stars": 0,
       "forks": 0,
-      "updated": "2018"
+      "updated": "2023",
+      "downloads": "541 on NuGet"
     },
     {
       "name": "PdbRewriter",
@@ -154,11 +127,11 @@
       "updated": "2017"
     },
     {
-      "name": "YoloTestSharp",
-      "description": "It tests YOLO and computer vision in C#.",
-      "url": "https://github.com/jacano/YoloTestSharp",
-      "lang": "C#",
-      "stars": 0,
+      "name": "ManagedXZLZMA",
+      "description": "It is a managed wrapper for the XZ LZMA stream decoder.",
+      "url": "https://github.com/jacano/ManagedXZLZMA",
+      "lang": "C",
+      "stars": 1,
       "forks": 0,
       "updated": "2018"
     }
