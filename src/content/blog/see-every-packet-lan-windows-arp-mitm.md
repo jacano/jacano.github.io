@@ -35,6 +35,8 @@ You see every packet that passes through you:
 
 If the traffic uses TLS, you see the metadata, not the content. For many devices the metadata is enough. A camera that talks to one cloud server every 60 seconds tells you a lot.
 
+That last line is why I built this. I have a Tapo camera at home, and I did not trust the vendor. I wanted to know if the camera sent image or sound while nobody watched it. I ran this tool on my own network. When the camera was idle, the capture showed one small keepalive every 55 seconds. No image. No sound.
+
 ---
 
 ## The tools that work on Windows
