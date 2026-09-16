@@ -2,41 +2,32 @@
 title: 'See every packet on your LAN from Windows'
 date: '2026-09-16'
 tag: 'Networking'
-excerpt: 'Your switch keeps secrets. With Npcap, Wireshark and one short Python script, you can stand in the middle of another device on your own network and read its life. I used it to check a camera that I did not trust.'
+excerpt: 'Your smart devices phone home, and your switch hides every word. With Npcap, Wireshark and one short Python script, you can stand in the middle of another device on your own network and read its life. I used it to check a camera that I did not trust.'
 ---
 
 > **Run this only on your own network, or on a network where you have written permission.** ARP spoofing interrupts the traffic of another device. On a network that is not yours, it is a crime. This is a guide for your own lab.
 
-Imagine a building. Every device on your network is an apartment. The switch in the basement is the doorman.
+Every smart device in your house sends messages to the internet. A camera, a plug, a doorbell. Some of them talk a lot. The problem is that you cannot see them do it.
 
-The doorman is good at his job. He learns who lives where. Then he walks each letter to one door only. Your neighbour never sees your mail. You never see his.
-
-That is the deal, and it is a fair one. It is also the exact reason you cannot see what your smart devices say when you sleep.
+You can read the privacy policy, or you can guess. Or you can watch the packets. This article shows the third option. It works on Windows, with three free tools and one short script.
 
 ---
 
-## The doorman has no ID check
+## Why you see nothing
 
-To find a door, the doorman asks a simple question into the hallway: "Who has 192.168.1.84?"
+A network switch has good memory. It learns which device sits on which port, and it sends each packet to one port only. Your card receives your traffic, and nothing else.
 
-The owner answers: "Me. I am at this MAC address." The doorman writes the answer in a small book. He never checks an ID. The name of the book is the **ARP cache**.
-
-You can already see the hole. Anyone can answer.
-
-One false answer, and the doorman delivers every letter for that address to the impostor.
+That is good for speed, and it is good for your neighbour. It is bad for inspection. To watch another device, you must first make it send its traffic to you.
 
 ---
 
-## Impersonate both sides
+## ARP trusts the first answer
 
-Here is the trick. I lie to the doorman, and I lie to the apartment.
+A device must find the MAC address of the next hop. The next hop is usually the router. So the device shouts into the network: "Who has 192.168.1.1?"
 
-- To the camera: "The router is at my MAC address."
-- To the router: "The camera is at my MAC address."
+Any device can answer. The answer goes into a small cache, and nobody checks the source. No signature. No password. No question.
 
-Now the camera sends everything to me. I read it, and I pass it to the router. The router sends the answers to me. I read them, and I pass them back. Nobody in the hallway notices.
-
-This is **ARP spoofing**, and the seat in the middle has a name: the **man in the middle**.
+A false answer moves the traffic. One lie to the victim, one lie to the router, and the packets pass through the liar. This is **ARP spoofing**, and the seat in the middle is the **man in the middle**.
 
 ---
 
@@ -52,7 +43,7 @@ TLS keeps the content hidden. You read the envelope, not the letter. For many de
 
 ---
 
-## A camera that I did not trust
+## The camera I did not trust
 
 That is why I built this tool. I have a Tapo camera at home. The vendor promises privacy. I wanted proof, not a promise.
 
@@ -174,4 +165,4 @@ A good capture shows one clean stream. In my test the sequence numbers moved wit
 
 ---
 
-*Use it on your own network only. The doorman trusts you.*
+*Use it on your own network only. Verify first, then trust.*
