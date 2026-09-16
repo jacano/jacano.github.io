@@ -34,11 +34,23 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
           <a href={`${base}/blog`} class="btn btn-outline">Read blog</a>
         </div>
         <div class="social">
-          <a href={cv.github} target="_blank" class="social-link">
+          <a href={cv.github} target="_blank" rel="noreferrer" class="social-link">
             <span class="mono">↗ GitHub</span> <strong>jacano</strong>
           </a>
-          <a href={cv.linkedin} target="_blank" class="social-link">
+          <a href={cv.linkedin} target="_blank" rel="noreferrer" class="social-link">
             <span class="mono">↗ LinkedIn</span> <strong>juanantoniocano</strong>
+          </a>
+          <a href={cv.stackoverflow} target="_blank" rel="noreferrer" class="social-link">
+            <span class="mono">↗ Stack Overflow</span> <strong>104185</strong>
+          </a>
+          <a href={cv.nuget} target="_blank" rel="noreferrer" class="social-link">
+            <span class="mono">↗ NuGet</span> <strong>jacanosalado</strong>
+          </a>
+          <a href={cv.pypi} target="_blank" rel="noreferrer" class="social-link">
+            <span class="mono">↗ PyPI</span> <strong>edistribucion-client</strong>
+          </a>
+          <a href={cv.leetcode} target="_blank" rel="noreferrer" class="social-link">
+            <span class="mono">↗ LeetCode</span> <strong>jacanosalado</strong>
           </a>
           <span class="social-link"><span class="mono">✉</span> {cv.email}</span>
         </div>
@@ -220,8 +232,12 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
         <p class="muted">I live in Seville and work remotely. I am open to talks, mentoring and collaboration in Web3, security and .NET.</p>
         <div class="cta">
           <a href="mailto:jacanosalado@gmail.com" class="btn btn-dark">✉ jacanosalado@gmail.com</a>
-          <a href="https://www.linkedin.com/in/juanantoniocano/" target="_blank" class="btn btn-outline">LinkedIn</a>
-          <a href="https://github.com/jacano" target="_blank" class="btn btn-outline">GitHub</a>
+          <a href={cv.linkedin} target="_blank" rel="noreferrer" class="btn btn-outline">LinkedIn</a>
+          <a href={cv.github} target="_blank" rel="noreferrer" class="btn btn-outline">GitHub</a>
+          <a href={cv.stackoverflow} target="_blank" rel="noreferrer" class="btn btn-outline">Stack Overflow</a>
+          <a href={cv.nuget} target="_blank" rel="noreferrer" class="btn btn-outline">NuGet</a>
+          <a href={cv.pypi} target="_blank" rel="noreferrer" class="btn btn-outline">PyPI</a>
+          <a href={cv.leetcode} target="_blank" rel="noreferrer" class="btn btn-outline">LeetCode</a>
         </div>
       </div>
     </div>
