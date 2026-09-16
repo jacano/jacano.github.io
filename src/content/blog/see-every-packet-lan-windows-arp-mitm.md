@@ -2,56 +2,79 @@
 title: 'See every packet on your LAN from Windows'
 date: '2026-09-16'
 tag: 'Networking'
-excerpt: 'A switch shows you only your own traffic. With Npcap, Wireshark and one short Python script, you can sit in the middle of another device on your own network and read its packets.'
+excerpt: 'Your switch keeps secrets. With Npcap, Wireshark and one short Python script, you can stand in the middle of another device on your own network and read its life. I used it to check a camera that I did not trust.'
 ---
 
-> **Run this only on your own network, or on a network where you have written permission.** ARP spoofing interrupts the traffic of another device. On a network that is not yours, it is a crime. This guide is for your own lab.
+> **Run this only on your own network, or on a network where you have written permission.** ARP spoofing interrupts the traffic of another device. On a network that is not yours, it is a crime. This is a guide for your own lab.
 
-A network switch is a good doorman. It learns which device sits on which port. Then it sends each packet to one port only. That is why you cannot see the traffic of your neighbour: your network card never receives it.
+Imagine a building. Every device on your network is an apartment. The switch in the basement is the doorman.
 
-A hub worked the other way. It copied every packet to every port. Hubs are gone.
+The doorman is good at his job. He learns who lives where. Then he walks each letter to one door only. Your neighbour never sees your mail. You never see his.
 
-So to watch another device, you must first make it send its packets to you. That is the job of ARP.
-
----
-
-## ARP has no lock
-
-Every device keeps a small address book. The book maps an IP address to a MAC address. The name of the book is the **ARP cache**.
-
-ARP fills the book with a simple rule. If someone answers "this IP is at this MAC", the device writes it down. It does not ask who answered.
-
-Send a false answer, and you change the book. The victim sends its packets to you. Send a second false answer to the router, and the return packets come to you too. Now you sit in the middle. This is **ARP poisoning**, or ARP spoofing.
+That is the deal, and it is a fair one. It is also the exact reason you cannot see what your smart devices say when you sleep.
 
 ---
 
-## What you can see
+## The doorman has no ID check
 
-You see every packet that passes through you:
+To find a door, the doorman asks a simple question into the hallway: "Who has 192.168.1.84?"
 
-- the servers the device contacts, by IP and by DNS name,
-- the size and the timing of each flow,
+The owner answers: "Me. I am at this MAC address." The doorman writes the answer in a small book. He never checks an ID. The name of the book is the **ARP cache**.
+
+You can already see the hole. Anyone can answer.
+
+One false answer, and the doorman delivers every letter for that address to the impostor.
+
+---
+
+## Impersonate both sides
+
+Here is the trick. I lie to the doorman, and I lie to the apartment.
+
+- To the camera: "The router is at my MAC address."
+- To the router: "The camera is at my MAC address."
+
+Now the camera sends everything to me. I read it, and I pass it to the router. The router sends the answers to me. I read them, and I pass them back. Nobody in the hallway notices.
+
+This is **ARP spoofing**, and the seat in the middle has a name: the **man in the middle**.
+
+---
+
+## What you can read
+
+Everything that passes through the middle:
+
+- the servers the device calls, by IP and by name,
+- the size and the rhythm of every flow,
 - the ports and the protocols.
 
-If the traffic uses TLS, you see the metadata, not the content. For many devices the metadata is enough. A camera that talks to one cloud server every 60 seconds tells you a lot.
-
-That last line is why I built this. I have a Tapo camera at home, and I did not trust the vendor. I wanted to know if the camera sent image or sound while nobody watched it. I ran this tool on my own network. When the camera was idle, the capture showed one small keepalive every 55 seconds. No image. No sound.
+TLS keeps the content hidden. You read the envelope, not the letter. For many devices, the envelope is the whole story. The size, the timing and the destination tell you what the device is doing.
 
 ---
 
-## The tools that work on Windows
+## A camera that I did not trust
 
-Three free tools:
+That is why I built this tool. I have a Tapo camera at home. The vendor promises privacy. I wanted proof, not a promise.
 
-- **Npcap** — the capture driver. Windows has no packet socket. Npcap adds one, and it gives you `libpcap`.
-- **Wireshark** — it brings `tshark` and `dumpcap` to read the capture.
-- **Python and scapy** — scapy sends the false ARP answers and moves the packets.
+So I put the camera in the middle of my own capture and I waited. When the camera was idle, it sent one small keepalive every 55 seconds. No image. No sound. When I opened the app, the traffic exploded to megabytes.
 
-You need administrator rights.
+The camera was honest. But I only knew it because I looked.
 
 ---
 
-## Install
+## The three tools
+
+Windows has no packet socket. You need three tools:
+
+- **Npcap** — the missing limb. It adds the packet driver, and it gives you `libpcap`.
+- **Wireshark** — it brings `tshark` and `dumpcap`, the tools that read a capture.
+- **Python and scapy** — the hands. scapy sends the lies and moves the packets.
+
+You need administrator rights. Put on the gloves.
+
+---
+
+## Install it
 
 **1. Wireshark**, from a terminal:
 
@@ -77,11 +100,13 @@ python -c "from scapy.all import conf; conf.use_pcap=True; from scapy.arch.windo
 
 ---
 
-## Why the Windows router mode fails
+## The Windows trap
 
-The easy plan is to turn on IP forwarding in Windows and let the system move the packets. On one interface it fails. Windows receives the packet and sends it back out of the same card. It often drops the packet, or it answers with an ICMP redirect.
+Here is the part that eats an afternoon. The lazy plan is to turn on IP forwarding in Windows and let the operating system move the packets for you.
 
-So the script moves the packets by hand, one level lower. It reads the frame, changes the destination MAC, and sends it again. The IP layer never changes, so the checksums stay correct and the sessions stay alive.
+It does not work on one interface. Windows takes the packet, looks at the same card, and gives up. It drops the packet, or it sends an ICMP redirect and pretends to help.
+
+So the script does the work by hand, one level lower. It takes the frame, swaps the destination MAC, and sends it out again. The IP layer never moves, so the checksums stay valid and the connections stay alive.
 
 ---
 
@@ -111,7 +136,7 @@ To stop, press Ctrl+C. The script then sends the correct ARP answers, and both s
 
 ---
 
-## Proof that it works
+## Did it work?
 
 Open the capture:
 
@@ -119,7 +144,7 @@ Open the capture:
 tshark -r victim.pcap -n -q -z conv,tcp
 ```
 
-A good capture shows one clean stream. In my test the sequence numbers moved with no gaps, and there were no retransmissions. That means the relay was transparent. The device never knew.
+A good capture shows one clean stream. In my test the sequence numbers moved with no gaps, and there were no retransmissions. The device never knew that I was there.
 
 ---
 
@@ -151,4 +176,4 @@ A good capture shows one clean stream. In my test the sequence numbers moved wit
 
 ---
 
-*Use it on your own network only.*
+*Use it on your own network only. The doorman trusts you.*
