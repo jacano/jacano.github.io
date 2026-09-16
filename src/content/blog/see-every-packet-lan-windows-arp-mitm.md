@@ -76,7 +76,7 @@ You need administrator rights. Put on the gloves.
 
 ## Install it
 
-**1. Wireshark**, from a terminal:
+**Wireshark**, from a terminal:
 
 ```powershell
 winget install --id WiresharkFoundation.Wireshark --silent
@@ -84,9 +84,9 @@ winget install --id WiresharkFoundation.Wireshark --silent
 
 The Wireshark package is an MSI, and the MSI does **not** include Npcap. Go to the next step.
 
-**2. Npcap**, from the official site [npcap.com](https://npcap.com/). The silent flag (`/S`) failed for me, so run the normal installer. In the wizard, mark **"Install Npcap in WinPcap API-compatible Mode"**. Without that mark, Python and scapy cannot find the driver.
+**Npcap**, from the official site [npcap.com](https://npcap.com/). The silent flag (`/S`) failed for me, so run the normal installer. In the wizard, mark **"Install Npcap in WinPcap API-compatible Mode"**. Without that mark, Python and scapy cannot find the driver.
 
-**3. scapy:**
+**scapy:**
 
 ```powershell
 python -m pip install scapy
@@ -100,13 +100,11 @@ python -c "from scapy.all import conf; conf.use_pcap=True; from scapy.arch.windo
 
 ---
 
-## The Windows trap
+## Why not the Windows router
 
-Here is the part that eats an afternoon. The lazy plan is to turn on IP forwarding in Windows and let the operating system move the packets for you.
+The obvious plan is to turn on IP forwarding in Windows and let the system move the packets. Do not bother. On one card, Windows drops the packet. At best, it sends an ICMP redirect and stops.
 
-It does not work on one interface. Windows takes the packet, looks at the same card, and gives up. It drops the packet, or it sends an ICMP redirect and pretends to help.
-
-So the script does the work by hand, one level lower. It takes the frame, swaps the destination MAC, and sends it out again. The IP layer never moves, so the checksums stay valid and the connections stay alive.
+So the script moves the frame itself, one level below the IP. It swaps the destination MAC and sends the frame out again. The IP layer never moves, so the checksums stay valid and the connections stay alive.
 
 ---
 
@@ -118,9 +116,9 @@ The full script is in the companion repository:
 
 It does three things:
 
-1. **Poison** — every 1.5 seconds it tells the victim that the router is at its MAC, and tells the router that the victim is at its MAC. It also answers the ARP requests of each side.
-2. **Relay** — for each frame that arrives for it, it rewrites the destination MAC and sends the frame on.
-3. **Capture** — it writes the victim traffic to a `.pcap` file, and it prints DNS names and TLS server names as they appear.
+- **Poison**: every 1.5 seconds it tells the victim that the router is at its MAC, and tells the router that the victim is at its MAC. It also answers the ARP requests of each side.
+- **Relay**: for each frame that arrives for it, it rewrites the destination MAC and sends the frame on.
+- **Capture**: it writes the victim traffic to a `.pcap` file, and it prints DNS names and TLS server names as they appear.
 
 ---
 
