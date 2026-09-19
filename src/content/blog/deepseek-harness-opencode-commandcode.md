@@ -71,19 +71,24 @@ The default model lives in its own section, `agent-default-model`. I set it once
 
 ---
 
+## Set the keys
+
+The settings file never holds a secret. It only names the environment variables that hold the keys. Set the key of each provider that you use:
+
+```bash
+export OPENCODE_API_KEY="your-open-code-go-key"
+export COMMANDCODE_API_KEY="your-command-code-key"
+```
+
+If you add one provider, define one variable. Open a new terminal after this step. A running process does not see a new environment variable.
+
+---
+
 ## Step 1: add OpenCode Go
 
 OpenCode Go is an OpenAI-compatible gateway at `https://opencode.ai/zen/go/v1`. It accepts the model `deepseek-v4.1-flash`.
 
-The gateway has one special rule. It wants a session header, `x-opencode-session`. Without the header it answers HTTP 400 with `MissingSessionID`. I send one stable value per tool, and the gateway is happy.
-
-The key is already on the machine. OpenCode keeps it in its auth store, in the entry `opencode-go`. I read it one time and move it into an environment variable. I do **not** write the secret into the settings file.
-
-```bash
-export OPENCODE_API_KEY="$(node -p 'require(require("os").homedir()+"/.local/share/opencode/auth.json")["opencode-go"].key')"
-```
-
-The line uses Node to read the value, so it works on any platform. It uses bash or zsh syntax to set the variable. In any other shell, set the same variable name to the same value.
+The gateway has one special rule. It wants a session header, `x-opencode-session`. Without the header it answers HTTP 400 with `MissingSessionID`. I send one stable value per tool, and the gateway is happy. The route reads its key from `OPENCODE_API_KEY`.
 
 ---
 
@@ -91,15 +96,7 @@ The line uses Node to read the value, so it works on any platform. It uses bash 
 
 Command Code has its own OpenAI-compatible endpoint: `https://api.commandcode.ai/provider/v1`. The model id is `deepseek/deepseek-v4.1-flash`. Note the `deepseek/` prefix. OpenCode Go does not use it, and this is the one difference between the two model ids.
 
-I tested it before I trusted it. A plain completion answered HTTP 200, and a tool-calling continuation answered HTTP 200 too. That last test matters, because a coding agent sends tool calls all the time.
-
-The key lives in the Command Code auth file, in the field `apiKey`. It starts with `user_`. Same pattern as before: one read, one environment variable.
-
-```bash
-export COMMANDCODE_API_KEY="$(node -p 'require(require("os").homedir()+"/.commandcode/auth.json").apiKey')"
-```
-
-Open a new terminal after this step. A running process does not see a new environment variable.
+I tested it before I trusted it. A plain completion answered HTTP 200, and a tool-calling continuation answered HTTP 200 too. That last test matters, because a coding agent sends tool calls all the time. The route reads its key from `COMMANDCODE_API_KEY`.
 
 ---
 
