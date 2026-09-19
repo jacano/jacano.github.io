@@ -18,11 +18,12 @@ I found the speed readout in [a post on X by @Ubendev](https://x.com/Ubendev/sta
 ## What you need
 
 - **Node.js** 22 or newer. I run Node 24.
-- An **OpenCode Go** subscription and its API key.
-- A **Command Code** account and its API key.
-- Windows with PowerShell. The steps work on macOS and Linux too, with small changes.
+- A terminal on macOS, Linux or Windows.
+- **One model provider.** In this article the providers are an **OpenCode Go** subscription and a **Command Code** account. You do not need both. One is enough to start.
 
 A quick note on words. A **harness** is the program that runs the agent loop: it sends the prompts, calls the tools and reads the answers. The **model** is the brain behind it. DSH is the harness. DeepSeek V4.1 Flash is one model I use inside it.
+
+The two routes below are independent. Add one, or add both. DSH also supports other providers, because the model plugin speaks the OpenAI-compatible wire. A free endpoint works, and so does a local model server, such as Ollama.
 
 ---
 
@@ -34,25 +35,11 @@ First, take a quick look with no install:
 npx @deepseek-ai/dsh web
 ```
 
-The command starts a local web UI and opens it in the browser. On Windows I install it for real:
+The command starts a local web UI and opens it in the browser. For a permanent install:
 
 ```bash
 npm install -g @deepseek-ai/dsh
 ```
-
-Two Windows traps can stop this command:
-
-1. The global npm folder can be `C:\Program Files\nodejs`, and that folder needs administrator rights. Install to the user folder instead:
-
-   ```bash
-   npm install -g --prefix "$env:APPDATA\npm" @deepseek-ai/dsh
-   ```
-
-2. npm 11 blocks install scripts by default. DSH needs a few native scripts. Allow them one time, then install again:
-
-   ```bash
-   npm config set allow-scripts "@deepseek-ai/dsh-subprocess-local,koffi,node-pty,@google/genai,protobufjs" --location=user
-   ```
 
 Check the result and start it:
 
@@ -92,10 +79,11 @@ The gateway has one special rule. It wants a session header, `x-opencode-session
 
 The key is already on the machine. OpenCode keeps it in its auth store, in the entry `opencode-go`. I read it one time and move it into an environment variable. I do **not** write the secret into the settings file.
 
-```powershell
-$auth = Get-Content "$HOME\.local\share\opencode\auth.json" -Raw | ConvertFrom-Json
-[Environment]::SetEnvironmentVariable('OPENCODE_API_KEY', $auth.'opencode-go'.key, 'User')
+```bash
+export OPENCODE_API_KEY="$(node -p 'require(require("os").homedir()+"/.local/share/opencode/auth.json")["opencode-go"].key')"
 ```
+
+The line uses Node to read the value, so it works on any platform. It uses bash or zsh syntax to set the variable. In any other shell, set the same variable name to the same value.
 
 ---
 
@@ -107,9 +95,8 @@ I tested it before I trusted it. A plain completion answered HTTP 200, and a too
 
 The key lives in the Command Code auth file, in the field `apiKey`. It starts with `user_`. Same pattern as before: one read, one environment variable.
 
-```powershell
-$cc = Get-Content "$HOME\.commandcode\auth.json" -Raw | ConvertFrom-Json
-[Environment]::SetEnvironmentVariable('COMMANDCODE_API_KEY', $cc.apiKey, 'User')
+```bash
+export COMMANDCODE_API_KEY="$(node -p 'require(require("os").homedir()+"/.commandcode/auth.json").apiKey')"
 ```
 
 Open a new terminal after this step. A running process does not see a new environment variable.
