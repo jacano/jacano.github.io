@@ -13,6 +13,8 @@ The second reason is freedom. DSH is a **harness**, not a model. It brings no ac
 
 I found the speed readout in [a post on X by @Ubendev](https://x.com/Ubendev/status/2100920587577446416). I installed DSH the same day, and I moved my daily work to it.
 
+![DeepSeek Harness session statistics: LLM time, tool time, time to first token, and tokens per second](/blog/deepseek-harness-session-stats.png)
+
 ---
 
 ## What you need
