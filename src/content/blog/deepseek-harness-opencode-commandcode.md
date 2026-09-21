@@ -2,16 +2,16 @@
 title: 'DeepSeek Harness with OpenCode Go and Command Code'
 date: '2026-09-19'
 tag: 'AI Tooling'
-excerpt: 'I run DeepSeek Harness as my coding agent. It shows tokens per second in the web UI, out of the box. This article shows how I installed it and how I added my OpenCode Go and Command Code subscriptions as model providers.'
+excerpt: 'DeepSeek Harness shows tokens per second in the web UI, out of the box. This article records how I installed it and how I added my OpenCode Go and Command Code subscriptions as model providers.'
 ---
 
-I use **DeepSeek Harness** (DSH) as my coding agent. One number keeps me there: **tokens per second**, right in the web UI, with no setup.
+I test agent harnesses the way I test editors: I install one, I work with it for a while, and I write down what I find. This article records my test of **DeepSeek Harness** (DSH). The number that stood out at once: **tokens per second**, right in the web UI, with no setup.
 
 That number is not a detail. Agent work is many calls in a row. A model that writes 15 tokens per second feels broken. A model that writes 80 feels fast. Most harnesses hide the speed. DSH shows it.
 
 The second reason is freedom. DSH is a **harness**, not a model. It brings no account and no key. I plug in my own subscriptions, and I keep my own keys.
 
-I found the speed readout in [a post on X by @Ubendev](https://x.com/Ubendev/status/2100920587577446416). I installed DSH the same day, and I moved my daily work to it.
+I found the speed readout in [a post on X by @Ubendev](https://x.com/Ubendev/status/2100920587577446416). I installed DSH the same day.
 
 ![DeepSeek Harness session statistics: LLM time, tool time, time to first token, and tokens per second](/blog/deepseek-harness-session-stats.png)
 
