@@ -5,6 +5,8 @@ tag: 'AI Tooling'
 excerpt: 'DeepSeek Harness shows tokens per second in the web UI, out of the box. This article records how I installed it and how I added my OpenCode Go and Command Code subscriptions as model providers.'
 ---
 
+> **Version record — checked 23 September 2026.** The exact version used for the original test was not recorded. The [DeepSeek Harness release page](https://github.com/deepseek-ai/deepseek-harness/releases) lists `v0.1.5-rc.2`; I have not re-tested every step in this article against that release. Check the current release notes before you follow the commands.
+
 I test agent harnesses the way I test editors: I install one, I work with it for a while, and I write down what I find. This article records my test of **DeepSeek Harness** (DSH). The number that stood out at once: **tokens per second**, right in the web UI, with no setup.
 
 That number is not a detail. Agent work is many calls in a row. A model that writes 15 tokens per second feels broken. A model that writes 80 feels fast. Most harnesses hide the speed. DSH shows it.

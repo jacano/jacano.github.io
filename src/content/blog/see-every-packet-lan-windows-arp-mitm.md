@@ -93,7 +93,7 @@ python -c "from scapy.all import conf; conf.use_pcap=True; from scapy.arch.windo
 
 ## Why not the Windows router
 
-The obvious plan is to turn on IP forwarding in Windows and let the system move the packets. Do not bother. On one card, Windows drops the packet. At best, it sends an ICMP redirect and stops.
+The obvious plan is to turn on IP forwarding in Windows and let the system move the packets. In my single-interface test setup, that did not relay the traffic as needed. The companion script instead forwards Ethernet frames itself. Behavior can vary with Windows configuration, adapters and routing, so treat this as a report of that setup, not a general rule about Windows forwarding.
 
 So the script moves the frame itself, one level below the IP. It swaps the destination MAC and sends the frame out again. The IP layer never moves, so the checksums stay valid and the connections stay alive.
 
@@ -104,6 +104,12 @@ So the script moves the frame itself, one level below the IP. It swaps the desti
 The full script is in the companion repository:
 
 <https://github.com/jacano/arp-mitm-windows>
+
+The diagram below shows the packet path. The victim and router each hold a false ARP entry that points to the analyzer. The analyzer relays Ethernet frames in both directions and captures a copy. It changes the destination MAC address for the next hop; the original IP endpoints remain the victim and router.
+
+![Diagram of authorized IPv4 ARP interception in a lab: victim and router send Ethernet frames through the analyzer, which relays them and captures a copy; ARP cache entries are restored on exit.](/blog/arp-mitm-flow.svg)
+
+> **Important:** this path interrupts traffic while the tool is running. Use a separate lab network and devices you own or are authorized to test. Stop the script cleanly and verify that the victim and router have their correct ARP entries again.
 
 It does three things:
 

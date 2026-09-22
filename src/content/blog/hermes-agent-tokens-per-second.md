@@ -5,6 +5,8 @@ tag: 'AI Tooling'
 excerpt: 'Hermes Agent shows tokens per second in the terminal and in a desktop app. This article shows how I installed it, how I plugged in the same OpenCode Go and Command Code subscriptions, and where I switch the speed readout on.'
 ---
 
+> **Version record — checked 23 September 2026.** The exact version used for the original test was not recorded. The [Hermes Agent release page](https://github.com/NousResearch/hermes-agent/releases) lists `v0.21.1` (`v2026.9.7`); I have not re-tested every step in this article against that release. Check the current release notes and documentation before you follow the commands.
+
 In my last article I set up **DeepSeek Harness** because it shows **tokens per second** in the web UI. That number is still the point. Agent work is many calls in a row. A model that writes 15 tokens per second feels broken. A model that writes 80 feels fast.
 
 This article is the next entry in the same notebook. I keep the same two subscriptions, **OpenCode Go** and **Command Code**, and I try a second harness: **Hermes Agent** from [Nous Research](https://nousresearch.com). It also shows the speed number, in two places: the terminal and a desktop app.

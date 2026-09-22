@@ -1,7 +1,7 @@
-# jacano.dev — Personal website
+# jacano.github.io — Personal website
 
 Personal site of **Juan Antonio Cano Salado** — Software Engineer. Blog, CV and projects.
-It uses [Astro](https://astro.build) and GitHub Pages at https://jacano.github.io/
+It uses [Astro](https://astro.build) and GitHub Pages at https://jacano.github.io/. This is the canonical public URL; the repository does not configure a custom domain.
 
 ## Sections
 

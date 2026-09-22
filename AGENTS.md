@@ -4,8 +4,9 @@ Read this before you change code.
 
 ## Overview
 
-- Personal site of **Juan Antonio Cano Salado**. Live site is **https://jacano.github.io/**.
+- Personal site of **Juan Antonio Cano Salado**. Canonical public URL is **https://jacano.github.io/**.
 - Stack is **Astro** (static) with GitHub Pages. Language is **English only**.
+- Do not use `jacano.dev` as the site URL or brand unless a custom domain is configured and verified; no custom-domain configuration is currently present in this repository.
 - Main sections are Home, CV (printable), Blog.
 
 ## Stack
@@ -20,6 +21,7 @@ Read this before you change code.
 - **Source of truth for CV:** `src/data/cv.json`. It drives Home, CV and Featured projects.
 - **Featured projects** are in `src/data/cv.json` `projects` array. Keep descriptions short, one sentence.
 - **Blog posts** are Markdown files in `src/content/blog/*.md` (a content collection). The home preview, the blog list, `rss.xml` and the sitemap read them. Keep English only.
+- Posts tagged `Archive · ...` are historical/re-published content: keep them out of the home-page recent preview and group them under the archive section in the blog index. Tag prefixes are the current editorial convention.
 - **Site text** follows **Simple English (ASD-STE100)** via https://github.com/AminBlg/SimpleEnglish. Short sentences, active voice, no contractions.
 - **Social image:** `public/og-image.png` (1200×630). Use PNG or JPG. Social sites do not show an SVG.
 - **Avatar:** `public/avatar.jpg` plus `public/avatar.webp`. The pages use `<picture>`. Keep both files small.

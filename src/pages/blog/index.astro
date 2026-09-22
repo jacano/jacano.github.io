@@ -4,14 +4,16 @@ import Layout from '../../layouts/Layout.astro';
 import { base, slugOf, readTime } from '../../utils/site';
 const allPosts = await getCollection('blog');
 const posts = [...allPosts].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
-const tags = [...new Set(posts.map((p) => p.data.tag))];
+const currentPosts = posts.filter((post) => !post.data.tag.startsWith('Archive ·'));
+const archivedPosts = posts.filter((post) => post.data.tag.startsWith('Archive ·'));
+const tags = [...new Set(currentPosts.map((post) => post.data.tag))];
 ---
 <Layout title="Blog — Juan Antonio Cano Salado" description="Articles on Web3 security, C# and .NET, architecture, technical leadership and hands-on data tools by Juan Antonio Cano Salado." canonicalPath="/blog/">
   <div class="container blog-wrap">
     <div class="header">
       <h1>Blog</h1>
       <p class="muted">I write about Web3 security, architecture, .NET, leadership and hands-on data tools. I publish when I have something useful to share.</p>
-      <div class="mono small muted"><a href={`${base}/rss.xml`} class="link">RSS feed</a> · {posts.length} articles</div>
+      <div class="mono small muted"><a href={`${base}/rss.xml`} class="link">RSS feed</a> · {currentPosts.length} recent articles · {archivedPosts.length} archived</div>
       <div class="search-box">
         <label class="visually-hidden" for="searchInput">Search articles</label>
         <input type="search" id="searchInput" placeholder="Search articles..." class="search-input" autocomplete="off" />
@@ -24,9 +26,10 @@ const tags = [...new Set(posts.map((p) => p.data.tag))];
       </div>
     </div>
 
-    <div class="list" id="postsList">
-      {posts.map((p) => (
-        <a href={`${base}/blog/${slugOf(p)}`} class="card row interactive" data-title={(p.data.title + ' ' + p.data.excerpt).toLowerCase()} data-tag={p.data.tag}>
+    <h2 class="group-title" id="recentHeading">Recent articles</h2>
+    <div class="list" id="currentPostsList">
+      {currentPosts.map((p) => (
+        <a href={`${base}/blog/${slugOf(p)}`} class="card row interactive post-card" data-title={(p.data.title + ' ' + p.data.excerpt).toLowerCase()} data-tag={p.data.tag}>
           <div>
             <div class="row-top">
               <span class="badge">{p.data.tag}</span>
@@ -39,6 +42,27 @@ const tags = [...new Set(posts.map((p) => p.data.tag))];
         </a>
       ))}
     </div>
+    {archivedPosts.length > 0 && (
+      <section class="archive-section" id="archiveSection" aria-labelledby="archiveHeading">
+        <h2 class="group-title" id="archiveHeading">From the archive</h2>
+        <p class="muted archive-note">Earlier work and republished articles. Check each article for its original publication date.</p>
+        <div class="list" id="archivePostsList">
+          {archivedPosts.map((p) => (
+            <a href={`${base}/blog/${slugOf(p)}`} class="card row interactive post-card" data-title={(p.data.title + ' ' + p.data.excerpt).toLowerCase()} data-tag={p.data.tag} data-archive="true">
+              <div>
+                <div class="row-top">
+                  <span class="badge">{p.data.tag}</span>
+                  <span class="mono small muted">{p.data.date} · {readTime(p.body)}</span>
+                </div>
+                <h2>{p.data.title}</h2>
+                <p class="muted">{p.data.excerpt}</p>
+                <span class="link">Read →</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
     <p class="mono small muted" id="noResults" hidden>No articles match your search.</p>
 
     <div class="card cta">
@@ -49,15 +73,18 @@ const tags = [...new Set(posts.map((p) => p.data.tag))];
   </div>
   <script>
     const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
-    const postsList = document.getElementById('postsList');
+    const recentHeading = document.getElementById('recentHeading') as HTMLElement | null;
+    const archiveSection = document.getElementById('archiveSection') as HTMLElement | null;
     const noResults = document.getElementById('noResults') as HTMLElement | null;
     const tagBtns = document.querySelectorAll<HTMLElement>('.tag-btn');
-    const cards = postsList?.querySelectorAll<HTMLElement>('.card') ?? [];
+    const cards = document.querySelectorAll<HTMLElement>('.post-card');
     let currentTag = 'all';
 
     function filterPosts() {
       const query = (searchInput?.value ?? '').toLowerCase().trim();
       let visible = 0;
+      let visibleRecent = 0;
+      let visibleArchive = 0;
       cards.forEach((post) => {
         const text = post.dataset.title ?? '';
         const postTag = post.dataset.tag ?? '';
@@ -65,8 +92,14 @@ const tags = [...new Set(posts.map((p) => p.data.tag))];
         const matchesTag = currentTag === 'all' || postTag === currentTag;
         const show = matchesQuery && matchesTag;
         post.style.display = show ? 'block' : 'none';
-        if (show) visible++;
+        if (show) {
+          visible++;
+          if (post.dataset.archive === 'true') visibleArchive++;
+          else visibleRecent++;
+        }
       });
+      if (recentHeading) recentHeading.hidden = visibleRecent === 0;
+      if (archiveSection) archiveSection.hidden = visibleArchive === 0;
       if (noResults) noResults.hidden = visible !== 0;
     }
 
@@ -86,7 +119,10 @@ const tags = [...new Set(posts.map((p) => p.data.tag))];
     .header{margin-bottom:32px}
     .header h1{font-size:2.8rem;letter-spacing:-0.03em;margin-bottom:8px}
     .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+    .group-title{font-size:1.2rem;letter-spacing:-0.02em;margin:32px 0 12px}
     .list{display:grid;gap:16px;margin-bottom:32px}
+    .archive-section{margin-top:40px}
+    .archive-note{margin-bottom:16px}
     .row{padding:24px}
     .row-top{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
     .badge{padding:4px 10px;border-radius:999px;background:rgba(99,102,241,.15);color:#a5b4fc;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(99,102,241,.3)}

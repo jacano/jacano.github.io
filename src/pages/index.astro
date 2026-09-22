@@ -4,7 +4,10 @@ import Layout from '../layouts/Layout.astro';
 import cv from '../data/cv.json';
 import { base, slugOf } from '../utils/site';
 const allPosts = await getCollection('blog');
-const posts = [...allPosts].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date)).slice(0, 3);
+const posts = allPosts
+  .filter((post) => !post.data.tag.startsWith('Archive ·'))
+  .sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date))
+  .slice(0, 3);
 const langColors: Record<string, string> = {
   'C#': '#9B4F96',
   'C++': '#f34b7d',
@@ -203,8 +206,8 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <h2>Blog</h2>
-        <a href={`${base}/blog`} class="link muted">View all →</a>
+        <h2>Recent writing</h2>
+        <a href={`${base}/blog`} class="link muted">Browse articles &amp; archive →</a>
       </div>
       <div class="grid three">
         {posts.map(post => (

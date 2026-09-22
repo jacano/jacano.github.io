@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 560" role="img" aria-labelledby="title desc">
+  <title id="title">Authorized ARP interception and Ethernet relay in a lab</title>
+  <desc id="desc">The analyzer sends false ARP replies to the victim and router. Both send IPv4 Ethernet frames through the analyzer. The analyzer relays the frames by changing the destination MAC address and saves a copy to a PCAP file. When stopped, it restores the correct ARP entries.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".7"/></pattern>
+    <marker id="arrow-cyan" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 10 4 0 8Z" fill="#22d3ee"/></marker>
+    <marker id="arrow-amber" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 10 4 0 8Z" fill="#fbbf24"/></marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 10 4 0 8Z" fill="#fb7185"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 10 4 0 8Z" fill="#34d399"/></marker>
+  </defs>
+  <rect width="1100" height="560" fill="#020617"/>
+  <rect width="1100" height="560" fill="url(#grid)"/>
+  <text x="40" y="42" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="21" font-weight="700">How authorized IPv4 ARP interception works</text>
+  <text x="40" y="68" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="13">An isolated lab topology · Ethernet frames are relayed in both directions · TLS payloads remain encrypted</text>
+  <rect x="36" y="94" width="1028" height="330" rx="16" fill="#0f172a" fill-opacity=".6" stroke="#475569" stroke-dasharray="8 6"/>
+  <text x="56" y="119" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="12" font-weight="600">AUTHORIZED TEST NETWORK</text>
+
+  <!-- Packet flows are drawn first so component boxes mask the lines. -->
+  <line x1="250" y1="215" x2="415" y2="215" stroke="#22d3ee" stroke-width="3" marker-end="url(#arrow-cyan)"/>
+  <line x1="685" y1="215" x2="850" y2="215" stroke="#22d3ee" stroke-width="3" marker-end="url(#arrow-cyan)"/>
+  <line x1="850" y1="280" x2="685" y2="280" stroke="#fbbf24" stroke-width="3" marker-end="url(#arrow-amber)"/>
+  <line x1="415" y1="280" x2="250" y2="280" stroke="#fbbf24" stroke-width="3" marker-end="url(#arrow-amber)"/>
+  <path d="M540 300V354" fill="none" stroke="#34d399" stroke-width="2.5" marker-end="url(#arrow-green)"/>
+
+  <!-- ARP cache poisoning messages. -->
+  <path d="M430 154 C370 125 300 128 235 160" fill="none" stroke="#fb7185" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#arrow-red)"/>
+  <path d="M650 154 C710 125 780 128 865 160" fill="none" stroke="#fb7185" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#arrow-red)"/>
+
+  <rect x="70" y="174" width="180" height="132" rx="12" fill="#0b2430" stroke="#22d3ee" stroke-width="2"/>
+  <text x="160" y="204" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="18" font-weight="700">Victim device</text>
+  <text x="160" y="230" text-anchor="middle" fill="#cbd5e1" font-family="ui-monospace,monospace" font-size="12">IP: 192.168.1.84</text>
+  <text x="160" y="250" text-anchor="middle" fill="#fb7185" font-family="system-ui,sans-serif" font-size="11">False ARP cache:</text>
+  <text x="160" y="270" text-anchor="middle" fill="#fb7185" font-family="ui-monospace,monospace" font-size="11">router IP → analyzer MAC</text>
+  <text x="160" y="291" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="10">Sends frames to analyzer</text>
+
+  <rect x="415" y="166" width="270" height="150" rx="12" fill="#2b1724" stroke="#fb7185" stroke-width="2"/>
+  <text x="550" y="197" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="19" font-weight="700">Analyzer / relay</text>
+  <text x="550" y="220" text-anchor="middle" fill="#fda4af" font-family="system-ui,sans-serif" font-size="12">Scapy + Npcap · authorized lab only</text>
+  <line x1="440" y1="233" x2="660" y2="233" stroke="#713f52"/>
+  <text x="550" y="254" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="11">Poison ARP · relay layer-2 frames · capture</text>
+  <text x="550" y="278" text-anchor="middle" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="11">Rewrite destination MAC for next hop</text>
+  <text x="550" y="298" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="10">IP source/destination stay unchanged</text>
+
+  <rect x="850" y="174" width="180" height="132" rx="12" fill="#172131" stroke="#94a3b8" stroke-width="2"/>
+  <text x="940" y="204" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="18" font-weight="700">Router / gateway</text>
+  <text x="940" y="230" text-anchor="middle" fill="#cbd5e1" font-family="ui-monospace,monospace" font-size="12">IP: 192.168.1.1</text>
+  <text x="940" y="250" text-anchor="middle" fill="#fb7185" font-family="system-ui,sans-serif" font-size="11">False ARP cache:</text>
+  <text x="940" y="270" text-anchor="middle" fill="#fb7185" font-family="ui-monospace,monospace" font-size="11">victim IP → analyzer MAC</text>
+  <text x="940" y="291" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="10">Sends frames to analyzer</text>
+
+  <text x="330" y="202" text-anchor="middle" fill="#67e8f9" font-family="system-ui,sans-serif" font-size="11" font-weight="600">REQUEST →</text>
+  <text x="770" y="202" text-anchor="middle" fill="#67e8f9" font-family="system-ui,sans-serif" font-size="11" font-weight="600">REQUEST →</text>
+  <text x="770" y="301" text-anchor="middle" fill="#fcd34d" font-family="system-ui,sans-serif" font-size="11" font-weight="600">← REPLY</text>
+  <text x="330" y="301" text-anchor="middle" fill="#fcd34d" font-family="system-ui,sans-serif" font-size="11" font-weight="600">← REPLY</text>
+  <text x="550" y="343" text-anchor="middle" fill="#86efac" font-family="system-ui,sans-serif" font-size="11">A copy of observed traffic is written to PCAP</text>
+
+  <rect x="438" y="360" width="204" height="48" rx="9" fill="#102a22" stroke="#34d399" stroke-width="1.5"/>
+  <text x="540" y="381" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="13" font-weight="700">Capture file (.pcap)</text>
+  <text x="540" y="398" text-anchor="middle" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="10">tshark / Wireshark</text>
+
+  <rect x="36" y="448" width="1028" height="80" rx="12" fill="#101d19" stroke="#34d399" stroke-width="1.5"/>
+  <path d="M62 481l8 8 16-18" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="100" y="479" fill="#86efac" font-family="system-ui,sans-serif" font-size="13" font-weight="700">When stopping (Ctrl+C)</text>
+  <text x="100" y="503" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="12">The script sends correct ARP replies to restore the victim and router caches. Verify the entries and connectivity afterward.</text>
+  <text x="1038" y="546" text-anchor="end" fill="#64748b" font-family="system-ui,sans-serif" font-size="10">ARP applies to IPv4 · IPv6 uses NDP · diagram is conceptual, not to scale</text>
+</svg>
