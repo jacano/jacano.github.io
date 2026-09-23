@@ -13,7 +13,7 @@ So I wrote a small benchmark and measured both routes the way I use them. I live
 
 Two earlier pieces of mine set up **DeepSeek Harness** and **Hermes Agent** on these same two subscriptions. They are not chapters of a series, only notes from the same learning process, and each one stands alone. This is the piece where I stop paying for one of them.
 
-> **The numbers and the raw records are open.** Every number here comes from four campaigns on one Windows 11 host on 23 September 2026. The tool, the raw records, the tables and the limits are in [github.com/jacano/llm-endpoint-bench](https://github.com/jacano/llm-endpoint-bench). Run `python bench.py ab --a commandcode --b opencode-go --n 4` to measure your own two routes, and compare your table with mine.
+> **The numbers and the raw records are open.** Every number here comes from four rounds of the same test on one Windows 11 host on 23 September 2026. A round is one full execution of the test: both routes, the same four phases, one after the other, in one sitting. Each round leaves its own directory of records in the repository. The tool, the raw records, the tables and the limits are in [github.com/jacano/llm-endpoint-bench](https://github.com/jacano/llm-endpoint-bench). Run `python bench.py ab --a commandcode --b opencode-go --n 4` to measure your own two routes, and compare your table with mine.
 
 ---
 
@@ -79,13 +79,13 @@ Three rules keep the comparison honest:
 
 First the difference in five numbers, then the picture that holds them.
 
-![Head to head of one campaign. Command Code against OpenCode Go: the first byte of the server on a ready connection in 27 and 297 milliseconds, the first token of a short answer in 754 and 1822, the total time of a long answer in 2839 and 4006, the writing speed of the visible content at 446 and 292 tokens per second, and four parallel requests at 902 and 424 tokens per second. Command Code is faster on five of five.](/blog/llm-endpoint-bench-head-to-head.svg)
+![Head to head of one round. Command Code against OpenCode Go: the first byte of the server on a ready connection in 27 and 297 milliseconds, the first token of a short answer in 754 and 1822, the total time of a long answer in 2839 and 4006, the writing speed of the visible content at 446 and 292 tokens per second, and four parallel requests at 902 and 424 tokens per second. Command Code is faster on five of five.](/blog/llm-endpoint-bench-head-to-head.svg)
 
 Those numbers are mine, measured from one city. Take them with a grain of salt: the distance from your desk to a gateway is not the distance from mine, and it moves a delay far more than it moves a write speed.
 
-Then the same measurements again, across the four campaigns. The table gives one number for each one: how many times faster Command Code was. All four campaigns ran on the same machine on the same day, so the ratios compare, and the absolute numbers do not.
+Then the same measurements again, across the four rounds. The table gives one number for each one: how many times faster Command Code was. All four rounds ran on the same machine on the same day, so the ratios compare, and the absolute numbers do not.
 
-![Command Code against OpenCode Go across four windows, how many times faster. Every value sits above the line at 1, so a taller line is a bigger gain for Command Code. The first byte of the server swings between 9.1 and 20.6 times, and the four other measurements stay between 1.4 and 2.4 times.](/blog/llm-endpoint-bench-ratios.svg)
+![Command Code against OpenCode Go across four rounds, how many times faster. Every value sits above the line at 1, so a taller line is a bigger gain for Command Code. The first byte of the server swings between 9.1 and 20.6 times, and the four other measurements stay between 1.4 and 2.4 times.](/blog/llm-endpoint-bench-ratios.svg)
 
 | Command Code is faster by | 15:34Z | 20:42Z | 21:02Z | 21:23Z |
 | --- | ---: | ---: | ---: | ---: |
@@ -99,19 +99,19 @@ Every number is how many times faster Command Code was, so a bigger number is al
 
 Two things stand out.
 
-**The waits move. The speeds do not.** The first byte of the server moved between 9.1 and 20.6 times across the four windows, and the first token of a short answer moved between 1.7 and 2.4 times. The write speed barely moved: 1.6, 1.7, 1.6, 1.5. So a wait measured once is worth less than a speed measured four times.
+**The waits move. The speeds do not.** The first byte of the server moved between 9.1 and 20.6 times across the four rounds, and the first token of a short answer moved between 1.7 and 2.4 times. The write speed barely moved: 1.6, 1.7, 1.6, 1.5. So a wait measured once is worth less than a speed measured four times.
 
-**The fixed cost is the gateway.** In the last campaign, one request to the server on a ready connection needed **27 ms on Command Code and 297 ms on OpenCode Go**. A new TLS connection added **41 ms against 273 ms**. That cost is there before the model writes a single token, and it lands on every call of a session. The model itself is closer: **754 ms against 1822 ms** to the first token of a short answer, and **446 tokens per second against 292** on the visible content of a long answer.
+**The fixed cost is the gateway.** In the last round, one request to the server on a ready connection needed **27 ms on Command Code and 297 ms on OpenCode Go**. A new TLS connection added **41 ms against 273 ms**. That cost is there before the model writes a single token, and it lands on every call of a session. The model itself is closer: **754 ms against 1822 ms** to the first token of a short answer, and **446 tokens per second against 292** on the visible content of a long answer.
 
 ---
 
 ## The decision
 
-Command Code was faster on every measurement, in all four campaigns. The gap is not one dramatic number. It is a smaller delay on every call, and a higher write speed on every answer. In an agent loop, that is the difference between a session that flows and a session that waits.
+Command Code was faster on every measurement, in all four rounds. The gap is not one dramatic number. It is a smaller delay on every call, and a higher write speed on every answer. In an agent loop, that is the difference between a session that flows and a session that waits.
 
-The card below is the decision in one view: two plans at the same price, one model, and what the four campaigns found.
+The card below is the decision in one view: two plans at the same price, one model, and what the four rounds found.
 
-![Decision card. Both plans cost $10 a month. OpenCode Go gives about $60 of usage for it and goes to pause. The Command Code GOAT plan gives $70 of credits, a 7x multiplier, and it is the one kept. Both serve deepseek-v4.1-flash. Command Code was faster on every measurement of all four campaigns: the delays ran between 9 and 21 times, and the write speed between 1.5 and 1.7 times. Measured from Seville, in the south of Spain, so run the benchmark on your own machine.](/blog/llm-endpoint-bench-decision.svg)
+![Decision card. Both plans cost $10 a month. OpenCode Go gives about $60 of usage for it and goes to pause. The Command Code GOAT plan gives $70 of credits, a 7x multiplier, and it is the one kept. Both serve deepseek-v4.1-flash. Command Code was faster on every measurement of all four rounds: the delays ran between 9 and 21 times, and the write speed between 1.5 and 1.7 times. Measured from Seville, in the south of Spain, so run the benchmark on your own machine.](/blog/llm-endpoint-bench-decision.svg)
 
 So the numbers point one way: **Command Code stays as my main route, and OpenCode Go goes to pause.**
 
@@ -121,20 +121,20 @@ The honest part: this is my decision for my machine. Another person may prefer t
 
 ## Limits
 
-- One host, one network path, four windows of one day. The absolute values do not transfer to another machine.
+- One host, one network path, four rounds of one day. The absolute values do not transfer to another machine.
 - I measured from Seville, in the south of Spain. The distance from my connection to a gateway is part of every delay in the tables. A reader in another region can see a different gap, in either direction. Take the sizes as mine, and check the direction on your own machine.
-- The queue of a provider moves hour by hour. The size of a difference is not a constant, and only the direction held across my four windows.
+- The queue of a provider moves hour by hour. The size of a difference is not a constant, and only the direction held across my four rounds.
 - Not measured: retries, tool calls, streaming with tools, very long context, image input, and price per million tokens.
-- A measurement goes stale. I run a campaign again when a provider changes something.
+- A measurement goes stale. I run a round again when a provider changes something.
 
 ---
 
 ## Wrap up
 
-The tool is small on purpose: one Python file, `curl`, no dependency, and one directory of raw records per campaign.
+The tool is small on purpose: one Python file, `curl`, no dependency, and one directory of raw records per round.
 
 - The tool and the records: [github.com/jacano/llm-endpoint-bench](https://github.com/jacano/llm-endpoint-bench)
-- The analysis of the four campaigns, with the limits: [ANALYSIS.md](https://github.com/jacano/llm-endpoint-bench/blob/main/ANALYSIS.md)
+- The analysis of the four rounds, with the limits: [ANALYSIS.md](https://github.com/jacano/llm-endpoint-bench/blob/main/ANALYSIS.md)
 - OpenCode Go: [opencode.ai/docs/go](https://opencode.ai/docs/go/)
 - The Command Code GOAT plan: [commandcode.ai/docs/plans/goat](https://commandcode.ai/docs/plans/goat)
 - Every Command Code plan, with the prices: [commandcode.ai/pricing](https://commandcode.ai/pricing)

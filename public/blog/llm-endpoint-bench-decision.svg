@@ -1,11 +1,11 @@
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 512" role="img" aria-labelledby="title desc">
     <title id="title">Two plans, one model, the same $10 a month</title>
-    <desc id="desc">OpenCode Go costs $10 a month, with $5 for the first month, and gives about $60 of usage. The Command Code GOAT plan costs $10 a month and gives $70 of credits, a 7x multiplier. Both serve deepseek-v4.1-flash. Command Code was faster on every measurement of all four campaigns: the delays ran between 9 and 21 times, and the write speed between 1.5 and 1.7 times. Measured from Seville, in the south of Spain, so every delay carries the distance from that connection to each gateway.</desc>
+    <desc id="desc">OpenCode Go costs $10 a month, with $5 for the first month, and gives about $60 of usage. The Command Code GOAT plan costs $10 a month and gives $70 of credits, a 7x multiplier. Both serve deepseek-v4.1-flash. Command Code was faster on every measurement of all four rounds: the delays ran between 9 and 21 times, and the write speed between 1.5 and 1.7 times. Measured from Seville, in the south of Spain, so every delay carries the distance from that connection to each gateway.</desc>
     <defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".7"/></pattern></defs>
     <rect width="1100" height="512" fill="#020617"/>
     <rect width="1100" height="512" fill="url(#grid)"/>
     <text x="40" y="50" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="25" font-weight="700">Two plans, one model, the same $10 a month</text>
-    <text x="40" y="78" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="13">the decision, after four campaigns on one machine on 23 September 2026</text>
+    <text x="40" y="78" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="13">the decision, after four rounds on one machine on 23 September 2026</text>
     <rect x="40" y="104" width="500" height="224" rx="14" fill="#0f172a" fill-opacity=".75" stroke="#fb7185" stroke-opacity=".45"/>
     <text x="64" y="140" fill="#fb7185" font-family="system-ui,sans-serif" font-size="19" font-weight="700">OpenCode Go</text>
     <text x="516" y="140" fill="#fb7185" font-family="system-ui,sans-serif" font-size="11" font-weight="700" text-anchor="end">GOES TO PAUSE</text>
@@ -29,7 +29,7 @@
     <text x="584" y="283" fill="#64748b" font-family="system-ui,sans-serif" font-size="11" font-weight="700">WHERE</text>
     <text x="678" y="283" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="13">commandcode.ai/docs/plans/goat</text>
     <rect x="40" y="348" width="1020" height="84" rx="14" fill="#064e3b" fill-opacity=".45" stroke="#34d399" stroke-opacity=".5"/>
-    <text x="64" y="380" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="19" font-weight="700">Command Code was faster on every measurement, in all four campaigns</text>
+    <text x="64" y="380" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="19" font-weight="700">Command Code was faster on every measurement, in all four rounds</text>
     <text x="64" y="404" fill="#a7f3d0" font-family="system-ui,sans-serif" font-size="12.5">The delays ran between 9 and 21 times. The write speed ran between 1.5 and 1.7 times.</text>
     <text x="64" y="422" fill="#a7f3d0" font-family="system-ui,sans-serif" font-size="12.5">A delay measured once is worth less than a rate measured four times: the rates barely moved.</text>
     <text x="40" y="462" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">Measured from Seville, in the south of Spain. Your distance to a gateway changes the delays, so run the benchmark on your own machine.</text>
