@@ -2,16 +2,16 @@
 title: 'Which AI subscription to keep: I built a benchmark to decide'
 date: '2026-09-23'
 tag: 'AI Tooling'
-excerpt: 'Two agent subscriptions cost 10 dollars a month each, and I wanted to keep one. So I wrote a small benchmark and measured both routes the way an agent uses them: the delay on every call, and the speed of the answer.'
+excerpt: 'Two agent subscriptions cost $10 a month each, and I wanted to keep one. So I wrote a small benchmark and measured both routes the way an agent uses them: the delay on every call, and the speed of the answer.'
 ---
 
-I pay for two AI subscriptions for agent work: **OpenCode Go** and **Command Code**. Both cost **10 dollars a month**, so the price does not separate them. For a personal setup I do not need both, so one stays as my main route and the other goes to pause.
+I pay for two AI subscriptions for agent work: **OpenCode Go** and **Command Code**. Both cost **$10 a month**, so the price does not separate them. For a personal setup I do not need both, so one stays as my main route and the other goes to pause.
 
 The question is which one. The price cannot answer it, because the two plans cost the same. My impression cannot answer it either. I noticed that I blamed the network when a session felt slow, and I had no number to check that feeling against.
 
 So I wrote a small benchmark and measured both routes the way I use them. I live in [Seville](https://en.wikipedia.org/wiki/Seville), in the south of Spain, and I run it from my own connection at home, so every number below carries my distance to each gateway.
 
-This article is the third entry in the same notebook. The first two set up **DeepSeek Harness** and **Hermes Agent** on these same two subscriptions. This one decides between them.
+Two earlier pieces of mine set up **DeepSeek Harness** and **Hermes Agent** on these same two subscriptions. They are not chapters of a series, only notes from the same learning process, and each one stands alone. This is the piece where I stop paying for one of them.
 
 > **The numbers and the raw records are open.** Every number here comes from four campaigns on one Windows 11 host on 23 September 2026. The tool, the raw records, the tables and the limits are in [github.com/jacano/llm-endpoint-bench](https://github.com/jacano/llm-endpoint-bench). Run `python bench.py ab --a commandcode --b opencode-go --n 4` to measure your own two routes, and compare your table with mine.
 
@@ -21,19 +21,19 @@ This article is the third entry in the same notebook. The first two set up **Dee
 
 Both routes are OpenAI-compatible gateways over the same model, `deepseek-v4.1-flash`. The model is identical, so the difference I can measure is the route around it.
 
-**OpenCode Go** — the low cost plan of the OpenCode team, at [opencode.ai/docs/go](https://opencode.ai/docs/go/). 10 dollars a month, and 5 dollars for the first one.
+**OpenCode Go** — the low cost plan of the OpenCode team, at [opencode.ai/docs/go](https://opencode.ai/docs/go/). $10 a month, and $5 for the first one.
 
 - It speaks on `https://opencode.ai/zen/go/v1`.
 - The model id is `deepseek-v4.1-flash`.
 - It needs one extra header, `x-opencode-session`.
-- The plan gives about 60 dollars of usage for the 10 dollars.
+- The plan gives about $60 of usage for the $10.
 
-**Command Code, the GOAT plan** — the plan I pay for, at [commandcode.ai/docs/plans/goat](https://commandcode.ai/docs/plans/goat). 10 dollars a month.
+**Command Code, the GOAT plan** — the plan I pay for, at [commandcode.ai/docs/plans/goat](https://commandcode.ai/docs/plans/goat). $10 a month.
 
 - It speaks on `https://api.commandcode.ai/provider/v1`.
 - The model id is `deepseek/deepseek-v4.1-flash`. Note the prefix.
 - It needs no extra header.
-- The plan gives 70 dollars of credits, a 7x multiplier.
+- The plan gives $70 of credits, a 7x multiplier.
 
 Same price, same model, same kind of plan. Both serve the model well, and a person cannot tell them apart by reading an answer. The difference lives in the wait before the answer and in the speed of the writing.
 
@@ -111,7 +111,7 @@ Command Code was faster on every measurement, in all four campaigns. The gap is 
 
 The card below is the decision in one view: two plans at the same price, one model, and what the four campaigns found.
 
-![Decision card. Both plans cost 10 dollars a month. OpenCode Go gives about 60 dollars of usage for it and goes to pause. The Command Code GOAT plan gives 70 dollars of credits, a 7x multiplier, and it is the one kept. Both serve deepseek-v4.1-flash. Command Code was faster on every measurement of all four campaigns: the delays ran between 9 and 21 times, and the write speed between 1.5 and 1.7 times. Measured from Seville, in the south of Spain, so run the benchmark on your own machine.](/blog/llm-endpoint-bench-decision.svg)
+![Decision card. Both plans cost $10 a month. OpenCode Go gives about $60 of usage for it and goes to pause. The Command Code GOAT plan gives $70 of credits, a 7x multiplier, and it is the one kept. Both serve deepseek-v4.1-flash. Command Code was faster on every measurement of all four campaigns: the delays ran between 9 and 21 times, and the write speed between 1.5 and 1.7 times. Measured from Seville, in the south of Spain, so run the benchmark on your own machine.](/blog/llm-endpoint-bench-decision.svg)
 
 So the numbers point one way: **Command Code stays as my main route, and OpenCode Go goes to pause.**
 
@@ -138,6 +138,6 @@ The tool is small on purpose: one Python file, `curl`, no dependency, and one di
 - OpenCode Go: [opencode.ai/docs/go](https://opencode.ai/docs/go/)
 - The Command Code GOAT plan: [commandcode.ai/docs/plans/goat](https://commandcode.ai/docs/plans/goat)
 - Every Command Code plan, with the prices: [commandcode.ai/pricing](https://commandcode.ai/pricing)
-- The previous article: [Tokens per Second in Hermes Agent](/blog/hermes-agent-tokens-per-second/)
+- Another piece on the same two subscriptions: [Tokens per Second in Hermes Agent](/blog/hermes-agent-tokens-per-second/)
 
 One last thing. Run the benchmark on your own machine and compare your table with mine. Your distance to a gateway is not mine, so a number you measure yourself beats a table you read.

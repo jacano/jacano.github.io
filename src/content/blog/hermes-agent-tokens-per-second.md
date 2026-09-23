@@ -9,7 +9,7 @@ excerpt: 'Hermes Agent shows tokens per second in the terminal and in a desktop 
 
 In my last article I set up **DeepSeek Harness** because it shows **tokens per second** in the web UI. That number is still the point. Agent work is many calls in a row. A model that writes 15 tokens per second feels broken. A model that writes 80 feels fast.
 
-This article is the next entry in the same notebook. I keep the same two subscriptions, **OpenCode Go** and **Command Code**, and I try a second harness: **Hermes Agent** from [Nous Research](https://nousresearch.com). It also shows the speed number, in two places: the terminal and a desktop app.
+The two subscriptions stay the same, **OpenCode Go** and **Command Code**, and I try a second harness: **Hermes Agent** from [Nous Research](https://nousresearch.com). It also shows the speed number, in two places: the terminal and a desktop app. There is no series here: these pieces are notes from the same learning process, and each one stands alone.
 
 The nice surprise: both providers ship **built in**. In DSH I wrote two provider blocks in YAML. In Hermes I wrote zero.
 
@@ -145,4 +145,4 @@ Hermes Agent keeps my subscriptions, installs on the three desktop platforms, an
 - Docs: [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/).
 - OpenCode Go: [opencode.ai/docs/go](https://opencode.ai/docs/go/).
 - Command Code: [commandcode.ai](https://commandcode.ai).
-- The previous article: [DeepSeek Harness with OpenCode Go and Command Code](/blog/deepseek-harness-opencode-commandcode/).
+- Another piece on the same two subscriptions: [DeepSeek Harness with OpenCode Go and Command Code](/blog/deepseek-harness-opencode-commandcode/).
