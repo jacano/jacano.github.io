@@ -22,6 +22,10 @@ Read this before you change code.
 - **Featured projects** are in `src/data/cv.json` `projects` array. Keep descriptions short, one sentence.
 - **Blog posts** are Markdown files in `src/content/blog/*.md` (a content collection). The home preview, the blog list, `rss.xml` and the sitemap read them. Keep English only.
 - Posts tagged `Archive · ...` are historical/re-published content: keep them out of the home-page recent preview and group them under the archive section in the blog index. Tag prefixes are the current editorial convention.
+- **Illustrate every article.** Every article should carry at least one diagram, chart, or image that explains its topic: a flow, a comparison, a result chart, an annotated screenshot. Treat the figure as a part of the writing, not as decoration, so make it carry a fact that the prose would take a paragraph to say. A chart that shows numbers must be generated from the data behind them, never typed by hand, so that it cannot drift from the result.
+  - Put the file in `public/blog/` and reference it as `/blog/<name>.svg`.
+  - Use a vector (`.svg`) for a diagram, a chart, or an infographic: it stays sharp at every size and it is small. Use a raster (`.png`, `.jpg`) for a screenshot or a photograph.
+  - Write the alt text as a full sentence that states what the figure shows, including the numbers that matter, because for a reader who cannot see it the alt text is the figure.
 - **Site text** follows **Simple English (ASD-STE100)** via https://github.com/AminBlg/SimpleEnglish. Short sentences, active voice, no contractions.
 - **Social image:** `public/og-image.png` (1200×630). Use PNG or JPG. Social sites do not show an SVG.
 - **Avatar:** `public/avatar.jpg` plus `public/avatar.webp`. The pages use `<picture>`. Keep both files small.
