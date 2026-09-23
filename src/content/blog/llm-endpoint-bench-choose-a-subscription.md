@@ -87,11 +87,11 @@ Then the same measurements again, across the four campaigns. The table gives the
 
 ![OpenCode Go divided by Command Code across four windows. The three delays stay above the line at 1 and move between windows. The two rates stay near 0.6 in every window.](/blog/llm-endpoint-bench-ratios.svg)
 
-| OpenCode Go divided by Command Code | 15:34Z | 20:42Z | 21:02Z | 21:23Z |
+| Measurement | 15:34Z | 20:42Z | 21:02Z | 21:23Z |
 | --- | ---: | ---: | ---: | ---: |
-| First byte of the server, ready connection | 11.77 | 9.11 | 20.58 | 10.95 |
+| First byte, ready connection | 11.77 | 9.11 | 20.58 | 10.95 |
 | Short answer: first token | 1.75 | 2.20 | 2.16 | 2.42 |
-| Long answer of 500 visible tokens: total time | 1.94 | 1.66 | 1.86 | 1.41 |
+| Long answer, 500 visible tokens: total | 1.94 | 1.66 | 1.86 | 1.41 |
 | Long answer: tokens per second | 0.63 | 0.59 | 0.61 | 0.65 |
 | Four requests at once: tokens per second | 0.62 | 0.63 | 0.60 | 0.66 |
 
