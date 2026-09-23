@@ -93,7 +93,7 @@ Then the same measurements again, across the four campaigns. The table gives the
 | Short answer: first token | 1.75 | 2.20 | 2.16 | 2.42 |
 | Long answer of 500 visible tokens: total time | 1.94 | 1.66 | 1.86 | 1.41 |
 | Long answer: tokens per second | 0.63 | 0.59 | 0.61 | 0.65 |
-| One request under four parallel requests: tokens per second | 0.62 | 0.63 | 0.60 | 0.66 |
+| Four requests at once: tokens per second | 0.62 | 0.63 | 0.60 | 0.66 |
 
 A number above 1 is a delay where OpenCode Go waits longer. A number below 1 is a rate where OpenCode Go is slower.
 
