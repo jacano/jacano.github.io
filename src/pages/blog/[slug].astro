@@ -105,6 +105,19 @@ const postSlug = slugOf(post);
         scale = next;
         apply();
       };
+      const startView = () => {
+        reset();
+        if (!window.matchMedia('(max-width: 700px)').matches) return;
+        const stageRect = stage.getBoundingClientRect();
+        const imageRect = image.getBoundingClientRect();
+        if (imageRect.width < 100 || imageRect.height < 40) return;
+        if (imageRect.width / imageRect.height < 1.3) return;   // only a wide figure gains from this
+        const k = Math.min(3, stageRect.height / imageRect.height);
+        if (k <= 1.05) return;
+        scale = k;
+        x = (imageRect.width * k - stageRect.width) / 2;        // start at the left edge
+        apply();
+      };
       const open = (el: HTMLImageElement) => {
         source = el;
         image.src = el.currentSrc || el.src;
@@ -114,7 +127,8 @@ const postSlug = slugOf(post);
         original.href = image.src;
         box.hidden = false;
         document.body.style.overflow = 'hidden';
-        reset();
+        startView();
+        image.addEventListener('load', startView, { once: true });
         closeButton.focus();
       };
       const close = () => {
