@@ -83,23 +83,23 @@ First the difference in five numbers, then the picture that holds them.
 
 Those numbers are mine, measured from one city. Take them with a grain of salt: the distance from your desk to a gateway is not the distance from mine, and it moves a delay far more than it moves a write speed.
 
-Then the same measurements again, across the four campaigns. The table gives the ratio of the two routes in each one. All four ran on the same machine on the same day, so the ratios compare, and the absolute numbers do not.
+Then the same measurements again, across the four campaigns. The table gives one number for each one: how many times faster Command Code was. All four campaigns ran on the same machine on the same day, so the ratios compare, and the absolute numbers do not.
 
-![OpenCode Go divided by Command Code across four windows. The three delays stay above the line at 1 and move between windows. The two rates stay near 0.6 in every window.](/blog/llm-endpoint-bench-ratios.svg)
+![Command Code against OpenCode Go across four windows, how many times faster. Every value sits above the line at 1, so a taller line is a bigger gain for Command Code. The first byte of the server swings between 9.1 and 20.6 times, and the four other measurements stay between 1.4 and 2.4 times.](/blog/llm-endpoint-bench-ratios.svg)
 
-| Measurement | 15:34Z | 20:42Z | 21:02Z | 21:23Z |
+| Command Code is faster by | 15:34Z | 20:42Z | 21:02Z | 21:23Z |
 | --- | ---: | ---: | ---: | ---: |
-| First byte: ready connection | 11.77 | 9.11 | 20.58 | 10.95 |
-| Short answer: first token | 1.75 | 2.20 | 2.16 | 2.42 |
-| Long answer: 500 visible tokens, total | 1.94 | 1.66 | 1.86 | 1.41 |
-| Long answer: tokens per second | 0.63 | 0.59 | 0.61 | 0.65 |
-| Four requests at once: tokens per second | 0.62 | 0.63 | 0.60 | 0.66 |
+| Time to the first byte | 11.8× | 9.1× | 20.6× | 11.0× |
+| Time to the first token | 1.7× | 2.2× | 2.2× | 2.4× |
+| Total time of a long answer | 1.9× | 1.7× | 1.9× | 1.4× |
+| Writing speed | 1.6× | 1.7× | 1.6× | 1.5× |
+| Four requests at once | 1.6× | 1.6× | 1.7× | 1.5× |
 
-A number above 1 is a delay where OpenCode Go waits longer. A number below 1 is a rate where OpenCode Go is slower.
+Every number is how many times faster Command Code was, so a bigger number is always a bigger gain for Command Code. The first three rows are waits: the number is how much longer OpenCode Go kept you waiting. The last two are speeds: the number is how much more Command Code wrote in the same second. The first of those two counts only the visible content, the second counts every token, reasoning included.
 
 Two things stand out.
 
-**The delays move. The rates do not.** The gap in the first byte of the server moved between 9.11 and 20.58 across the four windows, and the gap in the delay of a short answer moved between 1.75 and 2.42. The write speed barely moved: 0.63, 0.59, 0.61, 0.65. So a delay measured once is worth less than a rate measured four times.
+**The waits move. The speeds do not.** The first byte of the server moved between 9.1 and 20.6 times across the four windows, and the first token of a short answer moved between 1.7 and 2.4 times. The write speed barely moved: 1.6, 1.7, 1.6, 1.5. So a wait measured once is worth less than a speed measured four times.
 
 **The fixed cost is the gateway.** In the last campaign, one request to the server on a ready connection needed **27 ms on Command Code and 297 ms on OpenCode Go**. A new TLS connection added **41 ms against 273 ms**. That cost is there before the model writes a single token, and it lands on every call of a session. The model itself is closer: **754 ms against 1822 ms** to the first token of a short answer, and **446 tokens per second against 292** on the visible content of a long answer.
 

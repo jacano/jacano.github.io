@@ -1,72 +1,72 @@
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 566" role="img" aria-labelledby="title desc">
-    <title id="title">OpenCode Go divided by Command Code, four windows</title>
-    <desc id="desc">Four windows of one day on one host. A ratio above the line at 1 is a delay where OpenCode Go waits longer than Command Code. A ratio below the line is a rate where OpenCode Go is slower. The delays move between the windows and stay above the line: the first byte of the server 11.77, 9.11, 20.58 and 10.95; the first token of a short answer 1.75, 2.20, 2.16 and 2.42; the total time of a long answer 1.94, 1.66, 1.86 and 1.41. The rates stay near 0.6 in every window: the visible content of a long answer 0.63, 0.59, 0.61 and 0.65; one request under four parallel requests 0.62, 0.63, 0.60 and 0.66.</desc>
-    <defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".7"/></pattern></defs>
-    <rect width="1100" height="566" fill="#020617"/>
-    <rect width="1100" height="566" fill="url(#grid)"/>
-    <text x="40" y="46" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="27.5" font-weight="700">OpenCode Go divided by Command Code, four windows</text>
-    <text x="40" y="72" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="17">Above 1 is a delay for OpenCode Go &#183; below 1, a slower rate &#183; one host, 23 September 2026</text>
-    <rect x="104" y="94" width="982" height="346" rx="14" fill="#0f172a" fill-opacity=".55" stroke="#1e293b"/>
-    <line x1="150" y1="384.6" x2="1040" y2="384.6" stroke="#1e293b" stroke-width="1"/>
-    <text x="136" y="388.6" fill="#64748b" font-family="system-ui,sans-serif" font-size="15.5" text-anchor="end">0.5</text>
-    <line x1="150" y1="337.8" x2="1040" y2="337.8" stroke="#475569" stroke-width="1.4" stroke-dasharray="6 5"/>
-    <line x1="150" y1="291.0" x2="1040" y2="291.0" stroke="#1e293b" stroke-width="1"/>
-    <text x="136" y="295.0" fill="#64748b" font-family="system-ui,sans-serif" font-size="15.5" text-anchor="end">2</text>
-    <line x1="150" y1="229.0" x2="1040" y2="229.0" stroke="#1e293b" stroke-width="1"/>
-    <text x="136" y="233.0" fill="#64748b" font-family="system-ui,sans-serif" font-size="15.5" text-anchor="end">5</text>
-    <line x1="150" y1="182.2" x2="1040" y2="182.2" stroke="#1e293b" stroke-width="1"/>
-    <text x="136" y="186.2" fill="#64748b" font-family="system-ui,sans-serif" font-size="15.5" text-anchor="end">10</text>
-    <line x1="150" y1="135.4" x2="1040" y2="135.4" stroke="#1e293b" stroke-width="1"/>
-    <text x="136" y="139.4" fill="#64748b" font-family="system-ui,sans-serif" font-size="15.5" text-anchor="end">20</text>
-    <text x="996" y="329.8" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="15">equal</text>
-    <text x="261" y="426" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="17" text-anchor="middle">15:34Z</text>
-    <text x="484" y="426" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="17" text-anchor="middle">20:42Z</text>
-    <text x="706" y="426" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="17" text-anchor="middle">21:02Z</text>
-    <text x="929" y="426" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="17" text-anchor="middle">21:23Z</text>
-    <text x="595" y="448" fill="#64748b" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">the four campaigns, oldest to newest</text>
-    <polyline points="261,171.2 484,188.5 706,133.5 929,176.1" fill="none" stroke="#22d3ee" stroke-width="2.4" stroke-opacity=".92"/>
-    <circle cx="261" cy="171.2" r="4.6" fill="#020617" stroke="#22d3ee" stroke-width="2.4"/>
-    <circle cx="484" cy="188.5" r="4.6" fill="#020617" stroke="#22d3ee" stroke-width="2.4"/>
-    <circle cx="706" cy="133.5" r="4.6" fill="#020617" stroke="#22d3ee" stroke-width="2.4"/>
-    <circle cx="929" cy="176.1" r="4.6" fill="#020617" stroke="#22d3ee" stroke-width="2.4"/>
-    <text x="261" y="159.2" fill="#22d3ee" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">11.77</text>
-    <text x="929" y="164.1" fill="#22d3ee" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">10.95</text>
-    <polyline points="261,300.0 484,284.5 706,285.8 929,278.1" fill="none" stroke="#fb7185" stroke-width="2.4" stroke-opacity=".92"/>
-    <circle cx="261" cy="300.0" r="4.6" fill="#020617" stroke="#fb7185" stroke-width="2.4"/>
-    <circle cx="484" cy="284.5" r="4.6" fill="#020617" stroke="#fb7185" stroke-width="2.4"/>
-    <circle cx="706" cy="285.8" r="4.6" fill="#020617" stroke="#fb7185" stroke-width="2.4"/>
-    <circle cx="929" cy="278.1" r="4.6" fill="#020617" stroke="#fb7185" stroke-width="2.4"/>
-    <text x="261" y="288.0" fill="#fb7185" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">1.75</text>
-    <text x="929" y="266.1" fill="#fb7185" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">2.42</text>
-    <polyline points="261,293.0 484,303.5 706,295.9 929,314.6" fill="none" stroke="#fbbf24" stroke-width="2.4" stroke-opacity=".92"/>
-    <circle cx="261" cy="293.0" r="4.6" fill="#020617" stroke="#fbbf24" stroke-width="2.4"/>
-    <circle cx="484" cy="303.5" r="4.6" fill="#020617" stroke="#fbbf24" stroke-width="2.4"/>
-    <circle cx="706" cy="295.9" r="4.6" fill="#020617" stroke="#fbbf24" stroke-width="2.4"/>
-    <circle cx="929" cy="314.6" r="4.6" fill="#020617" stroke="#fbbf24" stroke-width="2.4"/>
-    <text x="304" y="298" fill="#fbbf24" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">1.94</text>
-    <text x="929" y="335.6" fill="#fbbf24" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">1.41</text>
-    <polyline points="261,369.0 484,373.4 706,371.2 929,366.9" fill="none" stroke="#34d399" stroke-width="2.4" stroke-opacity=".92"/>
-    <circle cx="261" cy="369.0" r="4.6" fill="#020617" stroke="#34d399" stroke-width="2.4"/>
-    <circle cx="484" cy="373.4" r="4.6" fill="#020617" stroke="#34d399" stroke-width="2.4"/>
-    <circle cx="706" cy="371.2" r="4.6" fill="#020617" stroke="#34d399" stroke-width="2.4"/>
-    <circle cx="929" cy="366.9" r="4.6" fill="#020617" stroke="#34d399" stroke-width="2.4"/>
-    <text x="261" y="390.0" fill="#34d399" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">0.63</text>
-    <text x="929" y="384.9" fill="#34d399" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">0.65</text>
-    <polyline points="261,370.1 484,369.0 706,372.3 929,365.8" fill="none" stroke="#a78bfa" stroke-width="2.4" stroke-opacity=".92"/>
-    <circle cx="261" cy="370.1" r="4.6" fill="#020617" stroke="#a78bfa" stroke-width="2.4"/>
-    <circle cx="484" cy="369.0" r="4.6" fill="#020617" stroke="#a78bfa" stroke-width="2.4"/>
-    <circle cx="706" cy="372.3" r="4.6" fill="#020617" stroke="#a78bfa" stroke-width="2.4"/>
-    <circle cx="929" cy="365.8" r="4.6" fill="#020617" stroke="#a78bfa" stroke-width="2.4"/>
-    <text x="261" y="358.1" fill="#a78bfa" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">0.62</text>
-    <text x="929" y="353.8" fill="#a78bfa" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">0.66</text>
-    <circle cx="68" cy="490" r="5.4" fill="none" stroke="#22d3ee" stroke-width="2.6"/>
-    <text x="86" y="494" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="15.5">First byte of /models, ready connection</text>
-    <circle cx="490" cy="490" r="5.4" fill="none" stroke="#fb7185" stroke-width="2.6"/>
-    <text x="508" y="494" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="15.5">Short answer, first token</text>
-    <circle cx="779" cy="490" r="5.4" fill="none" stroke="#fbbf24" stroke-width="2.6"/>
-    <text x="797" y="494" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="15.5">Long answer, total time</text>
-    <circle cx="68" cy="524" r="5.4" fill="none" stroke="#34d399" stroke-width="2.6"/>
-    <text x="86" y="528" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="15.5">Long answer, tokens per second</text>
-    <circle cx="404" cy="524" r="5.4" fill="none" stroke="#a78bfa" stroke-width="2.6"/>
-    <text x="422" y="528" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="15.5">One request under 4 parallel requests</text>
-  </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 566" role="img" aria-labelledby="t d">
+  <title id="t">How many times faster Command Code was than OpenCode Go, in four windows of one day</title>
+  <desc id="d">Every value is how many times faster Command Code was on that measurement, so a bigger number is always a bigger gain for Command Code, and a line below the dashed line at 1 times would mean Command Code was the slower one. In the window at 15:34Z the first byte of the server came 11.8 times sooner, the first token of a short answer 1.7 times sooner, the whole long answer 1.9 times faster, the writing speed 1.6 times higher and four parallel requests 1.6 times faster. In the last window, at 21:23Z, the same five measurements were 11.0, 2.4, 1.4, 1.5 and 1.5 times. Across the four windows the first byte swings between 9.1 and 20.6 times while the four other measurements stay between 1.4 and 2.4 times.</desc>
+  <defs><pattern id="g" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".7"/></pattern></defs>
+  <rect width="1100" height="566" fill="#020617"/><rect width="1100" height="566" fill="url(#g)"/>
+  <text x="40" y="52" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="27" font-weight="700">How many times faster Command Code was than OpenCode Go</text>
+  <text x="40" y="82" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="16.5">four windows of one day &#183; a bigger number is a bigger gain for Command Code &#183; 48 requests a side</text>
+  <line x1="150" y1="148.7" x2="1010" y2="148.7" stroke="#1e293b" stroke-width="0.8"/>
+  <text x="140" y="153.7" fill="#64748b" font-family="system-ui,sans-serif" font-size="13" text-anchor="end">20×</text>
+  <line x1="150" y1="206.9" x2="1010" y2="206.9" stroke="#1e293b" stroke-width="0.8"/>
+  <text x="140" y="211.9" fill="#64748b" font-family="system-ui,sans-serif" font-size="13" text-anchor="end">10×</text>
+  <line x1="150" y1="265.0" x2="1010" y2="265.0" stroke="#1e293b" stroke-width="0.8"/>
+  <text x="140" y="270.0" fill="#64748b" font-family="system-ui,sans-serif" font-size="13" text-anchor="end">5×</text>
+  <line x1="150" y1="341.9" x2="1010" y2="341.9" stroke="#1e293b" stroke-width="0.8"/>
+  <text x="140" y="346.9" fill="#64748b" font-family="system-ui,sans-serif" font-size="13" text-anchor="end">2×</text>
+  <line x1="150" y1="400.0" x2="1010" y2="400.0" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="140" y="405.0" fill="#64748b" font-family="system-ui,sans-serif" font-size="13" text-anchor="end">1×</text>
+  <text x="150" y="118" fill="#64748b" font-family="system-ui,sans-serif" font-size="13">times faster, on a log scale</text>
+  <rect x="150" y="400" width="860" height="30" fill="#7f1d1d" fill-opacity=".28"/>
+  <line x1="150" y1="400" x2="1010" y2="400" stroke="#64748b" stroke-dasharray="5 4"/>
+  <text x="1005" y="421" fill="#fca5a5" font-family="system-ui,sans-serif" font-size="12.5" text-anchor="end">below this line Command Code would be the slower one</text>
+  <polyline points="255,193.2 507,214.7 758,146.3 1010,199.2" fill="none" stroke="#22d3ee" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="255" cy="193.2" r="4.4" fill="#020617" stroke="#22d3ee" stroke-width="2.4"/>
+  <circle cx="507" cy="214.7" r="4.4" fill="#020617" stroke="#22d3ee" stroke-width="2.4"/>
+  <circle cx="758" cy="146.3" r="4.4" fill="#020617" stroke="#22d3ee" stroke-width="2.4"/>
+  <circle cx="1010" cy="199.2" r="4.4" fill="#020617" stroke="#22d3ee" stroke-width="2.4"/>
+  <text x="255" y="178.2" fill="#22d3ee" font-family="system-ui,sans-serif" font-size="14.5" font-weight="700" text-anchor="middle">11.8×</text>
+  <text x="507" y="199.7" fill="#22d3ee" font-family="system-ui,sans-serif" font-size="14.5" font-weight="700" text-anchor="middle">9.1×</text>
+  <text x="758" y="131.3" fill="#22d3ee" font-family="system-ui,sans-serif" font-size="14.5" font-weight="700" text-anchor="middle">20.6×</text>
+  <text x="1010" y="184.2" fill="#22d3ee" font-family="system-ui,sans-serif" font-size="14.5" font-weight="700" text-anchor="middle">11.0×</text>
+  <polyline points="255,353.2 507,334.0 758,335.6 1010,325.9" fill="none" stroke="#f472b6" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="255" cy="353.2" r="4.4" fill="#020617" stroke="#f472b6" stroke-width="2.4"/>
+  <circle cx="507" cy="334.0" r="4.4" fill="#020617" stroke="#f472b6" stroke-width="2.4"/>
+  <circle cx="758" cy="335.6" r="4.4" fill="#020617" stroke="#f472b6" stroke-width="2.4"/>
+  <circle cx="1010" cy="325.9" r="4.4" fill="#020617" stroke="#f472b6" stroke-width="2.4"/>
+  <polyline points="255,344.5 507,357.4 758,348.2 1010,371.1" fill="none" stroke="#fbbf24" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="255" cy="344.5" r="4.4" fill="#020617" stroke="#fbbf24" stroke-width="2.4"/>
+  <circle cx="507" cy="357.4" r="4.4" fill="#020617" stroke="#fbbf24" stroke-width="2.4"/>
+  <circle cx="758" cy="348.2" r="4.4" fill="#020617" stroke="#fbbf24" stroke-width="2.4"/>
+  <circle cx="1010" cy="371.1" r="4.4" fill="#020617" stroke="#fbbf24" stroke-width="2.4"/>
+  <polyline points="255,361.1 507,355.5 758,358.9 1010,364.4" fill="none" stroke="#34d399" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="255" cy="361.1" r="4.4" fill="#020617" stroke="#34d399" stroke-width="2.4"/>
+  <circle cx="507" cy="355.5" r="4.4" fill="#020617" stroke="#34d399" stroke-width="2.4"/>
+  <circle cx="758" cy="358.9" r="4.4" fill="#020617" stroke="#34d399" stroke-width="2.4"/>
+  <circle cx="1010" cy="364.4" r="4.4" fill="#020617" stroke="#34d399" stroke-width="2.4"/>
+  <polyline points="255,359.3 507,361.9 758,357.7 1010,365.7" fill="none" stroke="#a78bfa" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="8 4"/>
+  <circle cx="255" cy="359.3" r="4.4" fill="#020617" stroke="#a78bfa" stroke-width="2.4"/>
+  <circle cx="507" cy="361.9" r="4.4" fill="#020617" stroke="#a78bfa" stroke-width="2.4"/>
+  <circle cx="758" cy="357.7" r="4.4" fill="#020617" stroke="#a78bfa" stroke-width="2.4"/>
+  <circle cx="1010" cy="365.7" r="4.4" fill="#020617" stroke="#a78bfa" stroke-width="2.4"/>
+  <text x="150" y="258" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="14">the first byte swings between 9.1 and 20.6 times; the other four stay between 1.4 and 2.4</text>
+  <line x1="34.0" y1="481.0" x2="56.0" y2="481.0" stroke="#22d3ee" stroke-width="2.6" stroke-linecap="round"/>
+  <text x="58" y="486" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="13.5">Time to the first byte</text>
+  <text x="254.655" y="486" fill="#64748b" font-family="system-ui,sans-serif" font-size="12.5">9.1 to 20.6×</text>
+  <line x1="379.9" y1="481.0" x2="401.9" y2="481.0" stroke="#f472b6" stroke-width="2.6" stroke-linecap="round"/>
+  <text x="403.905" y="486" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="13.5">Time to the first token</text>
+  <text x="608.8625" y="486" fill="#64748b" font-family="system-ui,sans-serif" font-size="12.5">1.7 to 2.4×</text>
+  <line x1="34.0" y1="507.0" x2="56.0" y2="507.0" stroke="#fbbf24" stroke-width="2.6" stroke-linecap="round"/>
+  <text x="58" y="512" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="13.5">Total time of a long answer</text>
+  <text x="296.1675" y="512" fill="#64748b" font-family="system-ui,sans-serif" font-size="12.5">1.4 to 1.9×</text>
+  <line x1="413.7" y1="507.0" x2="435.7" y2="507.0" stroke="#34d399" stroke-width="2.6" stroke-linecap="round"/>
+  <text x="437.73" y="512" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="13.5">Writing speed</text>
+  <text x="559.6625" y="512" fill="#64748b" font-family="system-ui,sans-serif" font-size="12.5">1.5 to 1.7×</text>
+  <line x1="677.2" y1="507.0" x2="699.2" y2="507.0" stroke="#a78bfa" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="8 4"/>
+  <text x="701.225" y="512" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="13.5">Four requests at once</text>
+  <text x="889.5775" y="512" fill="#64748b" font-family="system-ui,sans-serif" font-size="12.5">1.5 to 1.7×</text>
+  <text x="255" y="456" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="14" text-anchor="middle">15:34Z</text>
+  <text x="507" y="456" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="14" text-anchor="middle">20:42Z</text>
+  <text x="758" y="456" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="14" text-anchor="middle">21:02Z</text>
+  <text x="1010" y="456" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="14" text-anchor="middle">21:23Z</text>
+  <text x="40" y="456" fill="#475569" font-family="system-ui,sans-serif" font-size="13">UTC</text>
+</svg>
