@@ -1,0 +1,49 @@
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 548" role="img" aria-labelledby="title desc">
+    <title id="title">Command Code against OpenCode Go, head to head in one campaign</title>
+    <desc id="desc">Five measurements of one campaign on 23 September 2026, both routes serving deepseek-v4.1-flash. Command Code against OpenCode Go: the time to the first byte of the server on a ready connection, 27 against 297 milliseconds. The time to the first token of a short answer, 754 against 1822 milliseconds. The total time of a long answer of 500 visible tokens, 2839 against 4006 milliseconds. The writing speed of the visible content, 446 against 292 tokens per second. Four requests at once, 902 against 424 tokens per second. Command Code is faster on five of five measurements.</desc>
+    <defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".7"/></pattern></defs>
+    <rect width="1100" height="548" fill="#020617"/>
+    <rect width="1100" height="548" fill="url(#grid)"/>
+    <text x="40" y="50" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="25" font-weight="700">Head to head: Command Code against OpenCode Go</text>
+    <text x="40" y="78" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="13">deepseek-v4.1-flash on both routes &#183; one campaign, 48 requests a side, 23 September 2026 &#183; measured from Seville, Spain</text>
+    <rect x="40" y="104" width="1020" height="330" rx="14" fill="#0f172a" fill-opacity=".7" stroke="#1e293b"/>
+    <text x="40" y="136" fill="#64748b" font-family="system-ui,sans-serif" font-size="11">MEASUREMENT</text>
+    <text x="725" y="136" fill="#34d399" font-family="system-ui,sans-serif" font-size="12" font-weight="700" text-anchor="middle">COMMAND CODE</text>
+    <text x="945" y="136" fill="#fb7185" font-family="system-ui,sans-serif" font-size="12" font-weight="700" text-anchor="middle">OPENCODE GO</text>
+    <text x="1040" y="136" fill="#64748b" font-family="system-ui,sans-serif" font-size="10.5" text-anchor="end">the tinted box is the faster of the two</text>
+    <line x1="60" y1="148" x2="1040" y2="148" stroke="#1e293b"/>
+    <rect x="615" y="160" width="220" height="46" rx="10" fill="#34d399" fill-opacity=".13"/>
+    <text x="40" y="174" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="13.5">Time to the first byte</text>
+    <text x="40" y="192" fill="#64748b" font-family="system-ui,sans-serif" font-size="11">a ready connection</text>
+    <text x="725" y="184" fill="#34d399" font-family="ui-monospace,Menlo,monospace" font-size="17" font-weight="700" text-anchor="middle">27 ms</text>
+    <text x="945" y="184" fill="#94a3b8" font-family="ui-monospace,Menlo,monospace" font-size="15" text-anchor="middle">297 ms</text>
+    <line x1="60" y1="214" x2="1040" y2="214" stroke="#1e293b"/>
+    <rect x="615" y="222" width="220" height="46" rx="10" fill="#34d399" fill-opacity=".13"/>
+    <text x="40" y="236" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="13.5">Time to the first token</text>
+    <text x="40" y="254" fill="#64748b" font-family="system-ui,sans-serif" font-size="11">a short answer</text>
+    <text x="725" y="246" fill="#34d399" font-family="ui-monospace,Menlo,monospace" font-size="17" font-weight="700" text-anchor="middle">754 ms</text>
+    <text x="945" y="246" fill="#94a3b8" font-family="ui-monospace,Menlo,monospace" font-size="15" text-anchor="middle">1822 ms</text>
+    <line x1="60" y1="276" x2="1040" y2="276" stroke="#1e293b"/>
+    <rect x="615" y="284" width="220" height="46" rx="10" fill="#34d399" fill-opacity=".13"/>
+    <text x="40" y="298" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="13.5">Total time of a long answer</text>
+    <text x="40" y="316" fill="#64748b" font-family="system-ui,sans-serif" font-size="11">500 visible tokens</text>
+    <text x="725" y="308" fill="#34d399" font-family="ui-monospace,Menlo,monospace" font-size="17" font-weight="700" text-anchor="middle">2839 ms</text>
+    <text x="945" y="308" fill="#94a3b8" font-family="ui-monospace,Menlo,monospace" font-size="15" text-anchor="middle">4006 ms</text>
+    <line x1="60" y1="338" x2="1040" y2="338" stroke="#1e293b"/>
+    <rect x="615" y="346" width="220" height="46" rx="10" fill="#34d399" fill-opacity=".13"/>
+    <text x="40" y="360" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="13.5">Writing speed</text>
+    <text x="40" y="378" fill="#64748b" font-family="system-ui,sans-serif" font-size="11">visible content</text>
+    <text x="725" y="370" fill="#34d399" font-family="ui-monospace,Menlo,monospace" font-size="17" font-weight="700" text-anchor="middle">446 tok/s</text>
+    <text x="945" y="370" fill="#94a3b8" font-family="ui-monospace,Menlo,monospace" font-size="15" text-anchor="middle">292 tok/s</text>
+    <line x1="60" y1="400" x2="1040" y2="400" stroke="#1e293b"/>
+    <rect x="615" y="408" width="220" height="46" rx="10" fill="#34d399" fill-opacity=".13"/>
+    <text x="40" y="422" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="13.5">Four requests at once</text>
+    <text x="40" y="440" fill="#64748b" font-family="system-ui,sans-serif" font-size="11">the aggregate</text>
+    <text x="725" y="432" fill="#34d399" font-family="ui-monospace,Menlo,monospace" font-size="17" font-weight="700" text-anchor="middle">902 tok/s</text>
+    <text x="945" y="432" fill="#94a3b8" font-family="ui-monospace,Menlo,monospace" font-size="15" text-anchor="middle">424 tok/s</text>
+    <line x1="60" y1="462" x2="1040" y2="462" stroke="#1e293b"/>
+    <rect x="40" y="452" width="1020" height="56" rx="14" fill="#064e3b" fill-opacity=".45" stroke="#34d399" stroke-opacity=".5"/>
+    <text x="64" y="478" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="17" font-weight="700">Command Code is faster on five of five measurements</text>
+    <text x="64" y="498" fill="#a7f3d0" font-family="system-ui,sans-serif" font-size="12">and on every measurement of all four campaigns, 15:34Z to 21:23Z on 23 September 2026</text>
+    <text x="40" y="534" fill="#94a3b8" font-family="ui-monospace,Menlo,monospace" font-size="11.5">Run the same test on your machine: python bench.py ab --a commandcode --b opencode-go --n 4</text>
+  </svg>

@@ -9,7 +9,7 @@ I pay for two AI subscriptions for agent work: **OpenCode Go** and **Command Cod
 
 The question is which one. The price cannot answer it, because the two plans cost the same. My impression cannot answer it either. I noticed that I blamed the network when a session felt slow, and I had no number to check that feeling against.
 
-So I wrote a small benchmark and measured both routes the way I use them. I live in Seville, in the south of Spain, and I run it from my own connection at home, so every number below carries my distance to each gateway.
+So I wrote a small benchmark and measured both routes the way I use them. I live in [Seville](https://en.wikipedia.org/wiki/Seville), in the south of Spain, and I run it from my own connection at home, so every number below carries my distance to each gateway.
 
 This article is the third entry in the same notebook. The first two set up **DeepSeek Harness** and **Hermes Agent** on these same two subscriptions. This one decides between them.
 
@@ -59,12 +59,13 @@ For agentic coding, the best route is the one with the smallest fixed delay and 
 
 The tool runs four phases and uses `curl` for every request, so no client library hides the slow end of the distribution.
 
-| Phase | What it asks for | What it reports |
-| --- | --- | --- |
-| `transport` | the list of models, on a new connection and on a ready one | DNS, TCP, TLS, and the time to the first byte |
-| `short` | one tiny reply | the delay to the first token |
-| `long` | one answer of about 500 visible tokens | the delay to the first token, the delay to the first visible token, the total time, and the write speed |
-| `concurrent` | four requests at the same time | the rate of one request, and the aggregate rate |
+**`transport`** asks the list of models, on a new connection and on a ready one, and reports DNS, TCP, TLS, and the time to the first byte.
+
+**`short`** asks for one tiny reply, and reports the delay to the first token.
+
+**`long`** asks for one answer of about 500 visible tokens, and reports the delay to the first token, the delay to the first visible token, the total time, and the write speed.
+
+**`concurrent`** sends four requests at the same time, and reports the rate of one request and the aggregate rate.
 
 Three rules keep the comparison honest:
 
@@ -76,9 +77,9 @@ Three rules keep the comparison honest:
 
 ## The results, in short
 
-The picture below is the whole comparison in one view: the same model, the same price, and four measurements of one campaign.
+First the difference in five numbers, then the picture that holds them.
 
-![Infographic. Both plans cost 10 dollars a month and both served deepseek-v4.1-flash. In the last campaign the first byte of the server on a ready connection arrived in 27 ms on Command Code and 297 ms on OpenCode Go, the first token of a short answer in 754 and 1822 ms, the visible content of a long answer at 446 and 292 tokens per second, and four parallel requests at 902 and 424 tokens per second in total. Command Code was faster on every measurement in all four campaigns. Measured from Seville, Spain.](/blog/llm-endpoint-bench-results.svg)
+![Head to head of one campaign. Command Code against OpenCode Go: the first byte of the server on a ready connection in 27 and 297 milliseconds, the first token of a short answer in 754 and 1822, the total time of a long answer in 2839 and 4006, the writing speed of the visible content at 446 and 292 tokens per second, and four parallel requests at 902 and 424 tokens per second. Command Code is faster on five of five.](/blog/llm-endpoint-bench-head-to-head.svg)
 
 Those numbers are mine, measured from one city. Take them with a grain of salt: the distance from your desk to a gateway is not the distance from mine, and it moves a delay far more than it moves a write speed.
 
@@ -87,7 +88,7 @@ Then the same measurements again, across the four campaigns. The table gives the
 ![OpenCode Go divided by Command Code across four windows. The three delays stay above the line at 1 and move between windows. The two rates stay near 0.6 in every window.](/blog/llm-endpoint-bench-ratios.svg)
 
 | OpenCode Go divided by Command Code | 15:34Z | 20:42Z | 21:02Z | 21:23Z |
-| --- | --- | --- | --- | --- |
+| --- | ---: | ---: | ---: | ---: |
 | First byte of the server, ready connection | 11.77 | 9.11 | 20.58 | 10.95 |
 | Short answer: first token | 1.75 | 2.20 | 2.16 | 2.42 |
 | Long answer of 500 visible tokens: total time | 1.94 | 1.66 | 1.86 | 1.41 |
@@ -107,6 +108,10 @@ Two things stand out.
 ## The decision
 
 Command Code was faster on every measurement, in all four campaigns. The gap is not one dramatic number. It is a smaller delay on every call, and a higher write speed on every answer. In an agent loop, that is the difference between a session that flows and a session that waits.
+
+The card below is the decision in one view: two plans at the same price, one model, and what the four campaigns found.
+
+![Decision card. Both plans cost 10 dollars a month. OpenCode Go gives about 60 dollars of usage for it and goes to pause. The Command Code GOAT plan gives 70 dollars of credits, a 7x multiplier, and it is the one kept. Both serve deepseek-v4.1-flash. Command Code was faster on every measurement of all four campaigns: the delays ran between 9 and 21 times, and the write speed between 1.5 and 1.7 times. Measured from Seville, in the south of Spain, so run the benchmark on your own machine.](/blog/llm-endpoint-bench-decision.svg)
 
 So the numbers point one way: **Command Code stays as my main route, and OpenCode Go goes to pause.**
 
