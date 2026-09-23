@@ -203,7 +203,7 @@ const postSlug = slugOf(post);
     .lb-tools button:hover,.lb-tools a:hover{border-color:var(--accent);color:#fff}
     .lb-level{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);min-width:44px;text-align:center}
     .lb-stage{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;cursor:zoom-in;padding:16px}
-    .lb-image{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:10px;border:1px solid var(--border);transform-origin:center center;will-change:transform;user-select:none}
+    .lb-image{min-width:0;min-height:0;max-width:100%;max-height:100%;width:auto;height:auto;border-radius:10px;border:1px solid var(--border);transform-origin:center center;will-change:transform;user-select:none}
   </style>
   <script>
     document.querySelectorAll('.prose pre').forEach((pre) => {
