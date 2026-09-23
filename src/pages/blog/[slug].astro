@@ -111,7 +111,10 @@ const postSlug = slugOf(post);
     .prose :global(tbody tr:nth-child(odd)){background:rgba(255,255,255,.035)}
     .prose :global(tbody tr:last-child td){border-bottom:none}
     .prose :global(tbody tr:hover){background:rgba(99,102,241,.06)}
-    @media(max-width:640px){.prose :global(table){display:block;overflow-x:auto}}
+    @media(max-width:640px){
+      .prose :global(table){display:block;overflow-x:auto}
+      .prose :global(th:first-child),.prose :global(td:first-child){position:sticky;left:0;background:var(--bg);z-index:1}
+    }
     .prose :global(blockquote){border-left:3px solid var(--accent);margin:24px 0;color:#c7c7cf;background:rgba(99,102,241,.08);padding:4px 20px;border-radius:0 12px 12px 0;font-style:italic}
     .prose :global(blockquote p){margin:14px 0}
     .prose :global(code){background:var(--card);border:1px solid var(--border);padding:2px 6px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:.88em}
