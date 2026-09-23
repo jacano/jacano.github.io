@@ -89,9 +89,9 @@ Then the same measurements again, across the four campaigns. The table gives the
 
 | Measurement | 15:34Z | 20:42Z | 21:02Z | 21:23Z |
 | --- | ---: | ---: | ---: | ---: |
-| First byte, ready connection | 11.77 | 9.11 | 20.58 | 10.95 |
+| First byte: ready connection | 11.77 | 9.11 | 20.58 | 10.95 |
 | Short answer: first token | 1.75 | 2.20 | 2.16 | 2.42 |
-| Long answer, 500 visible tokens: total | 1.94 | 1.66 | 1.86 | 1.41 |
+| Long answer: 500 visible tokens, total | 1.94 | 1.66 | 1.86 | 1.41 |
 | Long answer: tokens per second | 0.63 | 0.59 | 0.61 | 0.65 |
 | Four requests at once: tokens per second | 0.62 | 0.63 | 0.60 | 0.66 |
 
