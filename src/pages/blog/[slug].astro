@@ -54,6 +54,157 @@ const postSlug = slugOf(post);
       </div>
     </div>
   </article>
+  <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+    <div class="lb-bar">
+      <span class="lb-caption"></span>
+      <div class="lb-tools">
+        <button type="button" data-lb="out" aria-label="Zoom out">&#8722;</button>
+        <span class="lb-level" aria-live="polite">100%</span>
+        <button type="button" data-lb="in" aria-label="Zoom in">+</button>
+        <button type="button" data-lb="fit">Fit</button>
+        <a class="lb-original" target="_blank" rel="noopener">Open full size</a>
+        <button type="button" data-lb="close">Close</button>
+      </div>
+    </div>
+    <div class="lb-stage"><img class="lb-image" alt="" draggable="false" /></div>
+  </div>
+  <script>
+    // A click on any image of the article opens it full screen, where it can be
+    // zoomed with the wheel, the buttons or the keyboard, and dragged to move.
+    (function () {
+      const box = document.getElementById('lightbox') as HTMLElement | null;
+      if (!box) return;
+      const stage = box.querySelector('.lb-stage') as HTMLElement;
+      const image = box.querySelector('.lb-image') as HTMLImageElement;
+      const caption = box.querySelector('.lb-caption') as HTMLElement;
+      const level = box.querySelector('.lb-level') as HTMLElement;
+      const original = box.querySelector('.lb-original') as HTMLAnchorElement;
+      const closeButton = box.querySelector('[data-lb="close"]') as HTMLElement;
+      let scale = 1;
+      let x = 0;
+      let y = 0;
+      let source: HTMLElement | null = null;
+      let dragging = false;
+      let lastX = 0;
+      let lastY = 0;
+
+      const apply = () => {
+        image.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + scale + ')';
+        level.textContent = Math.round(scale * 100) + '%';
+      };
+      const reset = () => { scale = 1; x = 0; y = 0; apply(); };
+      const zoom = (factor: number, cx?: number, cy?: number) => {
+        const next = Math.min(8, Math.max(1, scale * factor));
+        if (next === scale) return;
+        if (cx !== undefined && cy !== undefined) {
+          const r = image.getBoundingClientRect();
+          const ratio = next / scale;
+          x -= (cx - (r.left + r.width / 2)) * (ratio - 1);
+          y -= (cy - (r.top + r.height / 2)) * (ratio - 1);
+        }
+        scale = next;
+        apply();
+      };
+      const open = (el: HTMLImageElement) => {
+        source = el;
+        image.src = el.currentSrc || el.src;
+        image.alt = el.alt || '';
+        caption.textContent = el.alt || '';
+        caption.title = el.alt || '';
+        original.href = image.src;
+        box.hidden = false;
+        document.body.style.overflow = 'hidden';
+        reset();
+        closeButton.focus();
+      };
+      const close = () => {
+        box.hidden = true;
+        document.body.style.overflow = '';
+        if (source) source.focus();
+      };
+
+      box.querySelectorAll('[data-lb]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const action = button.getAttribute('data-lb');
+          if (action === 'in') zoom(1.4);
+          else if (action === 'out') zoom(1 / 1.4);
+          else if (action === 'fit') reset();
+          else close();
+        });
+      });
+      stage.addEventListener('wheel', (event: WheelEvent) => {
+        event.preventDefault();
+        zoom(event.deltaY < 0 ? 1.15 : 1 / 1.15, event.clientX, event.clientY);
+      }, { passive: false });
+      stage.addEventListener('pointerdown', (event: PointerEvent) => {
+        if (scale === 1) return;
+        lastX = event.clientX; lastY = event.clientY;
+        try { stage.setPointerCapture(event.pointerId); } catch { /* a capture is a nicety, not a requirement */ }
+        dragging = true;
+        stage.style.cursor = 'grabbing';
+      });
+      stage.addEventListener('pointermove', (event: PointerEvent) => {
+        if (!dragging) return;
+        x += event.clientX - lastX;
+        y += event.clientY - lastY;
+        lastX = event.clientX; lastY = event.clientY;
+        apply();
+      });
+      const stopDrag = () => { dragging = false; stage.style.cursor = scale > 1 ? 'grab' : 'zoom-in'; };
+      stage.addEventListener('pointerup', stopDrag);
+      stage.addEventListener('pointercancel', stopDrag);
+      image.addEventListener('dblclick', () => { if (scale > 1) reset(); else zoom(2.5); });
+      stage.addEventListener('click', (event: MouseEvent) => { if (event.target === stage) close(); });
+      document.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (box.hidden) return;
+        if (event.key === 'Escape') close();
+        else if (event.key === '+' || event.key === '=') zoom(1.4);
+        else if (event.key === '-' || event.key === '_') zoom(1 / 1.4);
+        else if (event.key === '0') reset();
+      });
+
+      document.querySelectorAll('.prose img').forEach((node) => {
+        const img = node as HTMLImageElement;
+        const wrap = document.createElement('span');
+        wrap.className = 'zoom-wrap';
+        img.replaceWith(wrap);
+        wrap.appendChild(img);
+        img.tabIndex = 0;
+        img.setAttribute('role', 'button');
+        img.setAttribute('aria-label', (img.alt ? img.alt + '. ' : '') + 'Open a larger view');
+        img.addEventListener('click', () => open(img));
+        img.addEventListener('keydown', (event: KeyboardEvent) => {
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(img); }
+        });
+      });
+    })();
+  </script>
+  <style is:global>
+    .zoom-wrap{position:relative;display:block}
+    .zoom-wrap img{cursor:zoom-in;transition:filter .18s}
+    .zoom-wrap img:hover,.zoom-wrap img:focus-visible{filter:brightness(1.06)}
+    .zoom-wrap::after{
+      content:'Click to zoom';position:absolute;right:12px;bottom:32px;
+      padding:4px 10px;border-radius:999px;background:rgba(10,10,11,.82);
+      border:1px solid var(--border);color:var(--text);
+      font-size:.72rem;font-weight:600;opacity:0;transition:opacity .18s;pointer-events:none;
+    }
+    .zoom-wrap:hover::after,.zoom-wrap:focus-within::after{opacity:1}
+    @media (hover:none){.zoom-wrap::after{opacity:1;content:'Tap to zoom'}}
+    .lightbox{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;background:rgba(6,6,8,.94);backdrop-filter:blur(6px)}
+    .lightbox[hidden]{display:none}
+    .lb-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(10,10,11,.9)}
+    .lb-caption{color:var(--muted);font-size:.78rem;line-height:1.4;flex:1 1 240px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .lb-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .lb-tools button,.lb-tools a{
+      font:inherit;font-size:.78rem;font-weight:600;color:var(--text);background:var(--card);
+      border:1px solid var(--border);border-radius:999px;padding:6px 12px;cursor:pointer;text-decoration:none;
+    }
+    .lb-tools button:hover,.lb-tools a:hover{border-color:var(--accent);color:#fff}
+    .lb-level{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);min-width:44px;text-align:center}
+    .lb-stage{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;cursor:zoom-in;padding:16px}
+    .lb-image{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:10px;border:1px solid var(--border);transform-origin:center center;will-change:transform;user-select:none}
+  </style>
   <script>
     document.querySelectorAll('.prose pre').forEach((pre) => {
       const code = pre.querySelector('code');
