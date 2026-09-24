@@ -152,6 +152,13 @@ const blogPosting = ogType === "article" ? {
         });
       });
 
+      /** Show every card before the browser prints. The reveal animation keeps
+       *  a card at opacity 0 until it scrolls into view, and the print engine
+       *  never scrolls. Without this, a printed page loses its content. */
+      window.addEventListener('beforeprint', () => {
+        document.querySelectorAll('.fade-in').forEach((el) => el.classList.add('visible'));
+      });
+
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!reduceMotion) {
         const observer = new IntersectionObserver((entries) => {
@@ -252,6 +259,14 @@ const blogPosting = ogType === "article" ? {
         html{scroll-behavior:auto}
         .fade-in{opacity:1;transform:none;transition:none}
         *{animation:none !important;transition:none !important}
+      }
+      /* Print has no scroll, so the page furniture is noise on paper and the
+         reveal animation must not hide a card. Rules here are global: a rule
+         inside a page style cannot reach the nav or the footer. */
+      @media print{
+        .nav,.footer,.mobile-menu,.skip-link{display:none !important}
+        .fade-in{opacity:1 !important;transform:none !important;transition:none !important}
+        html,body{background:#fff;color:#15151a}
       }
       @media(max-width:768px){
         .nav-links{display:none}

@@ -32,6 +32,25 @@ Read this before you change code.
 - **Avatar:** `public/avatar.jpg` plus `public/avatar.webp`. The pages use `<picture>`. Keep both files small.
 - **Icons:** `public/favicon.svg` plus `public/apple-touch-icon.png` at 180x180. iOS does not take an SVG for the touch icon.
 
+## Print
+
+The CV is read as a PDF most of the time, so `src/pages/cv.astro` is a print
+document as well as a page. Four rules keep the export complete and clean.
+
+- **Keep the print layout in one column.** A grid or a flex box that breaks
+  across pages loses its content in Chromium, and the reader sees an empty
+  page.
+- **Never put `break-inside: avoid` on a box that can grow past one page.**
+  Chromium then drops the whole box from the PDF. Use it on a short entry, a
+  project card or a block of skills, not on a container.
+- **Reset the reveal animation for print.** A `.card` sits at `opacity: 0`
+  until it scrolls into view, and the print engine never scrolls. The global
+  style resets `.fade-in` and a `beforeprint` handler reveals the cards. Keep
+  both: the CSS covers a headless export, the handler covers the print dialog.
+- **Hide the nav and the footer from the global style.** Astro scopes the
+  rules of a page `<style>`, so a rule in `cv.astro` cannot reach an element
+  that `Layout.astro` renders.
+
 ## Commits
 
 Use Conventional Commits. Keep the subject in one line. Add a body only when it

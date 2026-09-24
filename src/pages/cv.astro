@@ -2,56 +2,89 @@
 import Layout from '../layouts/Layout.astro';
 import cv from '../data/cv.json';
 import { base } from '../utils/site';
+
+/** Shorten a link for paper: "https://github.com/jacano" becomes "github.com/jacano". */
+const shortUrl = (url: string) => {
+  const clean = url.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+  const [host, ...rest] = clean.split('/');
+  return [host, ...rest.slice(0, 2)].join('/');
+};
+
+const contacts = [
+  { label: 'GitHub', url: cv.github },
+  { label: 'LinkedIn', url: cv.linkedin },
+  { label: 'Stack Overflow', url: cv.stackoverflow },
+  { label: 'NuGet', url: cv.nuget },
+  { label: 'PyPI', url: cv.pypi },
+  { label: 'LeetCode', url: cv.leetcode },
+];
 ---
 <Layout title={`CV — ${cv.name}`} description={`Resume of ${cv.name}, ${cv.title}. 15+ years of experience.`}>
-  <div class="container cv-wrap">
-    <div class="cv-header">
-      <div>
+  <article class="container cv-wrap">
+    <header class="cv-header">
+      <div class="cv-id">
         <h1>{cv.name}</h1>
         <p class="role">{cv.title}</p>
-        <p class="muted">{cv.location} · <a href={`mailto:${cv.email}`}>{cv.email}</a> · <a href={cv.github} target="_blank">GitHub</a> · <a href={cv.linkedin} target="_blank">LinkedIn</a> · <a href={cv.stackoverflow} target="_blank">Stack Overflow</a> · <a href={cv.nuget} target="_blank">NuGet</a> · <a href={cv.pypi} target="_blank">PyPI</a> · <a href={cv.leetcode} target="_blank">LeetCode</a></p>
+        <p class="contacts">
+          <span>Seville, Spain</span>
+          <span class="sep" aria-hidden="true">·</span>
+          <a href={`mailto:${cv.email}`}>{cv.email}</a>
+          {contacts.map((c) => (
+            <>
+              <span class="sep" aria-hidden="true">·</span>
+              <a href={c.url} target="_blank" rel="noreferrer">
+                <span class="lbl">{c.label}</span><span class="url">{shortUrl(c.url)}</span>
+              </a>
+            </>
+          ))}
+        </p>
       </div>
-      <div class="actions">
-        <button onclick="window.print()" class="btn btn-dark">🖨️ Print / PDF</button>
+      <div class="actions no-print">
+        <button type="button" onclick="window.print()" class="btn btn-dark">🖨️ Print / PDF</button>
         <a href={`${base}/`} class="btn btn-outline">← Home</a>
       </div>
-    </div>
+    </header>
+
+    <p class="print-hint no-print">For a clean copy, turn off Headers and footers in the print dialog.</p>
 
     <div class="cv-grid">
       <main class="cv-main">
-        <section class="card">
+        <section class="block block-summary">
           <h2>Summary</h2>
           <p class="muted">{cv.summary}</p>
-          <p class="muted" style="margin-top:12px">{cv.about}</p>
+          <p class="muted about">{cv.about}</p>
         </section>
 
-        <section>
+        <section class="block block-exp">
           <h2>Experience</h2>
           <div class="grid">
-            {cv.experience.map(e => (
-              <div class="card interactive">
+            {cv.experience.map((e) => (
+              <div class="card exp interactive">
                 <div class="head">
-                  <h3>{e.role} — {e.company}</h3>
+                  <h3>{e.role} <span class="company">— {e.company}</span></h3>
                   <span class="period">{e.period}</span>
                 </div>
-                <p class="muted small">{e.location}</p>
-                <p class="muted" style="margin:8px 0">{e.description}</p>
-                <ul>
-                  {e.highlights?.map(h => <li>{h}</li>)}
-                </ul>
-                {e.link && <a href={e.link} target="_blank" class="link small">↗ {e.link}</a>}
+                <p class="muted small place">{e.location}</p>
+                {e.description && <p class="muted desc">{e.description}</p>}
+                {e.highlights?.length ? (
+                  <ul>
+                    {e.highlights.map((h) => <li>{h}</li>)}
+                  </ul>
+                ) : null}
+                {e.link && <a href={e.link} target="_blank" rel="noreferrer" class="link small">↗ {shortUrl(e.link)}</a>}
               </div>
             ))}
           </div>
         </section>
 
-        <section>
+        <section class="block block-projects">
           <h2>Open Source Projects</h2>
           <div class="grid two">
-            {cv.projects.map(p => (
-              <a href={p.url} target="_blank" class="card proj interactive">
+            {cv.projects.map((p) => (
+              <a href={p.url} target="_blank" rel="noreferrer" class="card proj interactive">
                 <strong>{p.name} <span class="muted">· {p.lang}</span></strong>
                 <p class="muted small">{p.description}</p>
+                <span class="proj-url mono">{shortUrl(p.url)}</span>
               </a>
             ))}
           </div>
@@ -59,26 +92,26 @@ import { base } from '../utils/site';
       </main>
 
       <aside class="cv-side">
-        <div class="card">
+        <div class="card side-card">
           <picture>
             <source srcset={`${base}/avatar.webp`} type="image/webp" />
             <img src={`${base}/avatar.jpg`} alt={cv.name} class="avatar" width="460" height="460" loading="lazy" />
           </picture>
-          <h3>{cv.name}</h3>
-          <p class="muted small">{cv.title}</p>
+          <h3 class="side-name">{cv.name}</h3>
+          <p class="muted small side-role">{cv.title}</p>
           <div class="divider"></div>
           <h4>Skills</h4>
           {Object.entries(cv.skills).map(([cat, items]) => (
             <div class="skill-group">
               <span class="cat">{cat}</span>
               <div class="chips">
-                {(items as string[]).map(s => <span class="chip">{s}</span>)}
+                {(items as string[]).map((s) => <span class="chip">{s}</span>)}
               </div>
             </div>
           ))}
           <div class="divider"></div>
           <h4>Education</h4>
-          {cv.education.map(ed => (
+          {cv.education.map((ed) => (
             <div class="edu">
               <strong>{ed.school}</strong>
               <p class="muted small">{ed.degree}</p>
@@ -88,29 +121,38 @@ import { base } from '../utils/site';
           ))}
           <div class="divider"></div>
           <h4>Languages</h4>
-          <ul class="small muted">
-            {cv.languages.map(l => <li>{l.lang} — {l.level}</li>)}
+          <ul class="plain small muted">
+            {cv.languages.map((l) => <li>{l.lang} — {l.level}</li>)}
           </ul>
-          <h4 style="margin-top:16px">Certifications</h4>
-          <ul class="small muted">
-            {cv.certifications.map(c => <li>{c}</li>)}
+          <h4>Certifications</h4>
+          <ul class="plain small muted">
+            {cv.certifications.map((c) => <li>{c}</li>)}
           </ul>
         </div>
       </aside>
     </div>
-  </div>
+  </article>
 
   <style>
+    /* ---------- screen ---------- */
     .cv-wrap{padding:40px 0}
-    .cv-header{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:start;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+    .cv-header{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:start;margin-bottom:14px;padding-bottom:24px;border-bottom:1px solid var(--border)}
     .cv-header h1{font-size:2.4rem;letter-spacing:-0.03em}
     .role{font-weight:600;color:var(--accent)}
+    .contacts{margin-top:8px;font-size:.92rem;color:var(--muted);line-height:1.9}
+    .contacts a{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--border)}
+    .contacts a:hover{text-decoration-color:var(--accent)}
+    .sep{margin:0 7px;color:var(--border)}
+    .url{display:none}
     .actions{display:flex;gap:12px;flex-wrap:wrap}
+    .print-hint{margin:0 0 22px;font-size:.85rem;color:var(--muted)}
     .cv-grid{display:grid;grid-template-columns:1.7fr .9fr;gap:24px}
-    .cv-main{display:grid;gap:24px}
-    .cv-main h2, .cv-side h2{font-size:1.25rem;margin-bottom:12px;letter-spacing:-0.02em}
+    .cv-main{display:grid;gap:28px}
+    .block h2{font-size:1.25rem;letter-spacing:-0.02em;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
     .cv-side{position:sticky;top:80px;height:fit-content}
     .head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .head h3{font-size:1rem}
+    .company{color:var(--muted);font-weight:500}
     .period{background:var(--bg2);border:1px solid var(--border);padding:4px 10px;border-radius:999px;font-size:.8rem;color:var(--muted);white-space:nowrap}
     .grid{display:grid;gap:16px}
     .two{grid-template-columns:1fr 1fr}
@@ -121,27 +163,95 @@ import { base } from '../utils/site';
     .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
     .chip{padding:4px 8px;border-radius:999px;background:var(--bg2);border:1px solid var(--border);font-size:.75rem;color:var(--muted)}
     .small{font-size:.9rem}
-    .proj{transition:border-color .2s}
+    .about{margin-top:12px}
+    .place{margin-top:2px}
+    .desc{margin:8px 0}
+    .proj{display:block;transition:border-color .2s}
     .proj:hover{border-color:rgba(99,102,241,.4)}
+    .proj-url{display:block;margin-top:8px;font-size:.78rem;color:var(--accent)}
     .edu{margin-bottom:12px}
+    .plain{list-style:none;padding:0}
+    .plain li{margin:2px 0}
     .link{color:var(--accent);font-size:.9rem}
+    .cv-side h4{margin-top:16px}
     @media(max-width:900px){
       .cv-grid{grid-template-columns:1fr}
       .cv-side{position:static}
       .two{grid-template-columns:1fr}
     }
+
+    /* ---------- paper ----------
+       The PDF is the copy a hiring manager reads, so print media is a first
+       class layout. Rules to respect:
+       - One column. Multi-column grid and flex drop content when a page
+         breaks inside them.
+       - A card must never carry `break-inside: avoid` when it can grow past
+         one page. Chromium then drops the whole box.
+       - The design must survive printing without background graphics, so no
+         text sits on a filled background. */
     @media print{
-      @page{size:A4;margin:15mm}
-      .nav,.footer,.actions{display:none !important}
+      @page{size:A4;margin:13mm 13mm 16mm}
+      *,*::before,*::after{animation:none !important;transition:none !important;box-shadow:none !important}
+      html,body{background:#fff !important;color:#15151a !important}
+      body{font-size:10pt;line-height:1.42;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      .no-print,.print-hint{display:none !important}
+      .muted,.place,.small{color:#3f3f46 !important}
       .cv-wrap{padding:0;max-width:100%}
-      .cv-grid{grid-template-columns:1fr !important;gap:16px}
-      .cv-side{position:static !important}
-      .cv-side .avatar{display:none !important}
-      body{background:#fff !important;color:#000 !important}
-      .card{border:1px solid #ddd !important;background:#fff !important;color:#000 !important;box-shadow:none !important;break-inside:avoid}
-      .muted,.role,.cat,.link{color:#000 !important}
-      .chip,.period{background:#fff !important;border-color:#999 !important;color:#000 !important}
-      a{text-decoration:none;color:#000 !important}
+      .cv-grid,.cv-main,.grid,.two{display:block !important}
+      .about{margin-top:6pt}
+
+      /* header */
+      .cv-header{display:block;border-bottom:2px solid #15151a;margin-bottom:10pt;padding-bottom:7pt}
+      .cv-header h1{font-size:22pt;line-height:1.1;letter-spacing:-.02em}
+      .role{font-size:11pt;margin-top:2pt}
+      .contacts{font-size:8.6pt;line-height:1.6;color:#3f3f46 !important;margin-top:5pt}
+      .contacts a{text-decoration:none}
+      .lbl{display:none}
+      .url{display:inline}
+      .sep{margin:0 5pt;color:#d4d4d8}
+
+      /* sections */
+      h2{font-size:8.6pt;letter-spacing:.16em;text-transform:uppercase;color:#4f46e5;border-bottom:1px solid #d4d4d8;padding-bottom:2.5pt;margin:11pt 0 7pt;break-after:avoid-page}
+      .block-summary h2{margin-top:0}
+      h3,h4{break-after:avoid-page}
+      h4{font-size:8.2pt;letter-spacing:.13em;text-transform:uppercase;color:#4f46e5;border-bottom:1px solid #e4e4e7;padding-bottom:2pt;margin:9pt 0 4pt}
+      .divider{display:none}
+      p{orphans:2;widows:2}
+
+      /* experience */
+      .card{border:0 !important;background:none !important;border-radius:0 !important;padding:0 !important}
+      .exp{border-bottom:1px solid #e4e4e7 !important;padding-bottom:6pt !important;margin-bottom:6pt;break-inside:avoid}
+      .exp:last-child{border-bottom:0 !important;margin-bottom:0}
+      .head{align-items:baseline}
+      .head h3{font-size:10.4pt}
+      .company{color:#52525b !important;font-weight:500}
+      .period{background:none !important;border:0 !important;padding:0 !important;font-size:8.6pt;color:#52525b !important;font-weight:600}
+      .place{font-size:8.4pt;color:#71717a !important;margin-top:0}
+      .desc{font-size:9.4pt;margin:3pt 0 0}
+      .exp ul{list-style:none;margin:3pt 0 0;padding:0}
+      .exp li{position:relative;padding-left:8pt;margin:1.5pt 0;font-size:9.4pt;break-inside:avoid}
+      .exp li::before{content:"•";position:absolute;left:0;color:#6366f1}
+      .exp .link{display:block;margin-top:2pt;font-size:8.4pt}
+
+      /* projects */
+      .proj{margin-bottom:5pt;break-inside:avoid}
+      .proj strong{font-size:9.8pt}
+      .proj p{font-size:9.2pt;margin-top:1pt}
+      .proj-url{color:#4f46e5 !important;font-size:8pt;margin-top:1pt}
+
+      /* skills, education, languages, certifications */
+      .side-card>picture,.side-name,.side-role{display:none !important}
+      .skill-group{display:grid;grid-template-columns:92pt 1fr;gap:4pt;margin:0 0 2.5pt;break-inside:avoid}
+      .cat{font-size:8.2pt;letter-spacing:.06em;color:#52525b !important;font-weight:700;padding-top:.5pt}
+      .chips{display:block;margin:0}
+      .chip{display:inline;background:none !important;border:0 !important;padding:0 !important;border-radius:0 !important;font-size:9.6pt;color:#15151a !important}
+      .chip:not(:last-child)::after{content:" · ";color:#a1a1aa}
+      .edu{margin-bottom:4pt}
+      .edu strong{font-size:9.8pt}
+      .edu p{margin:1pt 0;font-size:9.2pt}
+      .plain{display:block;margin:0}
+      .plain li{display:inline;margin:0;font-size:9.4pt}
+      .plain li:not(:last-child)::after{content:" · ";color:#a1a1aa}
     }
   </style>
 </Layout>
