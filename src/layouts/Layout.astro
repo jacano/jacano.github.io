@@ -133,7 +133,7 @@ const blogPosting = ogType === "article" ? {
     </main>
     <footer class="footer">
       <div class="container footer-inner">
-        <p>© {new Date().getFullYear()} Juan Antonio Cano Salado · Built with Astro · <a href="https://github.com/jacano/jacano.github.io">Source on GitHub</a> · Text follows <a href="https://github.com/AminBlg/SimpleEnglish">Simple English (ASD-STE100)</a></p>
+        <p>© <span id="year">{new Date().getFullYear()}</span> Juan Antonio Cano Salado · Built with Astro · <a href="https://github.com/jacano/jacano.github.io">Source on GitHub</a> · Text follows <a href="https://github.com/AminBlg/SimpleEnglish">Simple English (ASD-STE100)</a></p>
         <p class="muted">Seville, Spain · <a href="mailto:jacanosalado@gmail.com">jacanosalado@gmail.com</a></p>
       </div>
     </footer>
@@ -151,6 +151,13 @@ const blogPosting = ogType === "article" ? {
           btn?.setAttribute('aria-expanded', 'false');
         });
       });
+
+      /** Keep the year of the footer true without a rebuild. The value in the
+       *  markup comes from the build; this corrects it when the year turns. */
+      const year = document.getElementById('year');
+      if (year && year.textContent !== String(new Date().getFullYear())) {
+        year.textContent = String(new Date().getFullYear());
+      }
 
       /** Show every card before the browser prints. The reveal animation keeps
        *  a card at opacity 0 until it scrolls into view, and the print engine

@@ -10,6 +10,8 @@ const shortUrl = (url: string) => {
   return [host, ...rest.slice(0, 2)].join('/');
 };
 
+const siteUrl = 'https://jacano.github.io';
+
 const contacts = [
   { label: 'GitHub', url: cv.github },
   { label: 'LinkedIn', url: cv.linkedin },
@@ -29,6 +31,8 @@ const contacts = [
           <span>Seville, Spain</span>
           <span class="sep" aria-hidden="true">·</span>
           <a href={`mailto:${cv.email}`}>{cv.email}</a>
+          <span class="sep site-print" aria-hidden="true">·</span>
+          <a class="site-print" href={siteUrl}>{shortUrl(siteUrl)}</a>
           {contacts.map((c) => (
             <>
               <span class="sep" aria-hidden="true">·</span>
@@ -142,6 +146,7 @@ const contacts = [
     .contacts a:hover{text-decoration-color:var(--accent)}
     .sep{margin:0 7px;color:var(--border)}
     .url{display:none}
+    .site-print{display:none}
     .actions{display:flex;gap:12px;flex-wrap:wrap}
     .cv-grid{display:grid;grid-template-columns:1.7fr .9fr;gap:24px}
     .cv-main{display:grid;gap:28px}
@@ -204,7 +209,7 @@ const contacts = [
       .contacts{font-size:8.6pt;line-height:1.6;color:#3f3f46 !important;margin-top:5pt}
       .contacts a{text-decoration:none}
       .lbl{display:none}
-      .url{display:inline}
+      .url,.site-print{display:inline}
       .sep{margin:0 5pt;color:#d4d4d8}
 
       /* sections */
