@@ -3,9 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import cv from '../data/cv.json';
 import { base } from '../utils/site';
 
-/** Shorten a link for paper: "https://github.com/jacano" becomes "github.com/jacano". */
+/** Shorten a link for paper: "https://www.github.com/jacano" becomes "github.com/jacano". */
 const shortUrl = (url: string) => {
-  const clean = url.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+  const clean = url.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/+$/, '');
   const [host, ...rest] = clean.split('/');
   return [host, ...rest.slice(0, 2)].join('/');
 };
@@ -44,8 +44,6 @@ const contacts = [
         <a href={`${base}/`} class="btn btn-outline">← Home</a>
       </div>
     </header>
-
-    <p class="print-hint no-print">For a clean copy, turn off Headers and footers in the print dialog.</p>
 
     <div class="cv-grid">
       <main class="cv-main">
@@ -145,7 +143,6 @@ const contacts = [
     .sep{margin:0 7px;color:var(--border)}
     .url{display:none}
     .actions{display:flex;gap:12px;flex-wrap:wrap}
-    .print-hint{margin:0 0 22px;font-size:.85rem;color:var(--muted)}
     .cv-grid{display:grid;grid-template-columns:1.7fr .9fr;gap:24px}
     .cv-main{display:grid;gap:28px}
     .block h2{font-size:1.25rem;letter-spacing:-0.02em;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
@@ -194,7 +191,7 @@ const contacts = [
       *,*::before,*::after{animation:none !important;transition:none !important;box-shadow:none !important}
       html,body{background:#fff !important;color:#15151a !important}
       body{font-size:10pt;line-height:1.42;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-      .no-print,.print-hint{display:none !important}
+      .no-print{display:none !important}
       .muted,.place,.small{color:#3f3f46 !important}
       .cv-wrap{padding:0;max-width:100%}
       .cv-grid,.cv-main,.grid,.two{display:block !important}
