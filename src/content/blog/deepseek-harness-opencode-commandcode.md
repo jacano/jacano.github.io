@@ -5,8 +5,6 @@ tag: 'AI Tooling'
 excerpt: 'How I connected Command Code and OpenCode Go to DeepSeek Harness, and why the built-in tokens-per-second readout is useful when an agent makes many calls.'
 ---
 
-> **Version record — checked 23 September 2026.** The exact version used for the original test was not recorded. The [DeepSeek Harness release page](https://github.com/deepseek-ai/deepseek-harness/releases) lists `v0.1.5-rc.2`; I have not re-tested every step in this article against that release. Check the current release notes before you follow the commands.
-
 I installed **DeepSeek Harness** (DSH) because its web UI shows **tokens per second** without extra setup. After using it for a while, I wrote down what mattered and how I connected my two providers.
 
 Agent work consists of many calls in a row, so speed changes how the session feels. A model writing 15 tokens per second feels broken; one writing 80 feels fast. Most harnesses hide that number. DSH puts it in the UI.

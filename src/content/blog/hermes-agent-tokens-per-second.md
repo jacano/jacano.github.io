@@ -5,8 +5,6 @@ tag: 'AI Tooling'
 excerpt: 'How Hermes Agent Desktop reports tokens per second, and how I connected Command Code and OpenCode Go.'
 ---
 
-> **Version record — checked 23 September 2026.** The exact version used for the original test was not recorded. The [Hermes Agent release page](https://github.com/NousResearch/hermes-agent/releases) lists `v0.21.1` (`v2026.9.7`); I have not re-tested every step in this article against that release. Check the current release notes and documentation before you follow the commands.
-
 I wanted another way to see the cost of a slow model. **Hermes Agent Desktop** makes the speed visible, so I installed it with the same providers I used in DSH.
 
 I keep the same two subscriptions, **Command Code** and **OpenCode Go**, and try a second interface: **Hermes Agent Desktop** from [Nous Research](https://nousresearch.com). There is no series here: these pieces are notes from the same learning process, and each one stands alone.
