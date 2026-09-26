@@ -81,11 +81,11 @@ Two details that DSH made me handle by hand, Hermes Agent handles alone:
 
 ## Set the keys
 
-Hermes Agent reads `~/.hermes/.env`. Note the variable name: Hermes wants `OPENCODE_GO_API_KEY`, not `OPENCODE_API_KEY` as DSH did. The key value is the same OpenCode Go key.
+Hermes Agent reads `~/.hermes/.env`. The two variables are `COMMANDCODE_API_KEY` for Command Code and `OPENCODE_GO_API_KEY` for OpenCode Go. Note that Hermes uses `OPENCODE_GO_API_KEY`, not `OPENCODE_API_KEY` as DSH did. The key value is the same OpenCode Go key.
 
 ```bash
-OPENCODE_GO_API_KEY=your-open-code-go-key
 COMMANDCODE_API_KEY=your-command-code-key
+OPENCODE_GO_API_KEY=your-open-code-go-key
 ```
 
 ---
