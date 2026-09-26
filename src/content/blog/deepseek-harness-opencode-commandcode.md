@@ -1,8 +1,8 @@
 ---
-title: 'DeepSeek Harness with OpenCode Go and Command Code'
+title: 'DeepSeek Harness with Command Code and OpenCode Go'
 date: '2026-09-19'
 tag: 'AI Tooling'
-excerpt: 'How I connected OpenCode Go and Command Code to DeepSeek Harness, and why the built-in tokens-per-second readout is useful when an agent makes many calls.'
+excerpt: 'How I connected Command Code and OpenCode Go to DeepSeek Harness, and why the built-in tokens-per-second readout is useful when an agent makes many calls.'
 ---
 
 > **Version record — checked 23 September 2026.** The exact version used for the original test was not recorded. The [DeepSeek Harness release page](https://github.com/deepseek-ai/deepseek-harness/releases) lists `v0.1.5-rc.2`; I have not re-tested every step in this article against that release. Check the current release notes before you follow the commands.
@@ -23,7 +23,7 @@ I first noticed the speed readout in [a post on X by @Ubendev](https://x.com/Ube
 
 - **Node.js** 22 or newer. I run Node 24.
 - A terminal on macOS, Linux or Windows.
-- **One model provider.** Here the providers are an **OpenCode Go** subscription and a **Command Code** account. You do not need both. One is enough to start.
+- **One model provider.** Here the providers are a **Command Code** account and an **OpenCode Go** subscription. You do not need both. One is enough to start.
 
 DSH calls the program that runs the agent loop a **harness**, and the brain behind it a **model**. The model plugin speaks the OpenAI-compatible wire, so other providers work too. A free endpoint or a local server, such as Ollama, is enough.
 
@@ -80,15 +80,15 @@ Define only the variables of the providers you add. Open a new terminal after th
 
 ---
 
-## Step 1: add OpenCode Go
+## Step 1: add Command Code
 
-OpenCode Go is an OpenAI-compatible gateway at `https://opencode.ai/zen/go/v1`. It accepts the model `deepseek-v4.1-flash`. It needs one stable session header, `x-opencode-session`. The route reads its key from `OPENCODE_API_KEY`.
+Command Code has its own OpenAI-compatible endpoint: `https://api.commandcode.ai/provider/v1`. The model id is `deepseek/deepseek-v4.1-flash`. The route reads its key from `COMMANDCODE_API_KEY`.
 
 ---
 
-## Step 2: add Command Code
+## Step 2: add OpenCode Go
 
-Command Code has its own OpenAI-compatible endpoint: `https://api.commandcode.ai/provider/v1`. The model id is `deepseek/deepseek-v4.1-flash`. Note the `deepseek/` prefix: OpenCode Go does not use it. The route reads its key from `COMMANDCODE_API_KEY`.
+OpenCode Go is an OpenAI-compatible gateway at `https://opencode.ai/zen/go/v1`. It accepts the model `deepseek-v4.1-flash`. It needs one stable session header, `x-opencode-session`. The route reads its key from `OPENCODE_API_KEY`.
 
 ---
 
@@ -104,10 +104,22 @@ permission:
 ui-theme:
   preference: dark
 agent-default-model:
-  provider: opencode-go
-  model: deepseek-v4.1-flash
+  provider: command-code
+  model: deepseek/deepseek-v4.1-flash
 llm-pi-ai:
   providers:
+    command-code:
+      displayName: Command Code
+      api: openai-completions
+      baseURL: https://api.commandcode.ai/provider/v1
+      apiKeyEnv: COMMANDCODE_API_KEY
+      defaultContextWindow: 1000000
+      defaultMaxTokens: 32768
+      models:
+        - id: deepseek/deepseek-v4.1-flash
+          name: DeepSeek V4.1 Flash (Command Code)
+          contextWindow: 1000000
+          maxTokens: 32768
     opencode-go:
       displayName: OpenCode Go
       api: openai-completions
@@ -122,21 +134,9 @@ llm-pi-ai:
           name: DeepSeek V4.1 Flash
           contextWindow: 1048576
           maxTokens: 32768
-    command-code:
-      displayName: Command Code
-      api: openai-completions
-      baseURL: https://api.commandcode.ai/provider/v1
-      apiKeyEnv: COMMANDCODE_API_KEY
-      defaultContextWindow: 1000000
-      defaultMaxTokens: 32768
-      models:
-        - id: deepseek/deepseek-v4.1-flash
-          name: DeepSeek V4.1 Flash (Command Code)
-          contextWindow: 1000000
-          maxTokens: 32768
 ```
 
-Start `dsh web` again. The model menu shows **OpenCode Go** and **Command Code** as separate groups, and I can choose a model for each session. The `agent-default-model` block sets it for a new session. To make Command Code the default, change two lines:
+Start `dsh web` again. The model menu shows **Command Code** and **OpenCode Go** as separate groups, and I can choose a model for each session. The `agent-default-model` block sets it for a new session. To make Command Code the default, change two lines:
 
 ```yaml
 agent-default-model:
@@ -148,7 +148,7 @@ agent-default-model:
 
 ## The context window
 
-The two routes show 1,048,576 for OpenCode Go and 1,000,000 for Command Code, because each API reports its own number:
+The two routes show 1,000,000 for Command Code and 1,048,576 for OpenCode Go, because each API reports its own number:
 
 - Command Code returns `context_length: 1000000`.
 - OpenCode Go does not publish it, so I use 1,048,576, the binary 1M that DeepSeek uses.
@@ -159,7 +159,7 @@ The number is metadata for history compaction and display. The server enforces t
 
 ## Before DSH
 
-Before DSH I used two native desktop apps: [OpenCode Desktop](https://opencode.ai/download) and [Command Code Desktop](https://github.com/CommandCodeAI/desktop). Both talk to the same subscriptions and keep the same keys. Neither showed tokens per second. When a model felt slow, I blamed the network.
+Before DSH I used two native desktop apps: [Command Code Desktop](https://github.com/CommandCodeAI/desktop) and [OpenCode Desktop](https://opencode.ai/download). Both talk to the same subscriptions and keep the same keys. Neither showed tokens per second. When a model felt slow, I blamed the network.
 
 DSH adds that measurement, so a slow session becomes a fact rather than a feeling.
 
@@ -170,5 +170,5 @@ DSH adds that measurement, so a slow session becomes a fact rather than a feelin
 DSH is local and plugin-based. It keeps my subscriptions, the settings are one YAML file, and a new provider is a small block:
 
 - DeepSeek Harness: [github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness).
-- OpenCode Go: [opencode.ai/docs/go](https://opencode.ai/docs/go/).
 - Command Code: [commandcode.ai](https://commandcode.ai).
+- OpenCode Go: [opencode.ai/docs/go](https://opencode.ai/docs/go/).

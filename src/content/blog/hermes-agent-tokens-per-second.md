@@ -2,14 +2,14 @@
 title: 'Tokens per Second in Hermes Agent'
 date: '2026-09-21'
 tag: 'AI Tooling'
-excerpt: 'How Hermes Agent reports tokens per second in the terminal and desktop app, and how I connected OpenCode Go and Command Code.'
+excerpt: 'How Hermes Agent reports tokens per second in the terminal and desktop app, and how I connected Command Code and OpenCode Go.'
 ---
 
 > **Version record — checked 23 September 2026.** The exact version used for the original test was not recorded. The [Hermes Agent release page](https://github.com/NousResearch/hermes-agent/releases) lists `v0.21.1` (`v2026.9.7`); I have not re-tested every step in this article against that release. Check the current release notes and documentation before you follow the commands.
 
 I wanted another way to see the cost of a slow model. **Hermes Agent** shows tokens per second in both the terminal and desktop app, so I installed it with the same providers I used in DSH.
 
-I keep the same two subscriptions, **OpenCode Go** and **Command Code**, and try a second harness: **Hermes Agent** from [Nous Research](https://nousresearch.com). It also shows the speed number, in two places: the terminal and a desktop app. There is no series here: these pieces are notes from the same learning process, and each one stands alone.
+I keep the same two subscriptions, **Command Code** and **OpenCode Go**, and try a second harness: **Hermes Agent** from [Nous Research](https://nousresearch.com). It also shows the speed number, in two places: the terminal and a desktop app. There is no series here: these pieces are notes from the same learning process, and each one stands alone.
 
 The useful difference is that both providers are **built in**. DSH required two provider blocks in YAML. Hermes required none.
 
@@ -18,7 +18,7 @@ The useful difference is that both providers are **built in**. DSH required two 
 ## What you need
 
 - A terminal on **macOS, Linux, or Windows**.
-- **One model subscription.** I use **OpenCode Go** and **Command Code**. One is enough to start.
+- **One model subscription.** I use **Command Code** and **OpenCode Go**. One is enough to start.
 - The API keys of the providers you use.
 
 Hermes is a **harness**, not a model. It brings no account and no key. The repo is [github.com/NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) and the docs live at [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/).
@@ -69,8 +69,8 @@ This is the part I like most: both subscriptions are already first-class provide
 
 | Subscription | Provider id | Env var |
 | --- | --- | --- |
-| OpenCode Go | `opencode-go` | `OPENCODE_GO_API_KEY` |
 | Command Code | `commandcode` | `COMMANDCODE_API_KEY` |
+| OpenCode Go | `opencode-go` | `OPENCODE_GO_API_KEY` |
 
 Two details that DSH made me handle by hand, Hermes handles alone:
 
@@ -143,6 +143,6 @@ Hermes Agent keeps my subscriptions, runs on the three desktop platforms, and sh
 
 - Hermes Agent: [github.com/NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent).
 - Docs: [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/).
-- OpenCode Go: [opencode.ai/docs/go](https://opencode.ai/docs/go/).
 - Command Code: [commandcode.ai](https://commandcode.ai).
-- Another piece on the same two subscriptions: [DeepSeek Harness with OpenCode Go and Command Code](/blog/deepseek-harness-opencode-commandcode/).
+- OpenCode Go: [opencode.ai/docs/go](https://opencode.ai/docs/go/).
+- Another piece on the same two subscriptions: [DeepSeek Harness with Command Code and OpenCode Go](/blog/deepseek-harness-opencode-commandcode/).
