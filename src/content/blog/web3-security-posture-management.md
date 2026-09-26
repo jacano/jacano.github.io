@@ -2,20 +2,20 @@
 title: 'From audits to continuous posture: why Web3 needs W3SPM'
 date: '2026-07-15'
 tag: 'Web3 Security'
-excerpt: 'Over 75% of losses in 2026 came from operational gaps, not code bugs. Dedge builds continuous security from code to chain.'
+excerpt: 'Why smart-contract audits are not enough when signers, permissions, oracles, and other parts of a Web3 system keep changing.'
 ---
 
-In 2026, attacks moved beyond the smart contract and into operations. The State of Digital Asset Security for H1 2026 shows the shift: more than 75% of losses came from operational and configuration gaps, not from code bugs. And the clock is brutal. The average time from exploit to irreversible loss was 12 minutes.
+In 2026, many losses came from the systems around smart contracts rather than from the contracts themselves. The State of Digital Asset Security for H1 2026 attributes more than 75% of losses to operational and configuration gaps. Its average time from exploit to irreversible loss was 12 minutes.
 
-Twelve minutes is not enough time to read an alert, understand it, and react. You need to see the problem before it becomes an incident.
+Twelve minutes leaves little time to read an alert, investigate it, and react. Detection has to happen before the incident reaches production.
 
 ---
 
 ## An audit is a photo. You need a camera.
 
-A smart contract audit, formal verification, and a key-management review each protect one part of the system at one point in time.
+An audit, formal verification, or key-management review tells you something about the system when the check happens.
 
-An on-chain system changes after every check. Signers change. Timelocks move. Oracles rotate. Permissions drift. The audit is still correct on paper, and the system is already different.
+After that, the system keeps changing. Signers change, timelocks move, oracles rotate, and permissions drift. The audit may still be correct, but it may no longer describe the live system.
 
 The question is simple: who watches the live state?
 

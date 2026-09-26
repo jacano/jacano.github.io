@@ -2,16 +2,16 @@
 title: 'Lead remote engineering: culture, delivery and trust'
 date: '2025-05-20'
 tag: 'Leadership'
-excerpt: 'This is my playbook as Head of Engineering. It covers rituals that work, the oxygen that a team needs, and hiring without loss of quality.'
+excerpt: 'Practical notes on leading a distributed engineering team: useful rituals, space for people to solve problems, delivery metrics, and hiring.'
 ---
 
-As Head of Engineering at Dedge Security, I lead a distributed team that builds a critical Web3 platform. Remote work is not a detail for us. It is how we work, and this is the playbook I follow.
+I lead engineering at Dedge Security, where a distributed team builds a Web3 platform. We work remotely, so the usual office habits do not help much. These are the practices I use instead.
 
 ---
 
 ## Rituals that add value
 
-A remote team needs a few useful habits, not a calendar full of meetings.
+Remote work does not need more meetings. It needs a few habits that help people see the work and make decisions.
 
 - Weekly demos beat endless status updates. Show the work.
 - Ask people to draw the architecture. A diagram explains a system faster than any document.
@@ -22,7 +22,7 @@ A remote team needs a few useful habits, not a calendar full of meetings.
 
 ## Give oxygen to the team
 
-This is the lesson that helped me most. An experienced engineering manager told me to give oxygen to other people on the team.
+The best advice I received from an engineering manager was simple: give other people room to do the interesting work.
 
 As a manager, you see the interesting problems first: the hard bug, the new tool, or the design that nobody has solved. The easy choice is to keep them. Do not.
 
@@ -36,7 +36,7 @@ As a manager, you see the interesting problems first: the hard bug, the new tool
 
 ## Measure delivery, not people
 
-Track how long a critical fix takes to reach production. Look at the trend, not at one data point.
+I track how long a critical fix takes to reach production. The trend matters more than any single number.
 
 Then protect the number. A team that fears a bad metric will hide it, and a hidden number is worse than a bad one.
 

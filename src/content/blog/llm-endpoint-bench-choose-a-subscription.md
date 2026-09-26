@@ -2,16 +2,16 @@
 title: 'Which AI subscription to keep: I built a benchmark to decide'
 date: '2026-09-23'
 tag: 'AI Tooling'
-excerpt: 'Two agent subscriptions cost $10 a month each, and I wanted to keep one. So I wrote a small benchmark and measured both routes the way an agent uses them: the delay on every call, and the speed of the answer.'
+excerpt: 'I measured two $10 agent subscriptions from Seville, using the same model and four test phases, to decide which route to keep.'
 ---
 
 I pay for two AI subscriptions for agent work: **OpenCode Go** and **Command Code**. Both cost **$10 a month**, so price does not separate them. I do not need both for my personal setup, so one will remain my main route and I will pause the other.
 
-The question is which one. Price cannot answer it, because both plans cost the same. My impression cannot answer it either: when a session felt slow, I blamed the network without a number to test that assumption.
+I needed a way to choose between them. Price was no help because both plans cost the same, and my impression was unreliable. When a session felt slow, I blamed the network without a number to test that assumption.
 
-I wrote a small benchmark and measured both routes as I use them. I live in [Seville](https://en.wikipedia.org/wiki/Seville), in the south of Spain, and I run it from my own connection at home, so every number below carries my distance to each gateway.
+I wrote a small benchmark and measured both routes from my home connection in [Seville](https://en.wikipedia.org/wiki/Seville), in the south of Spain. The numbers include my distance to each gateway, so they describe my setup, not a universal ranking.
 
-Two earlier pieces of mine set up **DeepSeek Harness** and **Hermes Agent** on these same two subscriptions. They are not chapters of a series, only notes from the same learning process, and each one stands alone. This is the piece where I stop paying for one of them.
+I had already used both subscriptions with **DeepSeek Harness** and **Hermes Agent**. This benchmark answers a more practical question: which route should I keep paying for?
 
 > **The numbers and the raw records are open.** Every number here comes from four rounds of the same test on one Windows 11 host on 23 September 2026. A round is one full execution of the test: both routes, the same four phases, one after the other, in one sitting. Each round leaves its own directory of records in the repository. The tool, the raw records, the tables and the limits are in [github.com/jacano/llm-endpoint-bench](https://github.com/jacano/llm-endpoint-bench). Run `python bench.py ab --a commandcode --b opencode-go --n 4` to measure your own two routes, and compare your table with mine.
 
@@ -41,7 +41,7 @@ Same price, same model, same kind of plan. Both serve the model well, and a pers
 
 ## Why these numbers matter for agent work
 
-An agent session is not one question. It is a sequence of calls: read a file, plan, edit, run the tests, read the output, edit again. Sixty calls in one afternoon is a normal day, and every one of them crosses the gateway.
+An agent session is a chain of calls: read a file, plan, edit, run tests, read the output, then edit again. Every call crosses the provider gateway, so small delays add up.
 
 Three numbers decide how that day feels.
 
@@ -77,7 +77,7 @@ Three rules keep the comparison honest:
 
 ## The results, in short
 
-The five headline measurements come first, followed by the charts and the full comparison.
+The five headline measurements are below, followed by the charts and full comparison.
 
 ![Head to head of one round. Command Code against OpenCode Go: the first byte of the server on a ready connection in 27 and 297 milliseconds, the first token of a short answer in 754 and 1822, the total time of a long answer in 2839 and 4006, the writing speed of the visible content at 446 and 292 tokens per second, and four parallel requests at 902 and 424 tokens per second. Command Code is faster on five of five.](/blog/llm-endpoint-bench-head-to-head.svg)
 

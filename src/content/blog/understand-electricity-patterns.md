@@ -2,14 +2,14 @@
 title: 'Understand your electricity patterns over a year'
 date: '2026-09-14'
 tag: 'Energy'
-excerpt: 'An unofficial Python client for the e-distribucion private area. It downloads your hourly history, so you can compare tariffs and review your contracted power.'
+excerpt: 'An unofficial Python client for the e-distribucion private area. It downloads hourly readings so you can compare tariffs and check contracted power.'
 ---
 
-Your electricity bill gives you one number per month. It does not show *when* you used the energy. Without the hourly data, you can compare tariffs only by guessing.
+A monthly bill tells you how much electricity you used, not when you used it. That makes tariff comparisons mostly guesswork.
 
-The problem is that, in Spain, the distributor keeps the data, not the retailer. Each area has its own distributor, and [e-distribucion](https://www.edistribucion.com/) (the Endesa group) covers part of Spain. Your bill shows the name of yours.
+In Spain, the distributor holds the hourly readings, not the retailer. Each area has its own distributor. [e-distribucion](https://www.edistribucion.com/) covers part of the country, and your bill tells you whether it is yours.
 
-If yours is e-distribucion, the private area contains the data you need. The private area holds every hour of your history. The bad news is the portal: it shows the data in small parts, so you never see the full picture.
+If it is, the private area contains the readings. The portal displays them in small pieces, though, which makes the full year hard to inspect.
 
 I wrote a tool that reads the full history and produces one report for each CUPS.
 

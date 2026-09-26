@@ -2,18 +2,18 @@
 title: 'DeepSeek Harness with OpenCode Go and Command Code'
 date: '2026-09-19'
 tag: 'AI Tooling'
-excerpt: 'DeepSeek Harness shows tokens per second in the web UI, out of the box. This article records how I installed it and how I added my OpenCode Go and Command Code subscriptions as model providers.'
+excerpt: 'How I connected OpenCode Go and Command Code to DeepSeek Harness, and why the built-in tokens-per-second readout is useful when an agent makes many calls.'
 ---
 
 > **Version record — checked 23 September 2026.** The exact version used for the original test was not recorded. The [DeepSeek Harness release page](https://github.com/deepseek-ai/deepseek-harness/releases) lists `v0.1.5-rc.2`; I have not re-tested every step in this article against that release. Check the current release notes before you follow the commands.
 
-I test agent harnesses as I test editors: I install one, use it for a while, and record what I learn. This article records my test of **DeepSeek Harness** (DSH). The number that stood out at once: **tokens per second**, right in the web UI, with no setup.
+I installed **DeepSeek Harness** (DSH) because its web UI shows **tokens per second** without extra setup. After using it for a while, I wrote down what mattered and how I connected my two providers.
 
-That number is not a detail. Agent work consists of many calls in a row. A model that writes 15 tokens per second feels broken. A model that writes 80 feels fast. Most harnesses hide the speed. DSH shows it.
+Agent work consists of many calls in a row, so speed changes how the session feels. A model writing 15 tokens per second feels broken; one writing 80 feels fast. Most harnesses hide that number. DSH puts it in the UI.
 
-The second reason is flexibility. DSH is a **harness**, not a model. It brings no account and no key. I plug in my own subscriptions, and I keep my own keys.
+DSH is a **harness**, not a model. It does not bring an account or a key. I connect my own subscriptions and keep the keys under my control.
 
-I found the speed readout in [a post on X by @Ubendev](https://x.com/Ubendev/status/2100920587577446416). I installed DSH the same day.
+I first noticed the speed readout in [a post on X by @Ubendev](https://x.com/Ubendev/status/2100920587577446416), then installed DSH to try it.
 
 ![DeepSeek Harness session statistics: LLM time, tool time, time to first token, and tokens per second](/blog/deepseek-harness-session-stats.png)
 

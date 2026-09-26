@@ -2,14 +2,14 @@
 title: 'See every packet on your LAN from Windows'
 date: '2026-09-16'
 tag: 'Networking'
-excerpt: 'Your smart devices phone home, and your switch hides every word. With Npcap, Wireshark and one short Python script, you can stand in the middle of another device on your own network and read its life. I used it to check a camera that I did not trust.'
+excerpt: 'A lab guide to capturing traffic from an authorized device on a Windows LAN with Npcap, Wireshark, Scapy, and an ARP relay.'
 ---
 
 > **Run this only on your own network, or on a network where you have written permission.** ARP spoofing interrupts the traffic of another device. On a network that is not yours, it is a crime. This is a guide for your own lab.
 
-Every smart device in your home sends messages to the internet: cameras, plugs, and doorbells. Some communicate often, but you cannot see that traffic by default.
+Cameras, plugs, and doorbells all talk to the internet. A switch normally keeps that traffic away from your computer, so you cannot inspect it directly.
 
-You can read the privacy policy, guess, or watch the packets. This article shows the third option. It works on Windows, with three free tools and one short script.
+A privacy policy tells you what a vendor says. A packet capture tells you what the device actually sends. This is how I captured traffic from one of my own cameras on Windows.
 
 ---
 
@@ -49,7 +49,7 @@ That is why I built this tool. I have a Tapo camera at home. The vendor promises
 
 So I put the camera in the middle of my own capture and I waited. When the camera was idle, it sent one small keepalive every 55 seconds. No image. No sound. When I opened the app, the traffic exploded to megabytes.
 
-The camera was honest. But I only knew it because I looked.
+The camera did not show the behaviour I was looking for. I only learned that by capturing its traffic.
 
 ---
 

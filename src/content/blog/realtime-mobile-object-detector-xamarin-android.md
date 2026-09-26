@@ -2,16 +2,16 @@
 title: 'Realtime mobile object detector in Xamarin.Android'
 date: '2019-07-04'
 tag: 'Archive · Xamarin'
-excerpt: 'How we built TailwindTraders AR with Xamarin.Android, EmguTF and TensorFlow Lite. SSD MobileNet, NV21 to RGB in native code, SkiaSharp and 7 fps on Pixel XL.'
+excerpt: 'How a Xamarin.Android sample used TensorFlow Lite, native NV21-to-RGB conversion, and SkiaSharp to detect a hardhat at about 7 fps.'
 ---
 
 > **Archive note:** This article was first published on **July 4, 2019** at [geeks.ms/xamarinteam](https://geeks.ms/xamarinteam/2019/07/04/realtime-mobile-object-detector-in-xamarin-android/) (Plain Concepts Xamarin Team). It is republished here from the [Wayback Machine archive 2024-05-18](https://web.archive.org/web/20240518135953/https://geeks.ms/xamarinteam/2019/07/04/realtime-mobile-object-detector-in-xamarin-android/). Original author: **Juan Antonio Cano**. Code at [github.com/jacano/CameraTF](https://github.com/jacano/CameraTF).
 
-In 2019, the Plain Concepts Xamarin team joined the [TailwindTraders](https://github.com/Microsoft/TailwindTraders-Mobile) project, a set of reference samples for Microsoft Build.
+In 2019, the Plain Concepts Xamarin team contributed to [TailwindTraders](https://github.com/Microsoft/TailwindTraders-Mobile), Microsoft Build reference samples for Xamarin.Forms.
 
-We built the Xamarin.Forms demos to show the main features of Forms, especially Shell.
+Our demos focused on the main Xamarin.Forms features, especially Shell.
 
-TailwindTraders is a fictitious DIY brand that sells tools for work, gardening, and more.
+TailwindTraders is a fictional DIY retailer. The app sells tools for work and gardening.
 
 One part of the app was an AR experience. It read the phone's rear camera in real time, detected a product, and showed its details with a purchase suggestion.
 
