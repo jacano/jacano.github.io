@@ -5,13 +5,13 @@ tag: 'Leadership'
 excerpt: 'This is my playbook as Head of Engineering. It covers rituals that work, the oxygen that a team needs, and hiring without loss of quality.'
 ---
 
-As Head of Engineering at Dedge Security I lead a distributed team. The team builds a critical Web3 platform. Remote work is not a detail here. It is how we work. This is the playbook I follow.
+As Head of Engineering at Dedge Security, I lead a distributed team that builds a critical Web3 platform. Remote work is not a detail for us. It is how we work, and this is the playbook I follow.
 
 ---
 
 ## Rituals that add value
 
-A remote team runs on a few habits, not on a lot of meetings.
+A remote team needs a few useful habits, not a calendar full of meetings.
 
 - Weekly demos beat endless status updates. Show the work.
 - Ask people to draw the architecture. A diagram explains a system faster than any document.
@@ -22,9 +22,9 @@ A remote team runs on a few habits, not on a lot of meetings.
 
 ## Give oxygen to the team
 
-This is the lesson that helped me the most. An experienced engineering manager told me: give oxygen to the others, always inside the team.
+This is the lesson that helped me most. An experienced engineering manager told me to give oxygen to other people on the team.
 
-Here is the problem. As a manager you see the good problems first: the hard bug, the new tool, the design that nobody has cracked. The easy move is to keep them. Do not.
+As a manager, you see the interesting problems first: the hard bug, the new tool, or the design that nobody has solved. The easy choice is to keep them. Do not.
 
 - The investigation that motivates an expert belongs to that expert, not to you.
 - A good task is the best way to grow a person and to keep a person.
@@ -36,7 +36,7 @@ Here is the problem. As a manager you see the good problems first: the hard bug,
 
 ## Measure delivery, not people
 
-Track how long a critical fix takes to reach production. Look at the trend, not at one number.
+Track how long a critical fix takes to reach production. Look at the trend, not at one data point.
 
 Then protect the number. A team that fears a bad metric will hide it, and a hidden number is worse than a bad one.
 

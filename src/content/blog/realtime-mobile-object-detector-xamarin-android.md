@@ -7,17 +7,17 @@ excerpt: 'How we built TailwindTraders AR with Xamarin.Android, EmguTF and Tenso
 
 > **Archive note:** This article was first published on **July 4, 2019** at [geeks.ms/xamarinteam](https://geeks.ms/xamarinteam/2019/07/04/realtime-mobile-object-detector-in-xamarin-android/) (Plain Concepts Xamarin Team). It is republished here from the [Wayback Machine archive 2024-05-18](https://web.archive.org/web/20240518135953/https://geeks.ms/xamarinteam/2019/07/04/realtime-mobile-object-detector-in-xamarin-android/). Original author: **Juan Antonio Cano**. Code at [github.com/jacano/CameraTF](https://github.com/jacano/CameraTF).
 
-In 2019 the Plain Concepts Xamarin team joined [TailwindTraders](https://github.com/Microsoft/TailwindTraders-Mobile), a set of reference samples for Microsoft Build.
+In 2019, the Plain Concepts Xamarin team joined the [TailwindTraders](https://github.com/Microsoft/TailwindTraders-Mobile) project, a set of reference samples for Microsoft Build.
 
-We built the Xamarin.Forms demos. We showed the main features of Forms, and Shell in particular.
+We built the Xamarin.Forms demos to show the main features of Forms, especially Shell.
 
-TailwindTraders is a fictitious DIY brand. It sells tools for work, gardening and more.
+TailwindTraders is a fictitious DIY brand that sells tools for work, gardening, and more.
 
-One part of the app was an AR experience. It read the rear camera of the phone in real time. It detected a product and showed the details and a purchase suggestion.
+One part of the app was an AR experience. It read the phone's rear camera in real time, detected a product, and showed its details with a purchase suggestion.
 
 On Android we used the Xamarin Binding of [android.hardware.camera2](https://developer.android.com/reference/android/hardware/camera2/package-summary) for the preview, and a custom version of [EmguTF](https://github.com/emgucv/emgutf) to detect the objects.
 
-We agreed on three objects. The demo used one: a white hardhat.
+We selected three objects for detection, but the demo used one: a white hardhat.
 
 This article presents [CameraTF](https://github.com/jacano/CameraTF), a Xamarin.Android sample that uses the white hardhat model from TailwindTraders.
 
@@ -33,7 +33,7 @@ The .NET Standard project `Emgu.TF.Lite` is a small version of EmguTF. You give 
 
 For the model we used SSD MobileNet and did transfer learning over [ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03.tar.gz). We trained it on Google Cloud TPUs with this [pipeline config](https://github.com/tensorflow/models/blob/master/research/object_detection/samples/configs/ssd_mobilenet_v1_0.75_depth_quantized_300x300_pets_sync.config). The whole process is described in [this post](https://medium.com/tensorflow/training-and-serving-a-realtime-mobile-object-detector-in-30-minutes-with-cloud-tpus-b78971cf1193).
 
-At the end we had two files: [hardhat_detect.tflite](https://github.com/jacano/CameraTF/blob/master/src/Resources/hardhat/hardhat_detect.tflite) and [hardhat_labels_list.txt](https://github.com/jacano/CameraTF/blob/master/src/Resources/hardhat/hardhat_labels_list.txt).
+The training produced two files: [hardhat_detect.tflite](https://github.com/jacano/CameraTF/blob/master/src/Resources/hardhat/hardhat_detect.tflite) and [hardhat_labels_list.txt](https://github.com/jacano/CameraTF/blob/master/src/Resources/hardhat/hardhat_labels_list.txt).
 
 ---
 
@@ -62,10 +62,6 @@ Then it fills the input tensor, calls the interpreter and reads four output tens
 - the confidence of each object,
 - the number of objects.
 
-A screen recording on a Pixel XL showed about 7 fps in the processing task inside CameraAnalyzer.
+A screen recording on a Pixel XL showed about 7 fps for the processing task inside CameraAnalyzer.
 
 The project is open for [pull requests](https://github.com/jacano/CameraTF/pulls) and issues.
-
----
-
-*First published July 4, 2019 at geeks.ms/xamarinteam. Republished 2025 on jacano.dev via Wayback Machine. Tags: EmguTF, TailwindTraders, TensorFlow, Xamarin.Android*

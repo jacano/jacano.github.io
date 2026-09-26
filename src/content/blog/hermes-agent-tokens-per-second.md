@@ -7,11 +7,11 @@ excerpt: 'Hermes Agent shows tokens per second in the terminal and in a desktop 
 
 > **Version record — checked 23 September 2026.** The exact version used for the original test was not recorded. The [Hermes Agent release page](https://github.com/NousResearch/hermes-agent/releases) lists `v0.21.1` (`v2026.9.7`); I have not re-tested every step in this article against that release. Check the current release notes and documentation before you follow the commands.
 
-In my last article I set up **DeepSeek Harness** because it shows **tokens per second** in the web UI. That number is still the point. Agent work is many calls in a row. A model that writes 15 tokens per second feels broken. A model that writes 80 feels fast.
+I set up **DeepSeek Harness** because it shows **tokens per second** in the web UI. That measurement remains the point. Agent work is many calls in a row. A model that writes 15 tokens per second feels broken. A model that writes 80 feels fast.
 
-The two subscriptions stay the same, **OpenCode Go** and **Command Code**, and I try a second harness: **Hermes Agent** from [Nous Research](https://nousresearch.com). It also shows the speed number, in two places: the terminal and a desktop app. There is no series here: these pieces are notes from the same learning process, and each one stands alone.
+I keep the same two subscriptions, **OpenCode Go** and **Command Code**, and try a second harness: **Hermes Agent** from [Nous Research](https://nousresearch.com). It also shows the speed number, in two places: the terminal and a desktop app. There is no series here: these pieces are notes from the same learning process, and each one stands alone.
 
-The nice surprise: both providers ship **built in**. In DSH I wrote two provider blocks in YAML. In Hermes I wrote zero.
+The useful difference is that both providers are **built in**. DSH required two provider blocks in YAML; Hermes required none.
 
 ---
 
@@ -53,7 +53,7 @@ The installer starts a setup wizard at the end. You can leave it for later; the 
 
 ## The desktop app
 
-Hermes has a CLI, a modern TUI, a web dashboard, and bridges for Telegram, Discord, Slack and more. It also has a **desktop app** for macOS, Windows, and Linux:
+Hermes has a CLI, a modern TUI, a web dashboard, and bridges for Telegram, Discord, Slack, and more. It also has a **desktop app** for macOS, Windows, and Linux:
 
 ```bash
 hermes desktop
@@ -65,7 +65,7 @@ The first run compiles an Electron app and opens it. The app talks to the same a
 
 ## The providers are built in
 
-This is the part I like most. Both of my subscriptions are already first-class providers in Hermes:
+This is the part I like most: both subscriptions are already first-class providers in Hermes:
 
 | Subscription | Provider id | Env var |
 | --- | --- | --- |
@@ -92,7 +92,7 @@ COMMANDCODE_API_KEY=your-command-code-key
 
 ## Pick the default model
 
-Either run the picker:
+You can run the model picker:
 
 ```bash
 hermes model
@@ -128,7 +128,7 @@ The same menu offers the **cache hit rate**. That one is worth it too: it shows 
 
 ## How Hermes measures it
 
-The readout is the average over the **last 10 model calls**: output tokens divided by the full call time. Two consequences:
+The readout is the average over the **last 10 model calls**: output tokens divided by the full call time. This has two consequences:
 
 - It includes the wait before the first token. A reasoning model that thinks for a while shows a lower number than its raw write speed.
 - It is a rolling session average, not a per-message value.
@@ -139,7 +139,7 @@ DSH measures a different slice: only the decode window, from the first token to 
 
 ## Wrap up
 
-Hermes Agent keeps my subscriptions, installs on the three desktop platforms, and shows the speed number in the terminal and in the desktop app. The setup cost is two env vars and two config lines:
+Hermes Agent keeps my subscriptions, runs on the three desktop platforms, and shows the speed number in both the terminal and desktop app. The setup cost is two env vars and two config lines:
 
 - Hermes Agent: [github.com/NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent).
 - Docs: [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/).

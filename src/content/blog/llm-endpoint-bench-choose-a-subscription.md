@@ -5,11 +5,11 @@ tag: 'AI Tooling'
 excerpt: 'Two agent subscriptions cost $10 a month each, and I wanted to keep one. So I wrote a small benchmark and measured both routes the way an agent uses them: the delay on every call, and the speed of the answer.'
 ---
 
-I pay for two AI subscriptions for agent work: **OpenCode Go** and **Command Code**. Both cost **$10 a month**, so the price does not separate them. For a personal setup I do not need both, so one stays as my main route and the other goes to pause.
+I pay for two AI subscriptions for agent work: **OpenCode Go** and **Command Code**. Both cost **$10 a month**, so price does not separate them. I do not need both for my personal setup, so one will remain my main route and I will pause the other.
 
-The question is which one. The price cannot answer it, because the two plans cost the same. My impression cannot answer it either. I noticed that I blamed the network when a session felt slow, and I had no number to check that feeling against.
+The question is which one. Price cannot answer it, because both plans cost the same. My impression cannot answer it either: when a session felt slow, I blamed the network without a number to test that assumption.
 
-So I wrote a small benchmark and measured both routes the way I use them. I live in [Seville](https://en.wikipedia.org/wiki/Seville), in the south of Spain, and I run it from my own connection at home, so every number below carries my distance to each gateway.
+I wrote a small benchmark and measured both routes as I use them. I live in [Seville](https://en.wikipedia.org/wiki/Seville), in the south of Spain, and I run it from my own connection at home, so every number below carries my distance to each gateway.
 
 Two earlier pieces of mine set up **DeepSeek Harness** and **Hermes Agent** on these same two subscriptions. They are not chapters of a series, only notes from the same learning process, and each one stands alone. This is the piece where I stop paying for one of them.
 
@@ -41,7 +41,7 @@ Same price, same model, same kind of plan. Both serve the model well, and a pers
 
 ## Why these numbers matter for agent work
 
-An agent session is not one question. It is many calls in a row: read a file, plan, edit, run the tests, read the output, edit again. Sixty calls in one afternoon is a normal day, and every one of them crosses the gateway.
+An agent session is not one question. It is a sequence of calls: read a file, plan, edit, run the tests, read the output, edit again. Sixty calls in one afternoon is a normal day, and every one of them crosses the gateway.
 
 Three numbers decide how that day feels.
 
@@ -77,7 +77,7 @@ Three rules keep the comparison honest:
 
 ## The results, in short
 
-First the difference in five numbers, then the picture that holds them.
+The five headline measurements come first, followed by the charts and the full comparison.
 
 ![Head to head of one round. Command Code against OpenCode Go: the first byte of the server on a ready connection in 27 and 297 milliseconds, the first token of a short answer in 754 and 1822, the total time of a long answer in 2839 and 4006, the writing speed of the visible content at 446 and 292 tokens per second, and four parallel requests at 902 and 424 tokens per second. Command Code is faster on five of five.](/blog/llm-endpoint-bench-head-to-head.svg)
 
@@ -97,7 +97,7 @@ Then the same measurements again, across the four rounds. The table gives one nu
 
 Every number is how many times faster Command Code was, so a bigger number is always a bigger gain for Command Code. The first three rows are waits: the number is how much longer OpenCode Go kept you waiting. The last two are speeds: the number is how much more Command Code wrote in the same second. The first of those two counts only the visible content, the second counts every token, reasoning included.
 
-Two things stand out.
+Two patterns stand out.
 
 **The waits move. The speeds do not.** The first byte of the server moved between 9.1 and 20.6 times across the four rounds, and the first token of a short answer moved between 1.7 and 2.4 times. The write speed barely moved: 1.6, 1.7, 1.6, 1.5. So a wait measured once is worth less than a speed measured four times.
 
@@ -115,7 +115,7 @@ The card below is the decision in one view: two plans at the same price, one mod
 
 So the numbers point one way: **Command Code stays as my main route, and OpenCode Go goes to pause.**
 
-The honest part: this is my decision for my machine. Another person may prefer the other route for its other models, its price per token, or its rules about training data. The benchmark measures the route, and it measures only what I asked it to measure.
+This is my decision for my machine. Another person may prefer the other route for its other models, its price per token, or its rules about training data. The benchmark measures the route, and it measures only what I asked it to measure.
 
 ---
 
@@ -140,4 +140,4 @@ The tool is small on purpose: one Python file, `curl`, no dependency, and one di
 - Every Command Code plan, with the prices: [commandcode.ai/pricing](https://commandcode.ai/pricing)
 - Another piece on the same two subscriptions: [Tokens per Second in Hermes Agent](/blog/hermes-agent-tokens-per-second/)
 
-One last thing. Run the benchmark on your own machine and compare your table with mine. Your distance to a gateway is not mine, so a number you measure yourself beats a table you read.
+Run the benchmark on your own machine and compare your table with mine. Your distance to a gateway is not mine, so a number you measure yourself beats a table you read.

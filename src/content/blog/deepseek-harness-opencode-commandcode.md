@@ -7,11 +7,11 @@ excerpt: 'DeepSeek Harness shows tokens per second in the web UI, out of the box
 
 > **Version record — checked 23 September 2026.** The exact version used for the original test was not recorded. The [DeepSeek Harness release page](https://github.com/deepseek-ai/deepseek-harness/releases) lists `v0.1.5-rc.2`; I have not re-tested every step in this article against that release. Check the current release notes before you follow the commands.
 
-I test agent harnesses the way I test editors: I install one, I work with it for a while, and I write down what I find. This article records my test of **DeepSeek Harness** (DSH). The number that stood out at once: **tokens per second**, right in the web UI, with no setup.
+I test agent harnesses as I test editors: I install one, use it for a while, and record what I learn. This article records my test of **DeepSeek Harness** (DSH). The number that stood out at once: **tokens per second**, right in the web UI, with no setup.
 
-That number is not a detail. Agent work is many calls in a row. A model that writes 15 tokens per second feels broken. A model that writes 80 feels fast. Most harnesses hide the speed. DSH shows it.
+That number is not a detail. Agent work consists of many calls in a row. A model that writes 15 tokens per second feels broken. A model that writes 80 feels fast. Most harnesses hide the speed. DSH shows it.
 
-The second reason is freedom. DSH is a **harness**, not a model. It brings no account and no key. I plug in my own subscriptions, and I keep my own keys.
+The second reason is flexibility. DSH is a **harness**, not a model. It brings no account and no key. I plug in my own subscriptions, and I keep my own keys.
 
 I found the speed readout in [a post on X by @Ubendev](https://x.com/Ubendev/status/2100920587577446416). I installed DSH the same day.
 
@@ -31,7 +31,7 @@ DSH calls the program that runs the agent loop a **harness**, and the brain behi
 
 ## Install DeepSeek Harness
 
-Take a quick look with no install:
+Try it without a permanent install:
 
 ```bash
 npx @deepseek-ai/dsh web
@@ -50,7 +50,7 @@ The web UI listens on `127.0.0.1` and prints a link with a token.
 
 ## How DSH finds a model
 
-DSH is built from **plugins**. Each plugin owns one section of the settings file, and the section name is the plugin id.
+DSH uses **plugins**. Each plugin owns a section of the settings file, and the section name is the plugin ID.
 
 The part that talks to models is the plugin `@deepseek-ai/dsh-llm-pi-ai`. Its settings section is `llm-pi-ai`. It speaks the **OpenAI-compatible** wire and the **Anthropic-compatible** wire.
 
@@ -69,7 +69,7 @@ The default model lives in its own section, `agent-default-model`.
 
 ## Set the keys
 
-The settings file never holds a secret. It only names the environment variables that hold the keys:
+The settings file does not contain secrets. It names the environment variables that contain the keys:
 
 ```bash
 export OPENCODE_API_KEY="your-open-code-go-key"
@@ -136,7 +136,7 @@ llm-pi-ai:
           maxTokens: 32768
 ```
 
-Start `dsh web` again. The model menu shows two groups, **OpenCode Go** and **Command Code**, and I pick the model per session. The `agent-default-model` block sets it for a new session. To make Command Code the default, change two lines:
+Start `dsh web` again. The model menu shows **OpenCode Go** and **Command Code** as separate groups, and I can choose a model for each session. The `agent-default-model` block sets it for a new session. To make Command Code the default, change two lines:
 
 ```yaml
 agent-default-model:
@@ -153,7 +153,7 @@ The two routes show 1,048,576 for OpenCode Go and 1,000,000 for Command Code, be
 - Command Code returns `context_length: 1000000`.
 - OpenCode Go does not publish it, so I use 1,048,576, the binary 1M that DeepSeek uses.
 
-The number is metadata for the history compaction and for the display. The real limit lives on the server.
+The number is metadata for history compaction and display. The server enforces the actual limit.
 
 ---
 
@@ -161,7 +161,7 @@ The number is metadata for the history compaction and for the display. The real 
 
 Before DSH I used two native desktop apps: [OpenCode Desktop](https://opencode.ai/download) and [Command Code Desktop](https://github.com/CommandCodeAI/desktop). Both talk to the same subscriptions and keep the same keys. Neither showed tokens per second. When a model felt slow, I blamed the network.
 
-DSH adds the number. Now a slow model is a fact, not a feeling.
+DSH adds that measurement, so a slow session becomes a fact rather than a feeling.
 
 ---
 
