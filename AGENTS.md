@@ -92,7 +92,7 @@ docs: fix the agent guide
   npm run build
   ```
 - **Add a featured project:** Edit `src/data/cv.json` `projects` array, then `npm run build` and `git push`.
-- **Add a blog post:** Edit `src/pages/blog/[slug].astro` and `src/pages/blog/index.astro`, then `npm run build`.
+- **Add a blog post:** Create `src/content/blog/<slug>.md` with the four fields of the schema in `src/content.config.ts`: `title`, `date`, `tag` and `excerpt`. The blog list, the home preview, `rss.xml` and the sitemap read the collection, so no page needs an edit. Then run `npm run build`.
 - **Before you push:** run `npm run check` and `npm run build` in the local folder. Do not wait for the deploy workflow to find a build error.
 - **Verify contributions:** Use `gh api search/issues?q=author:jacano+type:pr&per_page=100` — never invent data.
 - **Deploy:** `git push` → wait for `Deploy to GitHub Pages` to succeed → `https://jacano.github.io/` is live.
