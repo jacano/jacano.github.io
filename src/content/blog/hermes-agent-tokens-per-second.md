@@ -1,15 +1,15 @@
 ---
-title: 'Tokens per Second in Hermes Agent'
+title: 'Tokens per Second in Hermes Agent Desktop'
 date: '2026-09-21'
 tag: 'AI Tooling'
-excerpt: 'How Hermes Agent reports tokens per second in the terminal and desktop app, and how I connected Command Code and OpenCode Go.'
+excerpt: 'How Hermes Agent Desktop reports tokens per second, and how I connected Command Code and OpenCode Go.'
 ---
 
 > **Version record — checked 23 September 2026.** The exact version used for the original test was not recorded. The [Hermes Agent release page](https://github.com/NousResearch/hermes-agent/releases) lists `v0.21.1` (`v2026.9.7`); I have not re-tested every step in this article against that release. Check the current release notes and documentation before you follow the commands.
 
-I wanted another way to see the cost of a slow model. **Hermes Agent** shows tokens per second in both the terminal and desktop app, so I installed it with the same providers I used in DSH.
+I wanted another way to see the cost of a slow model. **Hermes Agent Desktop** makes the speed visible, so I installed it with the same providers I used in DSH.
 
-I keep the same two subscriptions, **Command Code** and **OpenCode Go**, and try a second harness: **Hermes Agent** from [Nous Research](https://nousresearch.com). It also shows the speed number, in two places: the terminal and a desktop app. There is no series here: these pieces are notes from the same learning process, and each one stands alone.
+I keep the same two subscriptions, **Command Code** and **OpenCode Go**, and try a second interface: **Hermes Agent Desktop** from [Nous Research](https://nousresearch.com). There is no series here: these pieces are notes from the same learning process, and each one stands alone.
 
 The useful difference is that both providers are **built in**. DSH required two provider blocks in YAML. Hermes required none.
 
@@ -21,11 +21,11 @@ The useful difference is that both providers are **built in**. DSH required two 
 - **One model subscription.** I use **Command Code** and **OpenCode Go**. One is enough to start.
 - The API keys of the providers you use.
 
-Hermes is a **harness**, not a model. It brings no account and no key. The repo is [github.com/NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) and the docs live at [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/).
+Hermes Agent is a **harness**, not a model. The desktop app is its graphical interface, and it brings no account or key. The repo is [github.com/NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) and the docs live at [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/).
 
 ---
 
-## Install Hermes
+## Install Hermes Agent
 
 On macOS, Linux, or WSL2, one line:
 
@@ -53,26 +53,26 @@ The installer starts a setup wizard at the end. You can leave it for later; the 
 
 ## The desktop app
 
-Hermes has a CLI, a modern TUI, a web dashboard, and bridges for Telegram, Discord, Slack, and more. It also has a **desktop app** for macOS, Windows, and Linux:
+Hermes Agent includes a CLI, a modern TUI, a web dashboard, and bridges for Telegram, Discord, Slack, and more. This article uses **Hermes Agent Desktop** on macOS, Windows, and Linux:
 
 ```bash
 hermes desktop
 ```
 
-The first run compiles an Electron app and opens it. The app talks to the same agent core. Same config, same keys, same sessions. A chat that starts in the terminal resumes in the app.
+The first run compiles an Electron app and opens it. It uses the same core, configuration, keys, and sessions as the other Hermes interfaces. A chat that starts in the terminal resumes in the app.
 
 ---
 
 ## The providers are built in
 
-This is the part I like most: both subscriptions are already first-class providers in Hermes:
+This is the part I like most: both subscriptions are already first-class providers in Hermes Agent Desktop:
 
 | Subscription | Provider id | Env var |
 | --- | --- | --- |
 | Command Code | `commandcode` | `COMMANDCODE_API_KEY` |
 | OpenCode Go | `opencode-go` | `OPENCODE_GO_API_KEY` |
 
-Two details that DSH made me handle by hand, Hermes handles alone:
+Two details that DSH made me handle by hand, Hermes Agent handles alone:
 
 - **The session header.** OpenCode Go rejects requests without `x-opencode-session`. Hermes sends it on every call and generates one key per conversation. I do not write the header anywhere.
 - **The wire per model.** Some OpenCode models answer only on the OpenAI **Responses** API, such as `muse-spark-1.3-contributor`. Hermes picks the wire per model. I do not split the provider in two routes as I did in DSH.
@@ -81,7 +81,7 @@ Two details that DSH made me handle by hand, Hermes handles alone:
 
 ## Set the keys
 
-Hermes reads `~/.hermes/.env`. Note the variable name: Hermes wants `OPENCODE_GO_API_KEY`, not `OPENCODE_API_KEY` as DSH did. The key value is the same OpenCode Go key.
+Hermes Agent reads `~/.hermes/.env`. Note the variable name: Hermes wants `OPENCODE_GO_API_KEY`, not `OPENCODE_API_KEY` as DSH did. The key value is the same OpenCode Go key.
 
 ```bash
 OPENCODE_GO_API_KEY=your-open-code-go-key
@@ -117,7 +117,7 @@ One warning: models with a `-contributor` suffix cost less because the vendor ma
 ◷ 2.3s  ↑ 87 t/s
 ```
 
-**Desktop app.** The status bar at the bottom hides it by default:
+**Hermes Agent Desktop.** The status bar hides it by default:
 
 1. Right-click the status bar.
 2. Choose **Show in status bar** → **Tokens per second**.
@@ -126,7 +126,7 @@ The same menu offers the **cache hit rate**. That one is worth it too: it shows 
 
 ---
 
-## How Hermes measures it
+## How Hermes Agent Desktop measures it
 
 The readout is the average over the **last 10 model calls**: output tokens divided by the full call time. This has two consequences:
 
@@ -139,9 +139,9 @@ DSH measures a different slice: only the decode window, from the first token to 
 
 ## Wrap up
 
-Hermes Agent keeps my subscriptions, runs on the three desktop platforms, and shows the speed number in both the terminal and desktop app. The setup cost is two env vars and two config lines:
+Hermes Agent Desktop keeps my subscriptions and shows the speed number in the app on all three desktop platforms. The CLI and TUI use the same Hermes Agent core. The setup needs two environment variables and two config lines:
 
-- Hermes Agent: [github.com/NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent).
+- Hermes Agent and Desktop: [github.com/NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent).
 - Docs: [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/).
 - Command Code: [commandcode.ai](https://commandcode.ai).
 - OpenCode Go: [opencode.ai/docs/go](https://opencode.ai/docs/go/).
