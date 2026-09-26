@@ -5,7 +5,7 @@ tag: 'AI Tooling'
 excerpt: 'I measured two $10 agent subscriptions from Seville, using the same model and four test phases, to decide which route to keep.'
 ---
 
-I pay for two AI subscriptions for agent work: **OpenCode Go** and **Command Code**. Both cost **$10 a month**, so price does not separate them. I do not need both for my personal setup, so one will remain my main route and I will pause the other.
+I pay for two AI subscriptions for agent work: **Command Code** and **OpenCode Go**. Both cost **$10 a month**, so price does not separate them. I do not need both for my personal setup, so one will remain my main route and I will pause the other.
 
 I needed a way to choose between them. Price was no help because both plans cost the same, and my impression was unreliable. When a session felt slow, I blamed the network without a number to test that assumption.
 
@@ -19,14 +19,7 @@ I had already used both subscriptions with **DeepSeek Harness** and **Hermes Age
 
 ## The two subscriptions
 
-Both routes are OpenAI-compatible gateways over the same model, `deepseek-v4.1-flash`. The model is identical, so the difference I can measure is the route around it.
-
-**OpenCode Go** — the low cost plan of the OpenCode team, at [opencode.ai/docs/go](https://opencode.ai/docs/go/). $10 a month, and $5 for the first one.
-
-- It speaks on `https://opencode.ai/zen/go/v1`.
-- The model id is `deepseek-v4.1-flash`.
-- It needs one extra header, `x-opencode-session`.
-- The plan gives about $60 of usage for the $10.
+Both routes are OpenAI-compatible gateways over the same model, `deepseek-v4.1-flash`. The comparison below lists Command Code first, followed by OpenCode Go. The model is identical, so the difference I can measure is the route around it.
 
 **Command Code, the GOAT plan** — the plan I pay for, at [commandcode.ai/docs/plans/goat](https://commandcode.ai/docs/plans/goat). $10 a month.
 
@@ -34,6 +27,13 @@ Both routes are OpenAI-compatible gateways over the same model, `deepseek-v4.1-f
 - The model id is `deepseek/deepseek-v4.1-flash`. Note the prefix.
 - It needs no extra header.
 - The plan gives $70 of credits, a 7x multiplier.
+
+**OpenCode Go** — the low cost plan of the OpenCode team, at [opencode.ai/docs/go](https://opencode.ai/docs/go/). $10 a month, and $5 for the first one.
+
+- It speaks on `https://opencode.ai/zen/go/v1`.
+- The model id is `deepseek-v4.1-flash`.
+- It needs one extra header, `x-opencode-session`.
+- The plan gives about $60 of usage for the $10.
 
 Same price, same model, same kind of plan. Both serve the model well, and a person cannot tell them apart by reading an answer. The difference lives in the wait before the answer and in the speed of the writing.
 
@@ -111,7 +111,7 @@ Command Code was faster on every measurement, in all four rounds. The gap is not
 
 The card below is the decision in one view: two plans at the same price, one model, and what the four rounds found.
 
-![Decision card. Both plans cost $10 a month. OpenCode Go gives about $60 of usage for it and goes to pause. The Command Code GOAT plan gives $70 of credits, a 7x multiplier, and it is the one kept. Both serve deepseek-v4.1-flash. Command Code was faster on every measurement of all four rounds: the delays ran between 9 and 21 times, and the write speed between 1.5 and 1.7 times. Measured from Seville, in the south of Spain, so run the benchmark on your own machine.](/blog/llm-endpoint-bench-decision.svg)
+![Decision card. Both plans cost $10 a month. Command Code gives $70 of credits with a 7x multiplier and it is the plan I keep. OpenCode Go gives about $60 of usage and goes to pause. Both serve deepseek-v4.1-flash. Command Code was faster on every measurement of all four rounds: the delays ran between 9 and 21 times, and the write speed between 1.5 and 1.7 times. Measured from Seville, in the south of Spain, so run the benchmark on your own machine.](/blog/llm-endpoint-bench-decision.svg)
 
 So the numbers point one way: **Command Code stays as my main route, and OpenCode Go goes to pause.**
 
@@ -135,8 +135,8 @@ The tool is small on purpose: one Python file, `curl`, no dependency, and one di
 
 - The tool and the records: [github.com/jacano/llm-endpoint-bench](https://github.com/jacano/llm-endpoint-bench)
 - The analysis of the four rounds, with the limits: [ANALYSIS.md](https://github.com/jacano/llm-endpoint-bench/blob/main/ANALYSIS.md)
+- Command Code GOAT plan: [commandcode.ai/docs/plans/goat](https://commandcode.ai/docs/plans/goat)
 - OpenCode Go: [opencode.ai/docs/go](https://opencode.ai/docs/go/)
-- The Command Code GOAT plan: [commandcode.ai/docs/plans/goat](https://commandcode.ai/docs/plans/goat)
 - Every Command Code plan, with the prices: [commandcode.ai/pricing](https://commandcode.ai/pricing)
 - Another piece on the same two subscriptions: [Tokens per Second in Hermes Agent](/blog/hermes-agent-tokens-per-second/)
 
