@@ -7,9 +7,9 @@ excerpt: 'An unofficial Python client for the e-distribucion private area. It do
 
 A monthly bill tells you how much electricity you used, not when you used it. That makes tariff comparisons mostly guesswork.
 
-In Spain, the distributor holds the hourly readings, not the retailer. Each area has its own distributor. [e-distribucion](https://www.edistribucion.com/) covers part of the country, and your bill tells you whether it is yours.
+In Spain, the distributor holds the hourly readings, not the retailer. Each area has its own distributor. [e-distribucion](https://www.edistribucion.com/) covers part of Spain, and your bill tells you whether it is your distributor.
 
-If it is, the private area contains the readings. The portal displays them in small pieces, though, which makes the full year hard to inspect.
+If e-distribucion is your distributor, its private area contains the readings. The portal displays them in small pieces, though, which makes the full year hard to inspect.
 
 I wrote a tool that reads the full history and produces one report for each CUPS.
 
