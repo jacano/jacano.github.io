@@ -11,7 +11,7 @@ I needed a way to choose between them. Price was no help because both plans cost
 
 I wrote a small benchmark and measured both routes from my home connection in [Seville](https://en.wikipedia.org/wiki/Seville), in the south of Spain. The numbers include my distance to each gateway, so they describe my setup, not a universal ranking.
 
-I had already used both subscriptions with **DeepSeek Harness** and **Hermes Agent**. This benchmark answers a more practical question: which route should I keep paying for?
+I had already used both subscriptions with **DeepSeek Harness**, in the browser and in the desktop app. This benchmark answers a more practical question: which route should I keep paying for?
 
 > **The numbers and the raw records are open.** Every number here comes from four rounds of the same test on one Windows 11 host on 23 September 2026. A round is one full execution of the test: both routes, the same four phases, one after the other, in one sitting. Each round leaves its own directory of records in the repository. The tool, the raw records, the tables and the limits are in [github.com/jacano/llm-endpoint-bench](https://github.com/jacano/llm-endpoint-bench). Run `python bench.py ab --a commandcode --b opencode-go --n 4` to measure your own two routes, and compare your table with mine.
 
@@ -49,7 +49,7 @@ Three numbers decide how that day feels.
 - **Tokens per second.** This is the write speed. An edit of 500 visible tokens takes 1.1 seconds at 450 tokens per second, and 1.9 seconds at 260. In a loop that writes code all afternoon, the slower route costs minutes, and it costs them at the moment when you wait for the result.
 - **Behaviour under parallel load.** Harnesses run subagents and several tool calls at once. A route that holds its speed when four requests arrive keeps the session moving.
 
-There is a fourth point, and it comes from the two articles before this one. **Tokens per second turns a feeling into a fact.** "The model feels slow today" is not actionable. "This route writes at 260 tokens per second and the other at 446" is a number I can act on.
+There is a fourth point, and it comes from the article before this one. **Tokens per second turns a feeling into a fact.** "The model feels slow today" is not actionable. "This route writes at 260 tokens per second and the other at 446" is a number I can act on.
 
 For agentic coding, the best route is the one with the smallest fixed delay and the highest sustained write speed. It is not the route with the best answer to a single clever prompt. Both routes here answer equally well, and the slow one would make the agent feel broken.
 
@@ -138,6 +138,6 @@ The tool is small on purpose: one Python file, `curl`, no dependency, and one di
 - Command Code GOAT plan: [commandcode.ai/docs/plans/goat](https://commandcode.ai/docs/plans/goat)
 - OpenCode Go: [opencode.ai/docs/go](https://opencode.ai/docs/go/)
 - Every Command Code plan, with the prices: [commandcode.ai/pricing](https://commandcode.ai/pricing)
-- Another piece on the same two subscriptions: [Tokens per Second in Hermes Agent](/blog/hermes-agent-tokens-per-second/)
+- The same two subscriptions in DeepSeek Harness: [DeepSeek Harness with Command Code and OpenCode Go](/blog/deepseek-harness-opencode-commandcode/)
 
 Run the benchmark on your own machine and compare your table with mine. Your distance to a gateway is not mine, so a number you measure yourself beats a table you read.
