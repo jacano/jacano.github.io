@@ -12,8 +12,10 @@ Read this before you change code.
 ## Stack
 
 - **Node** `>=24`, **npm** `>=11` (see `.nvmrc` and `package.json` `engines`). Workflow uses `actions/setup-node@v5` with `node-version: 24`.
-- **Astro** `^7.3.1`, **@astrojs/rss** `^4.0.19`.
-- **Config:** `astro.config.mjs` has `site: 'https://jacano.github.io'` and `base: '/'`. Do not change the base.
+- **Astro** `^7.3.1`, **@astrojs/rss** `^4.0.19`. Every package is a `devDependency`: the site has no runtime.
+- **Install scripts are gated.** npm 11.16 warns and npm 12 blocks a lifecycle script unless `package.json` `allowScripts` names it. The list holds `esbuild@0.28.2`. When Dependabot moves that package, the key no longer matches and the script silently stops running: update the key in the same pull request.
+- **Config:** `astro.config.mjs` has `site: 'https://jacano.github.io'` and `base: '/'`. Do not change the base. Read the origin from `Astro.site` or `context.site`, never from a literal in a page.
+- **Fonts:** the `fonts` option of `astro.config.mjs` downloads Inter and JetBrains Mono at build time and serves them from this origin, so a visitor makes no third party request. `Layout.astro` renders `<Font cssVariable="--font-inter" preload />` and `<Font cssVariable="--font-mono" />` in the head, which is what writes the `@font-face` rules. A page that uses `var(--font-inter)` without that component gets the fallback font and no warning.
 - **Build:** `output: static`. `dist`, `node_modules`, `.astro` are gitignored. Do not commit `dist`.
 
 ## Content
@@ -87,12 +89,16 @@ docs: fix the agent guide
 - **Develop:**
   ```
   npm install
-  npm run dev      # http://localhost:4321/
-  npm run check    # astro check
+  npm run dev           # http://localhost:4321/
+  npm run check         # astro check (types and Astro diagnostics)
+  npm test              # vitest: the helpers and the figure reader
+  npm run format:check  # prettier; npm run format writes
   npm run build
   ```
+- **Clear the caches when a build plugin changes.** Astro caches the content store and the rendered Markdown in `.astro` and `node_modules/.astro`. After you edit `astro.config.mjs`, `src/utils/satteri-figure-size.mjs` or `src/utils/image-size.mjs`, remove both directories, or the next build reuses the output of the previous plugin.
+- **Refresh the numbers of the CV:** `npm run sync:stats` reads GitHub and NuGet and rewrites `stars`, `forks`, `downloads` and the verification date of `src/data/cv.json`. `npm run sync:stats:check` reports drift and exits non-zero. The script never touches `lang` or `updated`: both are editorial, and the comment at the top of `scripts/sync-stats.mjs` says why.
 - **Add a featured project:** Edit `src/data/cv.json` `projects` array, then `npm run build` and `git push`.
-- **Add a blog post:** Create `src/content/blog/<slug>.md` with the four fields of the schema in `src/content.config.ts`: `title`, `date`, `tag` and `excerpt`. The blog list, the home preview, `rss.xml` and the sitemap read the collection, so no page needs an edit. Then run `npm run build`.
-- **Before you push:** run `npm run check` and `npm run build` in the local folder. Do not wait for the deploy workflow to find a build error.
+- **Add a blog post:** Create `src/content/blog/<slug>.md` with the four fields of the schema in `src/content.config.ts`: `title`, `date`, `tag` and `excerpt`. The blog list, the home preview, `rss.xml` and the sitemap read the collection, so no page needs an edit. Then run `npm run build`. A figure in the post gets its width and height from the file itself, so the page reserves the box: keep the file in `public/` and the path correct, and the build stops with a message when the file is missing.
+- **Before you push:** run `npm run check`, `npm test`, `npm run format:check` and `npm run build` in the local folder. The deploy workflow runs the same four, so a failure there is a failure you could have seen.
 - **Verify contributions:** Use `gh api search/issues?q=author:jacano+type:pr&per_page=100` — never invent data.
 - **Deploy:** `git push` → wait for `Deploy to GitHub Pages` to succeed → `https://jacano.github.io/` is live.

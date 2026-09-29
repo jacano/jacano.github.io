@@ -11,7 +11,7 @@ It uses [Astro](https://astro.build) and GitHub Pages at https://jacano.github.i
 
 ## Data
 
-Edit `src/data/cv.json` to update experience, skills, projects and biography. The file updates all pages.
+Edit `src/data/cv.json` to update experience, skills, projects and biography. The file updates all pages. The counts that a service owns (stars, forks, NuGet downloads) come from `npm run sync:stats`, which reads GitHub and NuGet and rewrites the file.
 
 ## Develop
 
@@ -19,13 +19,18 @@ Install dependencies. Then run the site.
 
 ```bash
 npm install
-npm run dev      # http://localhost:4321/
-npm run check    # astro check (types and Astro diagnostics)
-npm run build    # creates /dist (pages + rss.xml + sitemaps)
+npm run dev           # http://localhost:4321/
+npm run check         # astro check (types and Astro diagnostics)
+npm test              # vitest: the helpers and the figure reader
+npm run format:check  # prettier; npm run format writes
+npm run build         # creates /dist (pages + rss.xml + sitemaps)
 npm run preview
+npm run sync:stats    # refresh the numbers of the CV from the APIs
 ```
 
 Needs Node `>=24` and npm `>=11` (see `.nvmrc`).
+
+Fonts are downloaded at build time and served from this site, so a visitor makes no request to a third party. The figures of an article get their width and height from the file itself, which the build reads.
 
 ## Deploy
 
