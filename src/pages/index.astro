@@ -125,7 +125,7 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
             We build a <strong style="color:var(--text)">Web3 Security Posture Management</strong> platform. It gives
             banks and enterprises continuous visibility of their on-chain risk.
           </p>
-          <a href="https://dedgesecurity.com" target="_blank" class="link">
+          <a href="https://dedgesecurity.com" target="_blank" rel="noreferrer" class="link">
             dedgesecurity.com →
           </a>
           <div class="mini-stats">
@@ -176,13 +176,13 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
     <div class="container">
       <div class="section-head">
         <h2>Featured projects</h2>
-        <a href={cv.github} target="_blank" class="link muted">
+        <a href={cv.github} target="_blank" rel="noreferrer" class="link muted">
           View GitHub →
         </a>
       </div>
       <div class="grid three">
         {cv.projects.slice(0, 6).map((p) => (
-          <a href={p.url} target="_blank" class="card project interactive">
+          <a href={p.url} target="_blank" rel="noreferrer" class="card project interactive">
             <div class="proj-top">
               <span class="lang">
                 <span class="dot" style={`background:${langColors[p.lang] ?? '#6366f1'}`}></span>
@@ -232,7 +232,7 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
         <p class="muted">
           {ms.summary} The search was <code>author:jacano type:pr</code> with {ms.total} total results. {ms.inMicrosoft}{' '}
           are in Microsoft orgs.{' '}
-          <a href={ms.searchUrl} target="_blank" class="link">
+          <a href={ms.searchUrl} target="_blank" rel="noreferrer" class="link">
             View on GitHub →
           </a>
         </p>
@@ -264,7 +264,7 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
             <ul style="margin-top:12px; display:grid; gap:10px; list-style:none; padding:0">
               {group.prs.map((pr) => (
                 <li>
-                  <a href={pr.url} target="_blank" class="link">
+                  <a href={pr.url} target="_blank" rel="noreferrer" class="link">
                     #{pr.number} {pr.title}
                   </a>{' '}
                   <span class="mono small muted">
@@ -288,7 +288,7 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
         <p class="muted small">
           {msOther.map((pr, i) => (
             <span>
-              <a href={pr.url} target="_blank" class="link">
+              <a href={pr.url} target="_blank" rel="noreferrer" class="link">
                 {pr.label}
               </a>{' '}
               ({pr.note}){i < msOther.length - 1 ? ', ' : '. '}
@@ -478,7 +478,7 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
       letter-spacing: -0.02em;
     }
     .link {
-      color: var(--accent);
+      color: var(--accent-text);
       font-weight: 600;
     }
     .link.muted {

@@ -13,7 +13,8 @@ const shortUrl = (url: string) => {
   return [host, ...rest.slice(0, 2)].join('/');
 };
 
-const siteUrl = 'https://jacano.github.io';
+/** The origin comes from `site` in the Astro config, never from a literal. */
+const siteUrl = (Astro.site ?? new URL('https://jacano.github.io')).toString().replace(/\/$/, '');
 
 const contacts = [
   { label: 'GitHub', url: cv.github },
@@ -191,7 +192,7 @@ const contacts = [
     }
     .role {
       font-weight: 600;
-      color: var(--accent);
+      color: var(--accent-text);
     }
     .contacts {
       margin-top: 8px;
@@ -335,7 +336,7 @@ const contacts = [
       display: block;
       margin-top: 8px;
       font-size: 0.78rem;
-      color: var(--accent);
+      color: var(--accent-text);
     }
     .edu {
       margin-bottom: 12px;
@@ -348,7 +349,7 @@ const contacts = [
       margin: 2px 0;
     }
     .link {
-      color: var(--accent);
+      color: var(--accent-text);
       font-size: 0.9rem;
     }
     .cv-side h4 {
