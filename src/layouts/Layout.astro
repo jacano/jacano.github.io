@@ -12,10 +12,10 @@ interface Props {
 }
 const {
   title,
-  description = "Juan Antonio Cano Salado is Head of Engineering at Dedge Security. He has 15+ years of experience as a Software Engineer. The site shows his blog, CV and projects.",
+  description = 'Juan Antonio Cano Salado is Head of Engineering at Dedge Security. He has 15+ years of experience as a Software Engineer. The site shows his blog, CV and projects.',
   canonicalPath,
-  ogImage = "https://jacano.github.io/og-image.png",
-  ogType = "website",
+  ogImage = 'https://jacano.github.io/og-image.png',
+  ogType = 'website',
   publishedTime,
   tags = [],
 } = Astro.props;
@@ -27,47 +27,51 @@ const isActive = (href: string) => {
   return currentPath.startsWith(full);
 };
 const person = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Juan Antonio Cano Salado",
-  "jobTitle": "Head of Engineering",
-  "worksFor": {
-    "@type": "Organization",
-    "name": "Dedge Security",
-    "url": "https://dedgesecurity.com"
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Juan Antonio Cano Salado',
+  jobTitle: 'Head of Engineering',
+  worksFor: {
+    '@type': 'Organization',
+    name: 'Dedge Security',
+    url: 'https://dedgesecurity.com',
   },
-  "url": "https://jacano.github.io",
-  "image": ogImage,
-  "sameAs": [
-    "https://github.com/jacano",
-    "https://www.linkedin.com/in/juanantoniocano/",
-    "https://stackoverflow.com/users/104185/juan-antonio-cano",
-    "https://www.nuget.org/profiles/jacanosalado",
-    "https://pypi.org/project/edistribucion-client/",
-    "https://leetcode.com/u/jacanosalado/"
+  url: 'https://jacano.github.io',
+  image: ogImage,
+  sameAs: [
+    'https://github.com/jacano',
+    'https://www.linkedin.com/in/juanantoniocano/',
+    'https://stackoverflow.com/users/104185/juan-antonio-cano',
+    'https://www.nuget.org/profiles/jacanosalado',
+    'https://pypi.org/project/edistribucion-client/',
+    'https://leetcode.com/u/jacanosalado/',
   ],
-  "email": "mailto:jacanosalado@gmail.com",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Seville",
-    "addressRegion": "Andalusia",
-    "addressCountry": "ES"
-  }
+  email: 'mailto:jacanosalado@gmail.com',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Seville',
+    addressRegion: 'Andalusia',
+    addressCountry: 'ES',
+  },
 };
-const blogPosting = ogType === "article" ? {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": title,
-  "description": description,
-  "datePublished": publishedTime,
-  "dateModified": publishedTime,
-  "author": { "@type": "Person", "name": "Juan Antonio Cano Salado", "url": "https://jacano.github.io" },
-  "publisher": { "@type": "Person", "name": "Juan Antonio Cano Salado" },
-  "mainEntityOfPage": canonicalURL,
-  "image": ogImage,
-  "keywords": tags.join(", ")
-} : null;
+const blogPosting =
+  ogType === 'article'
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: title,
+        description: description,
+        datePublished: publishedTime,
+        dateModified: publishedTime,
+        author: { '@type': 'Person', name: 'Juan Antonio Cano Salado', url: 'https://jacano.github.io' },
+        publisher: { '@type': 'Person', name: 'Juan Antonio Cano Salado' },
+        mainEntityOfPage: canonicalURL,
+        image: ogImage,
+        keywords: tags.join(', '),
+      }
+    : null;
 ---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -87,7 +91,9 @@ const blogPosting = ogType === "article" ? {
     <meta property="og:site_name" content="Juan Antonio Cano Salado" />
     <meta property="og:locale" content="en_US" />
     {publishedTime && <meta property="article:published_time" content={publishedTime} />}
-    {tags.map((tag) => <meta property="article:tag" content={tag} />)}
+    {tags.map((tag) => (
+      <meta property="article:tag" content={tag} />
+    ))}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -100,32 +106,78 @@ const blogPosting = ogType === "article" ? {
     <title>{title}</title>
     <script is:inline type="application/ld+json" set:html={JSON.stringify(person)} />
     {blogPosting && <script is:inline type="application/ld+json" set:html={JSON.stringify(blogPosting)} />}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <a href="#main" class="skip-link">Skip to content</a>
+    <a href="#main" class="skip-link">
+      Skip to content
+    </a>
     <header class="nav">
       <div class="container nav-inner">
-        <a href={`${base}/`} class="logo" aria-label="jacano.github.io home">jacano<span>.github.io</span></a>
+        <a href={`${base}/`} class="logo" aria-label="jacano.github.io home">
+          jacano<span>.github.io</span>
+        </a>
         <nav class="nav-links" aria-label="Primary">
-          <a href={`${base}/`} aria-current={isActive('/') ? 'page' : undefined} class={isActive('/') ? 'active' : undefined}>Home</a>
-          <a href={`${base}/cv`} aria-current={isActive('/cv') ? 'page' : undefined} class={isActive('/cv') ? 'active' : undefined}>CV</a>
-          <a href={`${base}/blog`} aria-current={isActive('/blog') ? 'page' : undefined} class={isActive('/blog') ? 'active' : undefined}>Blog</a>
-          <a href="https://github.com/jacano" target="_blank" rel="noreferrer">GitHub</a>
-          <a href="https://www.linkedin.com/in/juanantoniocano/" target="_blank" rel="noreferrer" class="btn-primary">LinkedIn</a>
+          <a
+            href={`${base}/`}
+            aria-current={isActive('/') ? 'page' : undefined}
+            class={isActive('/') ? 'active' : undefined}
+          >
+            Home
+          </a>
+          <a
+            href={`${base}/cv`}
+            aria-current={isActive('/cv') ? 'page' : undefined}
+            class={isActive('/cv') ? 'active' : undefined}
+          >
+            CV
+          </a>
+          <a
+            href={`${base}/blog`}
+            aria-current={isActive('/blog') ? 'page' : undefined}
+            class={isActive('/blog') ? 'active' : undefined}
+          >
+            Blog
+          </a>
+          <a href="https://github.com/jacano" target="_blank" rel="noreferrer">
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/in/juanantoniocano/" target="_blank" rel="noreferrer" class="btn-primary">
+            LinkedIn
+          </a>
         </nav>
         <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" id="menuBtn">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
         </button>
       </div>
       <div class="mobile-menu" id="mobileMenu">
         <a href={`${base}/`}>Home</a>
         <a href={`${base}/cv`}>CV</a>
         <a href={`${base}/blog`}>Blog</a>
-        <a href="https://github.com/jacano" target="_blank" rel="noreferrer">GitHub</a>
-        <a href="https://www.linkedin.com/in/juanantoniocano/" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a href="https://github.com/jacano" target="_blank" rel="noreferrer">
+          GitHub
+        </a>
+        <a href="https://www.linkedin.com/in/juanantoniocano/" target="_blank" rel="noreferrer">
+          LinkedIn
+        </a>
       </div>
     </header>
     <main id="main">
@@ -133,8 +185,14 @@ const blogPosting = ogType === "article" ? {
     </main>
     <footer class="footer">
       <div class="container footer-inner">
-        <p>© <span id="year">{new Date().getFullYear()}</span> Juan Antonio Cano Salado · Built with Astro · <a href="https://github.com/jacano/jacano.github.io">Source on GitHub</a> · Text follows <a href="https://github.com/AminBlg/SimpleEnglish">Simple English (ASD-STE100)</a></p>
-        <p class="muted">Seville, Spain · <a href="mailto:jacanosalado@gmail.com">jacanosalado@gmail.com</a></p>
+        <p>
+          © <span id="year">{new Date().getFullYear()}</span> Juan Antonio Cano Salado · Built with Astro ·{' '}
+          <a href="https://github.com/jacano/jacano.github.io">Source on GitHub</a> · Text follows{' '}
+          <a href="https://github.com/AminBlg/SimpleEnglish">Simple English (ASD-STE100)</a>
+        </p>
+        <p class="muted">
+          Seville, Spain · <a href="mailto:jacanosalado@gmail.com">jacanosalado@gmail.com</a>
+        </p>
       </div>
     </footer>
     <script>
@@ -168,14 +226,17 @@ const blogPosting = ogType === "article" ? {
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!reduceMotion) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: '0px 0px -50px 0px' },
+        );
 
         document.querySelectorAll('.card').forEach((el, index) => {
           el.classList.add('fade-in');
@@ -185,100 +246,286 @@ const blogPosting = ogType === "article" ? {
       }
     </script>
     <style is:global>
-      :root{
-        --bg:#0a0a0b;
-        --bg2:#111113;
-        --card:#1a1a1e;
-        --border:#27272a;
-        --text:#fafafa;
-        --muted:#a1a1aa;
-        --accent:#6366f1;
-        --accent2:#8b5cf6;
-        --radius:16px;
+      :root {
+        --bg: #0a0a0b;
+        --bg2: #111113;
+        --card: #1a1a1e;
+        --border: #27272a;
+        --text: #fafafa;
+        --muted: #a1a1aa;
+        --accent: #6366f1;
+        --accent2: #8b5cf6;
+        --radius: 16px;
       }
-      *{box-sizing:border-box;margin:0;padding:0}
-      html{scroll-behavior:smooth}
-      ::selection{background:rgba(99,102,241,.35);color:#fff}
-      :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
-      .skip-link{position:absolute;left:-9999px;top:0;background:var(--text);color:var(--bg);padding:10px 16px;border-radius:0 0 12px 0;font-weight:700;z-index:100}
-      .skip-link:focus{left:0}
-      body{
-        font-family:'Inter',system-ui,-apple-system,sans-serif;
-        background:var(--bg);
-        color:var(--text);
-        line-height:1.6;
-        -webkit-font-smoothing:antialiased;
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
-      a{color:inherit;text-decoration:none}
-      .container{max-width:1100px;margin:0 auto;padding:0 24px}
-      .nav{
-        position:sticky;top:0;z-index:50;
-        background:rgba(10,10,11,0.8);backdrop-filter:blur(12px);
-        border-bottom:1px solid var(--border);
+      html {
+        scroll-behavior: smooth;
       }
-      .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
-      .logo{font-weight:800;font-size:1.25rem;letter-spacing:-0.02em}
-      .logo span{color:var(--accent)}
-      .nav-links{display:flex;gap:28px;align-items:center;font-size:0.95rem}
-      .nav-links a{color:var(--muted);transition:color .2s}
-      .nav-links a:hover{color:var(--text)}
-      .nav-links a.active{color:var(--text);font-weight:600}
-      .btn-primary{
-        background:var(--text);color:var(--bg) !important;
-        padding:8px 16px;border-radius:999px;font-weight:600;
+      ::selection {
+        background: rgba(99, 102, 241, 0.35);
+        color: #fff;
       }
-      .btn-primary:hover{opacity:.9}
-      .hamburger{display:none;background:none;border:1px solid var(--border);border-radius:10px;color:var(--text);cursor:pointer;padding:6px;line-height:0}
-      .mobile-menu{display:none;flex-direction:column;padding:12px 24px 20px;gap:12px;border-top:1px solid var(--border);background:var(--bg)}
-      .mobile-menu.open{display:flex}
-      .footer{border-top:1px solid var(--border);padding:40px 0;margin-top:80px;color:var(--muted);font-size:0.9rem}
-      .footer a{color:var(--text);text-decoration:underline;text-underline-offset:4px}
-      .footer-inner{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
-      .muted{color:var(--muted)}
-      .btn{
-        display:inline-flex;align-items:center;gap:8px;
-        padding:12px 20px;border-radius:999px;font-weight:600;font-size:0.95rem;
-        transition:all .2s ease;cursor:pointer;border:1px solid transparent;
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 6px;
       }
-      .btn-dark{background:var(--text);color:var(--bg);box-shadow:0 2px 8px rgba(0,0,0,.2)}
-      .btn-dark:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
-      .btn-dark:active{transform:translateY(0)}
-      .btn-outline{border-color:var(--border);color:var(--text);background:transparent}
-      .btn-outline:hover{background:var(--card);border-color:rgba(99,102,241,.4);transform:translateY(-1px)}
-      .btn-outline:active{transform:translateY(0)}
-      .card{
-        background:var(--card);border:1px solid var(--border);
-        border-radius:var(--radius);padding:24px;
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        background: var(--text);
+        color: var(--bg);
+        padding: 10px 16px;
+        border-radius: 0 0 12px 0;
+        font-weight: 700;
+        z-index: 100;
       }
-      .card.interactive{transition:border-color .2s ease,box-shadow .2s ease}
-      .card.interactive:hover{border-color:rgba(99,102,241,.3);box-shadow:0 4px 20px rgba(0,0,0,.15)}
-      .badge{
-        display:inline-flex;padding:6px 12px;border-radius:999px;
-        background:rgba(99,102,241,.15);color:#a5b4fc;
-        font-size:0.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
-        border:1px solid rgba(99,102,241,.3)
+      .skip-link:focus {
+        left: 0;
       }
-      .grid{display:grid;gap:20px}
-      .mono{font-family:'JetBrains Mono',monospace}
-      .fade-in{opacity:0;transform:translateY(16px);transition:opacity 0.5s ease-out,transform 0.5s ease-out}
-      .fade-in.visible{opacity:1;transform:translateY(0)}
-      @media(prefers-reduced-motion:reduce){
-        html{scroll-behavior:auto}
-        .fade-in{opacity:1;transform:none;transition:none}
-        *{animation:none !important;transition:none !important}
+      body {
+        font-family:
+          'Inter',
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(10, 10, 11, 0.8);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+      }
+      .logo {
+        font-weight: 800;
+        font-size: 1.25rem;
+        letter-spacing: -0.02em;
+      }
+      .logo span {
+        color: var(--accent);
+      }
+      .nav-links {
+        display: flex;
+        gap: 28px;
+        align-items: center;
+        font-size: 0.95rem;
+      }
+      .nav-links a {
+        color: var(--muted);
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--text);
+      }
+      .nav-links a.active {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .btn-primary {
+        background: var(--text);
+        color: var(--bg) !important;
+        padding: 8px 16px;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+      .btn-primary:hover {
+        opacity: 0.9;
+      }
+      .hamburger {
+        display: none;
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        cursor: pointer;
+        padding: 6px;
+        line-height: 0;
+      }
+      .mobile-menu {
+        display: none;
+        flex-direction: column;
+        padding: 12px 24px 20px;
+        gap: 12px;
+        border-top: 1px solid var(--border);
+        background: var(--bg);
+      }
+      .mobile-menu.open {
+        display: flex;
+      }
+      .footer {
+        border-top: 1px solid var(--border);
+        padding: 40px 0;
+        margin-top: 80px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .footer a {
+        color: var(--text);
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: 1px solid transparent;
+      }
+      .btn-dark {
+        background: var(--text);
+        color: var(--bg);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+      .btn-dark:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+      .btn-dark:active {
+        transform: translateY(0);
+      }
+      .btn-outline {
+        border-color: var(--border);
+        color: var(--text);
+        background: transparent;
+      }
+      .btn-outline:hover {
+        background: var(--card);
+        border-color: rgba(99, 102, 241, 0.4);
+        transform: translateY(-1px);
+      }
+      .btn-outline:active {
+        transform: translateY(0);
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+      }
+      .card.interactive {
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .card.interactive:hover {
+        border-color: rgba(99, 102, 241, 0.3);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      }
+      .badge {
+        display: inline-flex;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(99, 102, 241, 0.15);
+        color: #a5b4fc;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        border: 1px solid rgba(99, 102, 241, 0.3);
+      }
+      .grid {
+        display: grid;
+        gap: 20px;
+      }
+      .mono {
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .fade-in {
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.5s ease-out,
+          transform 0.5s ease-out;
+      }
+      .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .fade-in {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
       }
       /* Print has no scroll, so the page furniture is noise on paper and the
          reveal animation must not hide a card. Rules here are global: a rule
          inside a page style cannot reach the nav or the footer. */
-      @media print{
-        .nav,.footer,.mobile-menu,.skip-link{display:none !important}
-        .fade-in{opacity:1 !important;transform:none !important;transition:none !important}
-        html,body{background:#fff;color:#15151a}
+      @media print {
+        .nav,
+        .footer,
+        .mobile-menu,
+        .skip-link {
+          display: none !important;
+        }
+        .fade-in {
+          opacity: 1 !important;
+          transform: none !important;
+          transition: none !important;
+        }
+        html,
+        body {
+          background: #fff;
+          color: #15151a;
+        }
       }
-      @media(max-width:768px){
-        .nav-links{display:none}
-        .hamburger{display:block}
-        .footer-inner{flex-direction:column}
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+        .hamburger {
+          display: block;
+        }
+        .footer-inner {
+          flex-direction: column;
+        }
       }
     </style>
   </body>

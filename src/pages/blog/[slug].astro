@@ -20,6 +20,7 @@ const prev = sorted[idx + 1];
 const next = sorted[idx - 1];
 const postSlug = slugOf(post);
 ---
+
 <Layout
   title={`${post.data.title} — Juan Antonio Cano`}
   description={post.data.excerpt}
@@ -30,10 +31,14 @@ const postSlug = slugOf(post);
 >
   <article class="container post-wrap">
     <div class="meta">
-      <a href={`${base}/blog`} class="link">← Back to blog</a>
+      <a href={`${base}/blog`} class="link">
+        ← Back to blog
+      </a>
       <div class="tags">
         <span class="badge">{post.data.tag}</span>
-        <span class="mono muted">{post.data.date} · {readTime(post.body)}</span>
+        <span class="mono muted">
+          {post.data.date} · {readTime(post.body)}
+        </span>
       </div>
     </div>
     <h1>{post.data.title}</h1>
@@ -42,8 +47,22 @@ const postSlug = slugOf(post);
     </div>
     {(prev || next) && (
       <nav class="pager">
-        {prev ? <a href={`${base}/blog/${slugOf(prev)}`} class="card pager-link"><span class="mono small muted">← Older</span><strong>{prev.data.title}</strong></a> : <span />}
-        {next ? <a href={`${base}/blog/${slugOf(next)}`} class="card pager-link right"><span class="mono small muted">Newer →</span><strong>{next.data.title}</strong></a> : <span />}
+        {prev ? (
+          <a href={`${base}/blog/${slugOf(prev)}`} class="card pager-link">
+            <span class="mono small muted">← Older</span>
+            <strong>{prev.data.title}</strong>
+          </a>
+        ) : (
+          <span />
+        )}
+        {next ? (
+          <a href={`${base}/blog/${slugOf(next)}`} class="card pager-link right">
+            <span class="mono small muted">Newer →</span>
+            <strong>{next.data.title}</strong>
+          </a>
+        ) : (
+          <span />
+        )}
       </nav>
     )}
   </article>
@@ -51,15 +70,29 @@ const postSlug = slugOf(post);
     <div class="lb-bar">
       <span class="lb-caption"></span>
       <div class="lb-tools">
-        <button type="button" data-lb="out" aria-label="Zoom out">&#8722;</button>
-        <span class="lb-level" aria-live="polite">100%</span>
-        <button type="button" data-lb="in" aria-label="Zoom in">+</button>
-        <button type="button" data-lb="fit">Fit</button>
-        <a class="lb-original" target="_blank" rel="noopener">Open full size</a>
-        <button type="button" data-lb="close">Close</button>
+        <button type="button" data-lb="out" aria-label="Zoom out">
+          &#8722;
+        </button>
+        <span class="lb-level" aria-live="polite">
+          100%
+        </span>
+        <button type="button" data-lb="in" aria-label="Zoom in">
+          +
+        </button>
+        <button type="button" data-lb="fit">
+          Fit
+        </button>
+        <a class="lb-original" target="_blank" rel="noopener">
+          Open full size
+        </a>
+        <button type="button" data-lb="close">
+          Close
+        </button>
       </div>
     </div>
-    <div class="lb-stage"><img class="lb-image" alt="" draggable="false" /></div>
+    <div class="lb-stage">
+      <img class="lb-image" alt="" draggable="false" />
+    </div>
   </div>
   <script>
     // A click on any image of the article opens it full screen, where it can be
@@ -85,7 +118,12 @@ const postSlug = slugOf(post);
         image.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + scale + ')';
         level.textContent = Math.round(scale * 100) + '%';
       };
-      const reset = () => { scale = 1; x = 0; y = 0; apply(); };
+      const reset = () => {
+        scale = 1;
+        x = 0;
+        y = 0;
+        apply();
+      };
       const zoom = (factor: number, cx?: number, cy?: number) => {
         const next = Math.min(8, Math.max(1, scale * factor));
         if (next === scale) return;
@@ -104,11 +142,11 @@ const postSlug = slugOf(post);
         const stageRect = stage.getBoundingClientRect();
         const imageRect = image.getBoundingClientRect();
         if (imageRect.width < 100 || imageRect.height < 40) return;
-        if (imageRect.width / imageRect.height < 1.3) return;   // only a wide figure gains from this
+        if (imageRect.width / imageRect.height < 1.3) return; // only a wide figure gains from this
         const k = Math.min(3, stageRect.height / imageRect.height);
         if (k <= 1.05) return;
         scale = k;
-        x = (imageRect.width * k - stageRect.width) / 2;        // start at the left edge
+        x = (imageRect.width * k - stageRect.width) / 2; // start at the left edge
         apply();
       };
       const open = (el: HTMLImageElement) => {
@@ -139,14 +177,23 @@ const postSlug = slugOf(post);
           else close();
         });
       });
-      stage.addEventListener('wheel', (event: WheelEvent) => {
-        event.preventDefault();
-        zoom(event.deltaY < 0 ? 1.15 : 1 / 1.15, event.clientX, event.clientY);
-      }, { passive: false });
+      stage.addEventListener(
+        'wheel',
+        (event: WheelEvent) => {
+          event.preventDefault();
+          zoom(event.deltaY < 0 ? 1.15 : 1 / 1.15, event.clientX, event.clientY);
+        },
+        { passive: false },
+      );
       stage.addEventListener('pointerdown', (event: PointerEvent) => {
         if (scale === 1) return;
-        lastX = event.clientX; lastY = event.clientY;
-        try { stage.setPointerCapture(event.pointerId); } catch { /* a capture is a nicety, not a requirement */ }
+        lastX = event.clientX;
+        lastY = event.clientY;
+        try {
+          stage.setPointerCapture(event.pointerId);
+        } catch {
+          /* a capture is a nicety, not a requirement */
+        }
         dragging = true;
         stage.style.cursor = 'grabbing';
       });
@@ -154,14 +201,23 @@ const postSlug = slugOf(post);
         if (!dragging) return;
         x += event.clientX - lastX;
         y += event.clientY - lastY;
-        lastX = event.clientX; lastY = event.clientY;
+        lastX = event.clientX;
+        lastY = event.clientY;
         apply();
       });
-      const stopDrag = () => { dragging = false; stage.style.cursor = scale > 1 ? 'grab' : 'zoom-in'; };
+      const stopDrag = () => {
+        dragging = false;
+        stage.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+      };
       stage.addEventListener('pointerup', stopDrag);
       stage.addEventListener('pointercancel', stopDrag);
-      image.addEventListener('dblclick', () => { if (scale > 1) reset(); else zoom(2.5); });
-      stage.addEventListener('click', (event: MouseEvent) => { if (event.target === stage) close(); });
+      image.addEventListener('dblclick', () => {
+        if (scale > 1) reset();
+        else zoom(2.5);
+      });
+      stage.addEventListener('click', (event: MouseEvent) => {
+        if (event.target === stage) close();
+      });
       document.addEventListener('keydown', (event: KeyboardEvent) => {
         if (box.hidden) return;
         if (event.key === 'Escape') close();
@@ -181,36 +237,139 @@ const postSlug = slugOf(post);
         img.setAttribute('aria-label', (img.alt ? img.alt + '. ' : '') + 'Open a larger view');
         img.addEventListener('click', () => open(img));
         img.addEventListener('keydown', (event: KeyboardEvent) => {
-          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(img); }
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            open(img);
+          }
         });
       });
     })();
   </script>
   <style is:global>
-    .zoom-wrap{position:relative;display:block}
-    .zoom-wrap img{cursor:zoom-in;transition:filter .18s}
-    .zoom-wrap img:hover,.zoom-wrap img:focus-visible{filter:brightness(1.06)}
-    .zoom-wrap::after{
-      content:'Click to zoom';position:absolute;right:12px;bottom:32px;
-      padding:4px 10px;border-radius:999px;background:rgba(10,10,11,.82);
-      border:1px solid var(--border);color:var(--text);
-      font-size:.72rem;font-weight:600;opacity:0;transition:opacity .18s;pointer-events:none;
+    .zoom-wrap {
+      position: relative;
+      display: block;
     }
-    .zoom-wrap:hover::after,.zoom-wrap:focus-within::after{opacity:1}
-    @media (hover:none){.zoom-wrap::after{opacity:1;content:'Tap to zoom'}}
-    .lightbox{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;background:rgba(6,6,8,.94);backdrop-filter:blur(6px)}
-    .lightbox[hidden]{display:none}
-    .lb-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(10,10,11,.9)}
-    .lb-caption{color:var(--muted);font-size:.78rem;line-height:1.4;flex:1 1 240px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .lb-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .lb-tools button,.lb-tools a{
-      font:inherit;font-size:.78rem;font-weight:600;color:var(--text);background:var(--card);
-      border:1px solid var(--border);border-radius:999px;padding:6px 12px;cursor:pointer;text-decoration:none;
+    .zoom-wrap img {
+      cursor: zoom-in;
+      transition: filter 0.18s;
     }
-    .lb-tools button:hover,.lb-tools a:hover{border-color:var(--accent);color:#fff}
-    .lb-level{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);min-width:44px;text-align:center}
-    .lb-stage{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;cursor:zoom-in;padding:16px}
-    .lb-image{min-width:0;min-height:0;max-width:100%;max-height:100%;width:auto;height:auto;border-radius:10px;border:1px solid var(--border);transform-origin:center center;will-change:transform;user-select:none}
+    .zoom-wrap img:hover,
+    .zoom-wrap img:focus-visible {
+      filter: brightness(1.06);
+    }
+    .zoom-wrap::after {
+      content: 'Click to zoom';
+      position: absolute;
+      right: 12px;
+      bottom: 32px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(10, 10, 11, 0.82);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.72rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.18s;
+      pointer-events: none;
+    }
+    .zoom-wrap:hover::after,
+    .zoom-wrap:focus-within::after {
+      opacity: 1;
+    }
+    @media (hover: none) {
+      .zoom-wrap::after {
+        opacity: 1;
+        content: 'Tap to zoom';
+      }
+    }
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      background: rgba(6, 6, 8, 0.94);
+      backdrop-filter: blur(6px);
+    }
+    .lightbox[hidden] {
+      display: none;
+    }
+    .lb-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10, 10, 11, 0.9);
+    }
+    .lb-caption {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.4;
+      flex: 1 1 240px;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .lb-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .lb-tools button,
+    .lb-tools a {
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 12px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .lb-tools button:hover,
+    .lb-tools a:hover {
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .lb-level {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      min-width: 44px;
+      text-align: center;
+    }
+    .lb-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      touch-action: none;
+      cursor: zoom-in;
+      padding: 16px;
+    }
+    .lb-image {
+      min-width: 0;
+      min-height: 0;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      transform-origin: center center;
+      will-change: transform;
+      user-select: none;
+    }
   </style>
   <script>
     document.querySelectorAll('.prose pre').forEach((pre) => {
@@ -228,61 +387,244 @@ const postSlug = slugOf(post);
         } catch {
           button.textContent = 'Press Ctrl+C';
         }
-        window.setTimeout(() => { button.textContent = 'Copy'; }, 1600);
+        window.setTimeout(() => {
+          button.textContent = 'Copy';
+        }, 1600);
       });
       pre.appendChild(button);
     });
   </script>
   <style is:global>
-    .copy-btn{
-      position:absolute;top:10px;right:10px;
-      font:inherit;font-size:.72rem;font-weight:600;
-      padding:4px 10px;border-radius:999px;
-      background:var(--bg2);color:var(--muted);
-      border:1px solid var(--border);cursor:pointer;
-      opacity:.55;transition:opacity .2s,color .2s;
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--bg2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      opacity: 0.55;
+      transition:
+        opacity 0.2s,
+        color 0.2s;
     }
-    .copy-btn:hover,.copy-btn:focus-visible{opacity:1;color:var(--text)}
+    .copy-btn:hover,
+    .copy-btn:focus-visible {
+      opacity: 1;
+      color: var(--text);
+    }
   </style>
   <style>
-    .post-wrap{max-width:720px;padding:48px 24px}
-    .meta{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px;align-items:center}
-    .tags{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-    .link{color:var(--accent);font-weight:600}
-    .badge{padding:4px 10px;border-radius:999px;background:rgba(99,102,241,.15);color:#a5b4fc;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(99,102,241,.3)}
-    .mono{font-family:'JetBrains Mono',monospace;font-size:.8rem}
-    .small{font-size:.75rem}
-    h1{font-size:2.2rem;line-height:1.15;letter-spacing:-0.03em;margin-bottom:24px}
-    .prose{color:#d4d4d8;line-height:1.85;font-size:1.02rem}
-    .prose :global(h2){color:var(--text);margin:44px 0 14px;font-size:1.45rem;letter-spacing:-0.02em}
-    .prose :global(h3){color:var(--text);margin:28px 0 10px;font-size:1.15rem}
-    .prose :global(p){margin:16px 0}
-    .prose :global(ul),.prose :global(ol){margin:16px 0 16px 22px;display:grid;gap:8px}
-    .prose :global(li){line-height:1.7}
-    .prose :global(strong){color:var(--text)}
-    .prose :global(em){color:var(--muted)}
-    .prose :global(a){color:var(--accent);text-decoration:underline;text-underline-offset:3px}
-    .prose :global(hr){border:none;border-top:1px solid var(--border);margin:44px 0}
-    .prose :global(table){width:100%;border-collapse:separate;border-spacing:0;margin:28px 0;font-size:.92rem;border:1px solid var(--border);border-radius:12px;overflow:hidden;font-variant-numeric:tabular-nums}
-    .prose :global(th),.prose :global(td){text-align:left;padding:11px 14px;border-bottom:1px solid rgba(148,163,184,.16);vertical-align:top}
-    .prose :global(thead th){background:var(--card);color:var(--muted);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;border-bottom-color:#475569}
-    .prose :global(tbody tr:nth-child(odd)){background:rgba(255,255,255,.035)}
-    .prose :global(tbody tr:last-child td){border-bottom:none}
-    .prose :global(tbody tr:hover){background:rgba(99,102,241,.06)}
-    @media(max-width:640px){
-      .prose :global(table){display:block;overflow-x:auto}
-      .prose :global(th:first-child),.prose :global(td:first-child){position:sticky;left:0;background:var(--bg);z-index:1}
+    .post-wrap {
+      max-width: 720px;
+      padding: 48px 24px;
     }
-    .prose :global(blockquote){border-left:3px solid var(--accent);margin:24px 0;color:#c7c7cf;background:rgba(99,102,241,.08);padding:4px 20px;border-radius:0 12px 12px 0;font-style:italic}
-    .prose :global(blockquote p){margin:14px 0}
-    .prose :global(code){background:var(--card);border:1px solid var(--border);padding:2px 6px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:.88em}
-    .prose :global(pre){position:relative;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;overflow-x:auto;margin:20px 0}
-    .prose :global(pre code){background:none;border:none;padding:0;font-size:.85rem;line-height:1.6}
-    .prose :global(img){max-width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin:20px 0}
-    .pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
-    .pager-link{display:flex;flex-direction:column;gap:6px}
-    .pager-link.right{text-align:right}
-    .pager-link strong{font-size:.95rem;line-height:1.4}
-    @media(max-width:640px){.pager{grid-template-columns:1fr}}
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+    .tags {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .link {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+    .small {
+      font-size: 0.75rem;
+    }
+    h1 {
+      font-size: 2.2rem;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+    .prose {
+      color: #d4d4d8;
+      line-height: 1.85;
+      font-size: 1.02rem;
+    }
+    .prose :global(h2) {
+      color: var(--text);
+      margin: 44px 0 14px;
+      font-size: 1.45rem;
+      letter-spacing: -0.02em;
+    }
+    .prose :global(h3) {
+      color: var(--text);
+      margin: 28px 0 10px;
+      font-size: 1.15rem;
+    }
+    .prose :global(p) {
+      margin: 16px 0;
+    }
+    .prose :global(ul),
+    .prose :global(ol) {
+      margin: 16px 0 16px 22px;
+      display: grid;
+      gap: 8px;
+    }
+    .prose :global(li) {
+      line-height: 1.7;
+    }
+    .prose :global(strong) {
+      color: var(--text);
+    }
+    .prose :global(em) {
+      color: var(--muted);
+    }
+    .prose :global(a) {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .prose :global(hr) {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 44px 0;
+    }
+    .prose :global(table) {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 28px 0;
+      font-size: 0.92rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      font-variant-numeric: tabular-nums;
+    }
+    .prose :global(th),
+    .prose :global(td) {
+      text-align: left;
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+      vertical-align: top;
+    }
+    .prose :global(thead th) {
+      background: var(--card);
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border-bottom-color: #475569;
+    }
+    .prose :global(tbody tr:nth-child(odd)) {
+      background: rgba(255, 255, 255, 0.035);
+    }
+    .prose :global(tbody tr:last-child td) {
+      border-bottom: none;
+    }
+    .prose :global(tbody tr:hover) {
+      background: rgba(99, 102, 241, 0.06);
+    }
+    @media (max-width: 640px) {
+      .prose :global(table) {
+        display: block;
+        overflow-x: auto;
+      }
+      .prose :global(th:first-child),
+      .prose :global(td:first-child) {
+        position: sticky;
+        left: 0;
+        background: var(--bg);
+        z-index: 1;
+      }
+    }
+    .prose :global(blockquote) {
+      border-left: 3px solid var(--accent);
+      margin: 24px 0;
+      color: #c7c7cf;
+      background: rgba(99, 102, 241, 0.08);
+      padding: 4px 20px;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+    }
+    .prose :global(blockquote p) {
+      margin: 14px 0;
+    }
+    .prose :global(code) {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+    }
+    .prose :global(pre) {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+    .prose :global(pre code) {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .prose :global(img) {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin: 20px 0;
+    }
+    .pager {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .pager-link {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .pager-link.right {
+      text-align: right;
+    }
+    .pager-link strong {
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    @media (max-width: 640px) {
+      .pager {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </Layout>
