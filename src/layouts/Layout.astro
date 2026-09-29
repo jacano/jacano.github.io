@@ -1,25 +1,32 @@
 ---
+import { Font } from 'astro:assets';
 import { base } from '../utils/site';
 
 interface Props {
   title: string;
   description?: string;
-  canonicalPath?: string;
+  /** A page sets null to declare no canonical URL, for example the 404 page. */
+  canonicalPath?: string | null;
   ogImage?: string;
   ogType?: string;
   publishedTime?: string;
   tags?: string[];
+  noindex?: boolean;
 }
 const {
   title,
   description = 'Juan Antonio Cano Salado is Head of Engineering at Dedge Security. He has 15+ years of experience as a Software Engineer. The site shows his blog, CV and projects.',
   canonicalPath,
-  ogImage = 'https://jacano.github.io/og-image.png',
+  ogImage,
   ogType = 'website',
   publishedTime,
   tags = [],
+  noindex = false,
 } = Astro.props;
-const canonicalURL = new URL(canonicalPath ?? Astro.url.pathname, 'https://jacano.github.io').toString();
+/** The origin of the site comes from `site` in the Astro config, never from a literal. */
+const site = (Astro.site ?? new URL('https://jacano.github.io')).toString().replace(/\/$/, '');
+const canonicalURL = canonicalPath === null ? null : new URL(canonicalPath ?? Astro.url.pathname, site).toString();
+const socialImage = ogImage ?? `${site}/og-image.png`;
 const currentPath = Astro.url.pathname;
 const isActive = (href: string) => {
   const full = `${base}${href}`;
@@ -36,8 +43,8 @@ const person = {
     name: 'Dedge Security',
     url: 'https://dedgesecurity.com',
   },
-  url: 'https://jacano.github.io',
-  image: ogImage,
+  url: site,
+  image: socialImage,
   sameAs: [
     'https://github.com/jacano',
     'https://www.linkedin.com/in/juanantoniocano/',
@@ -63,10 +70,10 @@ const blogPosting =
         description: description,
         datePublished: publishedTime,
         dateModified: publishedTime,
-        author: { '@type': 'Person', name: 'Juan Antonio Cano Salado', url: 'https://jacano.github.io' },
+        author: { '@type': 'Person', name: 'Juan Antonio Cano Salado', url: site },
         publisher: { '@type': 'Person', name: 'Juan Antonio Cano Salado' },
         mainEntityOfPage: canonicalURL,
-        image: ogImage,
+        image: socialImage,
         keywords: tags.join(', '),
       }
     : null;
@@ -79,12 +86,13 @@ const blogPosting =
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="author" content="Juan Antonio Cano Salado" />
-    <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex" />}
+    {canonicalURL && <link rel="canonical" href={canonicalURL} />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={ogType} />
-    <meta property="og:url" content={canonicalURL} />
-    <meta property="og:image" content={ogImage} />
+    {canonicalURL && <meta property="og:url" content={canonicalURL} />}
+    <meta property="og:image" content={socialImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={title} />
@@ -97,21 +105,20 @@ const blogPosting =
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:image:alt" content={title} />
     <meta name="theme-color" content="#0a0a0b" />
+    {/* The head of every page declares the two families the site uses. Inter
+        carries the text, so it is preloaded; the mono face only dresses a
+        label or a code block, so it waits for the browser to ask for it. */}
+    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-mono" />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <link rel="apple-touch-icon" sizes="180x180" href={`${base}/apple-touch-icon.png`} />
     <link rel="alternate" type="application/rss+xml" title="Juan Antonio Cano Salado — Blog" href={`${base}/rss.xml`} />
     <title>{title}</title>
     <script is:inline type="application/ld+json" set:html={JSON.stringify(person)} />
     {blogPosting && <script is:inline type="application/ld+json" set:html={JSON.stringify(blogPosting)} />}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <a href="#main" class="skip-link">
@@ -254,6 +261,10 @@ const blogPosting =
         --text: #fafafa;
         --muted: #a1a1aa;
         --accent: #6366f1;
+        /* A link is small text, so it needs its own tone: #6366f1 on the dark
+           background is 4.43:1 and fails WCAG AA, while #818cf8 is 6.63:1. The
+           first accent stays for fills, borders and gradients. */
+        --accent-text: #818cf8;
         --accent2: #8b5cf6;
         --radius: 16px;
       }
@@ -290,7 +301,7 @@ const blogPosting =
       }
       body {
         font-family:
-          'Inter',
+          var(--font-inter),
           system-ui,
           -apple-system,
           sans-serif;
@@ -468,7 +479,7 @@ const blogPosting =
         gap: 20px;
       }
       .mono {
-        font-family: 'JetBrains Mono', monospace;
+        font-family: var(--font-mono), monospace;
       }
       .fade-in {
         opacity: 0;

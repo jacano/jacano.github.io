@@ -6,7 +6,7 @@ import { base, slugOf, readTime } from '../../utils/site';
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts.map((post) => ({
-    params: { slug: post.id.replace(/\.md$/, '').split('/').pop() },
+    params: { slug: slugOf(post) },
     props: { post },
   }));
 }
@@ -341,7 +341,7 @@ const postSlug = slugOf(post);
       color: #fff;
     }
     .lb-level {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--font-mono), monospace;
       font-size: 0.75rem;
       color: var(--muted);
       min-width: 44px;
@@ -439,7 +439,7 @@ const postSlug = slugOf(post);
       flex-wrap: wrap;
     }
     .link {
-      color: var(--accent);
+      color: var(--accent-text);
       font-weight: 600;
     }
     .badge {
@@ -454,7 +454,7 @@ const postSlug = slugOf(post);
       border: 1px solid rgba(99, 102, 241, 0.3);
     }
     .mono {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--font-mono), monospace;
       font-size: 0.8rem;
     }
     .small {
@@ -501,7 +501,7 @@ const postSlug = slugOf(post);
       color: var(--muted);
     }
     .prose :global(a) {
-      color: var(--accent);
+      color: var(--accent-text);
       text-decoration: underline;
       text-underline-offset: 3px;
     }
@@ -577,7 +577,7 @@ const postSlug = slugOf(post);
       border: 1px solid var(--border);
       padding: 2px 6px;
       border-radius: 6px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--font-mono), monospace;
       font-size: 0.88em;
     }
     .prose :global(pre) {
