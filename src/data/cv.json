@@ -159,7 +159,7 @@
       "stars": 0,
       "forks": 0,
       "updated": "2023",
-      "downloads": "541 on NuGet"
+      "downloads": "579 on NuGet"
     },
     {
       "name": "PdbRewriter",
@@ -181,7 +181,7 @@
     }
   ],
   "microsoftContributions": {
-    "verified": "2026-08-31",
+    "verified": "2026-09-29",
     "total": 17,
     "inMicrosoft": 13,
     "summary": "I opened 13 pull requests in Microsoft repositories. All data is verified via the GitHub API.",
