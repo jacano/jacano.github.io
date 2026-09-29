@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 
-export const GET: APIRoute = () => {
-  const baseUrl = 'https://jacano.github.io';
+export const GET: APIRoute = ({ site }) => {
+  const baseUrl = (site ?? new URL('https://jacano.github.io')).toString().replace(/\/$/, '');
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -13,10 +13,5 @@ export const GET: APIRoute = () => {
   </sitemap>
 </sitemapindex>`;
 
-  return new Response(xml, {
-    headers: {
-      'Content-Type': 'application/xml',
-      'Cache-Control': 'public, max-age=3600',
-    },
-  });
+  return new Response(xml);
 };

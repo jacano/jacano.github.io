@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 
-export const GET: APIRoute = () => {
-  const baseUrl = 'https://jacano.github.io';
+export const GET: APIRoute = ({ site }) => {
+  const baseUrl = (site ?? new URL('https://jacano.github.io')).toString().replace(/\/$/, '');
 
   const pages = [
     { loc: '/', priority: '1.0', changefreq: 'weekly' },
@@ -22,10 +22,5 @@ ${pages
   .join('\n')}
 </urlset>`;
 
-  return new Response(xml, {
-    headers: {
-      'Content-Type': 'application/xml',
-      'Cache-Control': 'public, max-age=3600',
-    },
-  });
+  return new Response(xml);
 };
