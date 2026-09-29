@@ -1,0 +1,12 @@
+# Generated, installed or owned by another tool.
+node_modules
+dist
+.astro
+package-lock.json
+
+# Content is hand written and has conventions of its own: the frontmatter of a
+# post, the aligned table that AGENTS.md describes, and the shape of cv.json.
+# Prettier pads a table but it cannot right align a column, and it would rewrite
+# the quoting of every post, so these two stay out of the check.
+src/content/blog
+src/data/cv.json

@@ -9,15 +9,23 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
-  },
-  "dependencies": {
-    "astro": "^7.3.1"
+    "check": "astro check",
+    "test": "vitest run",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "sync:stats": "node scripts/sync-stats.mjs",
+    "sync:stats:check": "node scripts/sync-stats.mjs --check"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@astrojs/markdown-satteri": "^0.4.0",
     "@astrojs/rss": "^4.0.19",
-    "typescript": "^6.0.3"
+    "@types/node": "^26.6.3",
+    "astro": "^7.3.1",
+    "prettier": "^3.9.9",
+    "prettier-plugin-astro": "^1.1.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.2"
   },
   "engines": {
     "node": ">=24.0.0",

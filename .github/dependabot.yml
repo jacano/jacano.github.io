@@ -1,0 +1,25 @@
+# Keep the two dependencies that can break a deploy current: the packages of the
+# site and the actions of the workflow. A group of minor and patch updates
+# arrives as one pull request, because each one alone is noise in the history.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: build
+      include: scope
+    groups:
+      npm:
+        patterns: ['*']
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
+      include: scope
