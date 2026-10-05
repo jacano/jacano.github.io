@@ -72,7 +72,9 @@ En el paso 12.000, la misma suma:
 
 El 47 recibe un 90 %, y ninguna otra se le acerca.
 
-Merece la pena pararse aquí, porque explica un número de la tabla anterior. Un modelo así no duda nunca en el sentido corriente. La entropía cruzada solo mira la probabilidad de la respuesta correcta, de modo que una respuesta equivocada sostenida con confianza puntúa peor que una duda. Por eso el acierto en pares reservados puede quedar por debajo del azar: el modelo no se está cubriendo las espaldas, está equivocado con convencimiento.
+**La pérdida es un solo número que dice cuánto se equivocó el modelo, y mira una sola cosa: la probabilidad que le dio a la respuesta correcta.** Con un 100 % es 0,0; con un 50 %, 0,7; con un 10 %, 2,3; con un 1 %, 4,6. La regla se llama **entropía cruzada** y nunca baja de cero, así que la única forma de reducirla es darle más probabilidad a la respuesta correcta.
+
+La pérdida no mira en qué creía el modelo en su lugar. Una respuesta equivocada sostenida con un 40 % de confianza puntúa peor que una duda, y por eso el acierto en pares reservados puede quedar por debajo del azar: el modelo no se está cubriendo las espaldas, está equivocado con convencimiento.
 
 ## Por qué ocurre el salto
 
@@ -116,35 +118,11 @@ El salto no es un aprendiz lento que llega tarde. Sin decaimiento no hay ningún
 
 El modelo es el de [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95), de Andrej Karpathy: una capa, 64 dimensiones, 8 cabezas, RMSNorm en lugar de LayerNorm, sin sesgos y ReLU en lugar de GeLU. La *atención* deja que cada posición lea las anteriores. El *perceptrón* (*MLP*) transforma lo que ha leído. Los dos suman su resultado a su entrada, así que la señal tiene un camino directo por la capa.
 
-La pasada hacia delante entera son diez líneas, y TorchSharp lleva todo lo demás:
-
-```csharp
-public override Tensor forward(Tensor index)
-{
-    Tensor positions = arange(index.shape[1], dtype: ScalarType.Int64, device: index.device);
-    Tensor x = _wte.forward(index) + _wpe.forward(positions);
-    Tensor h = RmsNorm(x);
-    Tensor q = _wq.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
-    Tensor k = _wk.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
-    Tensor v = _wv.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
-    Tensor attended = scaled_dot_product_attention(q, k, v, is_casual: true);
-    x = x + _wo.forward(attended.transpose(1, 2).reshape(batch, length, _embd));
-    x = x + _fc2.forward(relu(_fc1.forward(RmsNorm(x))));
-    return _lmHead.forward(x);
-}
-```
-
-y el paso de entrenamiento son tres más:
-
-```csharp
-Tensor loss = lossFn.forward(logits.reshape(-1, Vocab), targets.reshape(-1));
-loss.backward();
-optimiser.step();
-```
-
-Escrito a mano, el mismo entrenamiento son unas mil líneas, porque hay que escribir también la diferenciación automática. Ese es el intercambio que hace este repositorio: no hay derivadas que leer y todas las decisiones siguen siendo tuyas. Dos de ellas me costaron una tarde.
+Esa es toda la arquitectura. El resto del repositorio son el bucle de entrenamiento, el conjunto de datos y las gráficas; la diferenciación automática la pone TorchSharp, así que el modelo son 55 líneas y el bucle 12.
 
 ## Dos trampas
+
+Hay dos detalles del entrenamiento que se equivocan con facilidad, y los dos cambian el resultado.
 
 **La inicialización.** TorchSharp arranca la tabla de representaciones en `N(0, 1)` y una capa lineal en un rango uniforme. microgpt usa `N(0, 0,08)`. Medido por el tamaño de los parámetros, el valor por defecto de la biblioteca deja el entrenamiento en 69,6 en vez de 19,1, lo que cambia contra qué tiene que pelear el decaimiento. Se corrige en cuatro líneas.
 

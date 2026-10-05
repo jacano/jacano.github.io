@@ -72,7 +72,9 @@ At step 12,000, the same sum:
 
 47 gets 90%, and nothing else is close.
 
-This is worth pausing on, because it explains a number in the table above. A model of this kind is never uncertain in the everyday sense. Cross-entropy looks only at the probability of the correct answer, so a wrong answer held with confidence scores worse than a hesitant guess would. That is why held-back accuracy can sit below chance: the model is not hedging, it is confidently wrong.
+**The loss is one number that says how wrong the model was, and it looks at one thing: the probability the model gave to the correct answer.** At 100% it is 0.0; at 50%, 0.7; at 10%, 2.3; at 1%, 4.6. The rule is called **cross-entropy**, and it never goes below zero, so the only way to reduce it is to give the correct answer more probability.
+
+The loss pays no attention to what the model believed instead. A wrong answer held with 40% confidence scores worse than a hesitant guess would, which is why held-back accuracy can sit below chance: the model is not hedging, it is confidently wrong.
 
 ## Why the jump happens
 
@@ -116,35 +118,11 @@ So the jump is not a slow learner arriving late. Without decay there is no mecha
 
 The model is the one from [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95) by Andrej Karpathy: one layer, 64 dimensions, 8 heads, RMSNorm instead of LayerNorm, no biases, ReLU instead of GeLU. Attention lets each position read the earlier ones. The MLP transforms what it read. Both add their result back to their input, so the signal has a straight path through the layer.
 
-The whole forward pass is ten lines, and TorchSharp carries everything else:
-
-```csharp
-public override Tensor forward(Tensor index)
-{
-    Tensor positions = arange(index.shape[1], dtype: ScalarType.Int64, device: index.device);
-    Tensor x = _wte.forward(index) + _wpe.forward(positions);
-    Tensor h = RmsNorm(x);
-    Tensor q = _wq.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
-    Tensor k = _wk.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
-    Tensor v = _wv.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
-    Tensor attended = scaled_dot_product_attention(q, k, v, is_casual: true);
-    x = x + _wo.forward(attended.transpose(1, 2).reshape(batch, length, _embd));
-    x = x + _fc2.forward(relu(_fc1.forward(RmsNorm(x))));
-    return _lmHead.forward(x);
-}
-```
-
-and the training step is three more:
-
-```csharp
-Tensor loss = lossFn.forward(logits.reshape(-1, Vocab), targets.reshape(-1));
-loss.backward();
-optimiser.step();
-```
-
-Written by hand, the same run is about a thousand lines, because the automatic differentiation has to be written too. That is the trade this repository takes: no derivatives to read, and every decision still on you. Two of those decisions cost me an afternoon.
+That is the whole architecture. The rest of the repository is the training loop, the dataset and the figures; TorchSharp supplies the automatic differentiation, so the model is 55 lines and the loop is 12.
 
 ## Two traps
+
+Two details of the run are easy to get wrong, and both change the outcome.
 
 **The initialisation.** TorchSharp starts an embedding at `N(0, 1)` and a linear layer in a uniform range. microgpt uses `N(0, 0.08)`. Measured by the size of the parameters, the framework default puts the run at 69.6 instead of 19.1, which changes what decay has to work against. Four lines set it.
 
