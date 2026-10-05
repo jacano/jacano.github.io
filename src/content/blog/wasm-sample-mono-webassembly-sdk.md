@@ -7,15 +7,11 @@ excerpt: 'A small 2019 sample showing .NET running in a browser through WebAssem
 
 In 2019 I published [WasmSample](https://github.com/jacano/WasmSample), a small demonstration of .NET running in a browser as WebAssembly. No plugin required. The original post is at [x.com/jacano35/status/1124476690640572416](https://x.com/jacano35/status/1124476690640572416).
 
----
-
 ## Why WASM
 
 WebAssembly lets code run in the browser at near-native speed. For me, that meant using C# in a place where I would normally reach for JavaScript.
 
 The project also closed a circle for me. In 2017, I added WASM support for the IL opcodes `neg`, `not`, `switch`, `throw`, and `nop` to [dotnet/corert](https://github.com/dotnet/corert). Two years later, I could share a sample that used that work.
-
----
 
 ## What is inside
 
@@ -25,14 +21,10 @@ The sample is small on purpose:
 - A `build.sh` script and a `scripts` folder.
 - The Mono runtime, compiled to WASM, running in the page.
 
----
-
 ## Run it
 
 Clone the repository, run the build script, and open the result in a browser. The [README](https://github.com/jacano/WasmSample) contains the steps.
 
 The code is at [github.com/jacano/WasmSample](https://github.com/jacano/WasmSample), and it is open for pull requests.
 
----
-
-*First shared May 4, 2019 at x.com/jacano35. Republished 2026 on jacano.dev.*
+*First shared May 4, 2019 at x.com/jacano35. Republished 2026 on jacano.github.io.*

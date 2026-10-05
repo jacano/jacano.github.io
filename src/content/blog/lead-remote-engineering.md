@@ -2,46 +2,38 @@
 title: 'Lead remote engineering: culture, delivery and trust'
 date: '2025-05-20'
 tag: 'Leadership'
-excerpt: 'Practical notes on leading a distributed engineering team: useful rituals, space for people to solve problems, delivery metrics, and hiring.'
+excerpt: 'Notes from leading a distributed engineering team: the rituals that help, giving people room to solve problems, measuring delivery, and hiring.'
 ---
 
-I lead engineering at Dedge Security, where a distributed team builds a Web3 platform. We work remotely, so the usual office habits do not help much. These are the practices I use instead.
+I lead engineering at Dedge Security, where a distributed team builds a Web3 platform. We work remotely, so the usual office habits do not help much. These are the practices I use instead, and the ones I would keep if I started again.
 
----
+## Rituals that pay for themselves
 
-## Rituals that add value
+Remote work does not need more meetings. It needs a few habits that let people see the work and make decisions.
 
-Remote work does not need more meetings. It needs a few habits that help people see the work and make decisions.
+- A weekly demo tells the team more than any status update. Show the work.
+- Asking people to draw the architecture gets the system explained faster than any document.
+- The diagrams live in the repository, next to the code, and they change together.
+- On-call runs with blameless postmortems. We ask what failed, not who failed.
 
-- Weekly demos beat endless status updates. Show the work.
-- Ask people to draw the architecture. A diagram explains a system faster than any document.
-- Keep the diagrams in the repository, next to the code, and update them together.
-- Run on-call with blameless postmortems. Ask what failed, not who failed.
+## Give the team room
 
----
+The best advice I got from an engineering manager was short: give other people the interesting work.
 
-## Give oxygen to the team
+A manager sees the interesting problems first, the hard bug and the new tool and the design nobody has solved. Keeping them is the easy choice, and it is the wrong one.
 
-The best advice I received from an engineering manager was simple: give other people room to do the interesting work.
-
-As a manager, you see the interesting problems first: the hard bug, the new tool, or the design that nobody has solved. The easy choice is to keep them. Do not.
-
-- The investigation that motivates an expert belongs to that expert, not to you.
-- A good task is the best way to grow a person and to keep a person.
-- If you come from a technical role, your hands want the work. That is the trap. Step back.
-- Your job is to remove the blockers and to give the context. The team does the work.
-- Give people room to solve a problem their own way. The result can be better than yours.
-
----
+- The investigation that motivates an expert belongs to that expert.
+- A good task grows a person, and it also keeps them.
+- Coming from a technical role, my hands want the work. That is the trap I have to watch.
+- My job is to remove blockers and hand over context. The team does the work.
+- A problem solved someone else's way is often a better answer than mine.
 
 ## Measure delivery, not people
 
-I track how long a critical fix takes to reach production. The trend matters more than any single number.
+I track how long a critical fix takes to reach production. The trend says more than any single number.
 
-Then protect the number. A team that fears a bad metric will hide it, and a hidden number is worse than a bad one.
-
----
+Then I protect the number. A team that fears a bad metric hides it, and a hidden number is worse than a bad one.
 
 ## Hiring
 
-We look for Platform Engineers. If you like IaC, K8s and security, contact us.
+We hire Platform Engineers, and we are always interested in people who like IaC, Kubernetes and security. My contact details are on the [CV](/cv/).

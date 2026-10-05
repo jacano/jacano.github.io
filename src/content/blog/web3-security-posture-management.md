@@ -2,39 +2,29 @@
 title: 'From audits to continuous posture: why Web3 needs W3SPM'
 date: '2026-07-15'
 tag: 'Web3 Security'
-excerpt: 'Why smart-contract audits are not enough when signers, permissions, oracles, and other parts of a Web3 system keep changing.'
+excerpt: 'Why a smart-contract audit is not enough when signers, permissions and oracles keep moving, and what continuous posture management adds.'
 ---
 
-In 2026, many losses came from the systems around smart contracts rather than from the contracts themselves. The State of Digital Asset Security for H1 2026 attributes more than 75% of losses to operational and configuration gaps. Its average time from exploit to irreversible loss was 12 minutes.
+In 2026, most of the losses in Web3 came from the systems around the smart contracts rather than from the contracts themselves. The State of Digital Asset Security for H1 2026 attributes more than 75% of losses to operational and configuration gaps, and puts the average time from exploit to irreversible loss at 12 minutes.
 
-Twelve minutes leaves little time to read an alert, investigate it, and react. Detection has to happen before the incident reaches production.
-
----
+Twelve minutes is not enough to read an alert, investigate it and react. The detection has to happen before the incident reaches production.
 
 ## An audit is a photo. You need a camera.
 
-An audit, formal verification, or key-management review tells you something about the system when the check happens.
+An audit, a formal verification or a key-management review tells you something about the system at the moment of the check.
 
-After that, the system keeps changing. Signers change, timelocks move, oracles rotate, and permissions drift. The audit may still be correct, but it may no longer describe the live system.
+After that, the system keeps moving. Signers change, timelocks move, oracles rotate, permissions drift. The audit can still be correct and no longer describe the live system. The question that follows is a simple one: who watches the live state?
 
-The question is simple: who watches the live state?
+## What continuous posture management adds
 
----
+Web3 Security Posture Management (W3SPM) is that watch. It keeps a current picture of the assets and the policy, instead of a picture from last quarter, and it turns the policy into guardrails:
 
-## What W3SPM does
+- it discovers the assets, from the code to the chain,
+- it looks for risk on its own,
+- it watches production, and it plugs into CI/CD.
 
-W3SPM means Web3 Security Posture Management. It provides continuous visibility and turns policy into guardrails.
+## Why this matters to institutions
 
-At Dedge, we deliver it as a Web3-native ASPM platform. It does three things:
+A bank moving into Web3 inherits a problem its current tooling does not cover: the state that matters lives on a chain it does not control, and it changes without a change request.
 
-- It discovers your assets, from code to chain.
-- It finds risk on its own.
-- It watches production and plugs into CI/CD.
-
----
-
-## Why it matters for institutions
-
-At Dedge Security, we help banks and institutions scale Web3. Our ISO 27001 certification, Circle Alliance membership, and work with LF Decentralized Trust support this approach.
-
-If you build DeFi or institutional custody systems, talk with us about security posture.
+I work on this at Dedge Security, which sells a Web3-native ASPM platform. That is my interest in the subject, and it is worth saying plainly rather than leaving it for the reader to guess.

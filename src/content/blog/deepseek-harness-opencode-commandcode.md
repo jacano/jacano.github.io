@@ -15,8 +15,6 @@ I first noticed the speed readout in [a post on X by @Ubendev](https://x.com/Ube
 
 ![DeepSeek Harness session statistics: LLM time, tool time, time to first token, and tokens per second](/blog/deepseek-harness-session-stats.png)
 
----
-
 ## What you need
 
 - **Node.js** 22 or newer. I run Node 24.
@@ -24,8 +22,6 @@ I first noticed the speed readout in [a post on X by @Ubendev](https://x.com/Ube
 - **One model provider.** Here the providers are a **Command Code** account and an **OpenCode Go** subscription. You do not need both. One is enough to start.
 
 DSH calls the program that runs the agent loop a **harness**, and the brain behind it a **model**. The model plugin speaks the OpenAI-compatible wire, so other providers work too. A free endpoint or a local server, such as Ollama, is enough.
-
----
 
 ## Install DeepSeek Harness
 
@@ -44,8 +40,6 @@ dsh web
 
 The web UI listens on `127.0.0.1` and prints a link with a token.
 
----
-
 ## How DSH finds a model
 
 DSH uses **plugins**. Each plugin owns a section of the settings file, and the section name is the plugin ID.
@@ -63,8 +57,6 @@ llm-pi-ai:
 
 The default model lives in its own section, `agent-default-model`.
 
----
-
 ## Set the keys
 
 The settings file does not contain secrets. It names the environment variables that contain the keys:
@@ -76,19 +68,13 @@ export COMMANDCODE_API_KEY="your-command-code-key"
 
 Define only the variables of the providers you add. Open a new terminal after this step.
 
----
-
 ## Step 1: add Command Code
 
 Command Code has its own OpenAI-compatible endpoint: `https://api.commandcode.ai/provider/v1`. The model id is `deepseek/deepseek-v4.1-flash`. The route reads its key from `COMMANDCODE_API_KEY`.
 
----
-
 ## Step 2: add OpenCode Go
 
 OpenCode Go is an OpenAI-compatible gateway at `https://opencode.ai/zen/go/v1`. It accepts the model `deepseek-v4.1-flash`. It needs one stable session header, `x-opencode-session`. The route reads its key from `OPENCODE_API_KEY`.
-
----
 
 ## The final settings
 
@@ -142,8 +128,6 @@ agent-default-model:
   model: deepseek/deepseek-v4.1-flash
 ```
 
----
-
 ## The context window
 
 The two routes show 1,000,000 for Command Code and 1,048,576 for OpenCode Go, because each API reports its own number:
@@ -153,15 +137,11 @@ The two routes show 1,000,000 for Command Code and 1,048,576 for OpenCode Go, be
 
 The number is metadata for history compaction and display. The server enforces the actual limit.
 
----
-
 ## Before DSH
 
 Before DSH I used two native desktop apps: [Command Code Desktop](https://github.com/CommandCodeAI/desktop) and [OpenCode Desktop](https://opencode.ai/download). Both talk to the same subscriptions and keep the same keys. Neither showed tokens per second. When a model felt slow, I blamed the network.
 
 DSH adds that measurement, so a slow session becomes a fact rather than a feeling.
-
----
 
 ## Wrap up
 

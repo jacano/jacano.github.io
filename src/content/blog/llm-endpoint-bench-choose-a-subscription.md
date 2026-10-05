@@ -15,8 +15,6 @@ I had already used both subscriptions with **DeepSeek Harness**, in the browser 
 
 > **The numbers and the raw records are open.** Every number here comes from four rounds of the same test on one Windows 11 host on 23 September 2026. A round is one full execution of the test: both routes, the same four phases, one after the other, in one sitting. Each round leaves its own directory of records in the repository. The tool, the raw records, the tables and the limits are in [github.com/jacano/llm-endpoint-bench](https://github.com/jacano/llm-endpoint-bench). Run `python bench.py ab --a commandcode --b opencode-go --n 4` to measure your own two routes, and compare your table with mine.
 
----
-
 ## The two subscriptions
 
 Both routes are OpenAI-compatible gateways over the same model, `deepseek-v4.1-flash`. The comparison below lists Command Code first, followed by OpenCode Go. The model is identical, so the difference I can measure is the route around it.
@@ -37,8 +35,6 @@ Both routes are OpenAI-compatible gateways over the same model, `deepseek-v4.1-f
 
 Same price, same model, same kind of plan. Both serve the model well, and a person cannot tell them apart by reading an answer. The difference lives in the wait before the answer and in the speed of the writing.
 
----
-
 ## Why these numbers matter for agent work
 
 An agent session is a chain of calls: read a file, plan, edit, run tests, read the output, then edit again. Every call crosses the provider gateway, so small delays add up.
@@ -52,8 +48,6 @@ Three numbers decide how that day feels.
 There is a fourth point, and it comes from the article before this one. **Tokens per second turns a feeling into a fact.** "The model feels slow today" is not actionable. "This route writes at 260 tokens per second and the other at 446" is a number I can act on.
 
 For agentic coding, the best route is the one with the smallest fixed delay and the highest sustained write speed. It is not the route with the best answer to a single clever prompt. Both routes here answer equally well, and the slow one would make the agent feel broken.
-
----
 
 ## What the benchmark measures
 
@@ -72,8 +66,6 @@ Three rules keep the comparison honest:
 - Both sides run in the same session, in an interleaved order. A slow moment of one provider therefore hits both sides.
 - The tool reads every token count from the `usage` block of the response. It never estimates.
 - It refuses a verdict when a side has fewer than three samples, or when a rate rests on too few tokens. A ratio of 1.6 from one request is not a result.
-
----
 
 ## The results, in short
 
@@ -103,8 +95,6 @@ Two patterns stand out.
 
 **The fixed cost is the gateway.** In the last round, one request to the server on a ready connection needed **27 ms on Command Code and 297 ms on OpenCode Go**. A new TLS connection added **41 ms against 273 ms**. That cost is there before the model writes a single token, and it lands on every call of a session. The model itself is closer: **754 ms against 1822 ms** to the first token of a short answer, and **446 tokens per second against 292** on the visible content of a long answer.
 
----
-
 ## The decision
 
 Command Code was faster on every measurement, in all four rounds. The gap is not one dramatic number. It is a smaller delay on every call, and a higher write speed on every answer. In an agent loop, that is the difference between a session that flows and a session that waits.
@@ -117,8 +107,6 @@ So the numbers point one way: **Command Code stays as my main route, and OpenCod
 
 This is my decision for my machine. Another person may prefer the other route for its other models, its price per token, or its rules about training data. The benchmark measures the route, and it measures only what I asked it to measure.
 
----
-
 ## Limits
 
 - One host, one network path, four rounds of one day. The absolute values do not transfer to another machine.
@@ -126,8 +114,6 @@ This is my decision for my machine. Another person may prefer the other route fo
 - The queue of a provider moves hour by hour. The size of a difference is not a constant, and only the direction held across my four rounds.
 - Not measured: retries, tool calls, streaming with tools, very long context, image input, and price per million tokens.
 - A measurement goes stale. I run a round again when a provider changes something.
-
----
 
 ## Wrap up
 

@@ -21,8 +21,6 @@ We selected three objects for detection, but the demo used one: a white hardhat.
 
 This article presents [CameraTF](https://github.com/jacano/CameraTF), a Xamarin.Android sample that uses the white hardhat model from TailwindTraders.
 
----
-
 ## The model
 
 The app runs an offline model. On a phone, speed matters more than accuracy, so we chose [TensorFlow Lite](https://www.tensorflow.org/lite).
@@ -35,8 +33,6 @@ For the model we used SSD MobileNet and did transfer learning over [ssd_mobilene
 
 The training produced two files: [hardhat_detect.tflite](https://github.com/jacano/CameraTF/blob/master/src/Resources/hardhat/hardhat_detect.tflite) and [hardhat_labels_list.txt](https://github.com/jacano/CameraTF/blob/master/src/Resources/hardhat/hardhat_labels_list.txt).
 
----
-
 ## Camera setup
 
 The sample uses the Xamarin Binding for android.hardware.camera. That keeps the camera code short and gives us one frame at a time.
@@ -48,8 +44,6 @@ On the devices we tested (Nokia 6.1, Google Pixel XL, LG G4), the [OnPreviewFram
 [CameraController](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Camera/CameraController.cs) sets the preview format to NV21, and the fps range and the resolution with SetPreviewFpsRange and SetPreviewSize.
 
 The step that makes real time possible is one: convert NV21 (YUV420sp) to RGB in native code. See [YuvHelper](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Helpers/YuvHelper.cs) and [yuv2rgb.cc](https://github.com/jacano/CameraTF/tree/master/src/CameraTF/Libs/YUV).
-
----
 
 ## From pixels to a detection
 
