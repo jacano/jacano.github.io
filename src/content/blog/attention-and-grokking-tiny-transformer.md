@@ -13,7 +13,7 @@ In 2017, Vaswani and colleagues published [Attention Is All You Need](https://ar
 
 In 2022, Power and colleagues reported a smaller and stranger result in [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). They trained networks on small algorithmic datasets, and they watched a model fit every example it was given while it kept guessing on the examples it had not seen. The guessing lasted long past the point of overfitting, where the training examples are already perfect and new examples still fail. Then the model changed: from one measurement to the next, it started to answer the unseen examples correctly, and it kept answering them. That change is grokking. The model memorized first and it learned the rule later.
 
-This article puts both results in one program. The program is a transformer of 56,640 parameters. The engine is about 1,200 lines of Rust with no dependencies, and it trains on one arithmetic task. Then it shows the jump.
+This article puts both results in one program. The program is a transformer of 56,640 parameters, and it trains on one arithmetic task. Then it shows the jump. The engine exists twice, in **Rust** and in **C#**, both with no dependencies. The two versions start from the same weights and show the same curve.
 
 ## The task: modular addition
 
@@ -177,15 +177,21 @@ The three curves together show the whole mechanism: train accuracy, unseen accur
 
 ## Reproduce it
 
-You need Rust 1.75 or newer. There is no other dependency.
+You need Rust 1.75 or newer. The same engine is also written in **C#**, and that one needs the .NET SDK 10 or newer. There is no other dependency in either case.
 
 ```bash
+# Rust
 git clone https://github.com/jacano/grokking-rs
 cd grokking-rs
 cargo run --release
+
+# C#
+git clone https://github.com/jacano/grokking-csharp
+cd grokking-csharp
+dotnet run -c Release
 ```
 
-The run takes about eight minutes on one core of a normal laptop. It writes three things:
+Both runs take about ten minutes on one core of a normal laptop, show the same curve, and write the same three things:
 
 | Where | What |
 | --- | --- |
@@ -251,7 +257,8 @@ The prompt is `[START, 12, +, 35, =]`. The model reads it and returns one probab
 - **Grokking is a transition between two solutions.** The memorizing solution needs large weights. The generalizing solution needs less. Weight decay decides which one survives, and the decision takes thousands of steps.
 - **Watch three numbers together.** Train accuracy, unseen accuracy and the size of the parameters. One curve alone hides the mechanism.
 
-The engine, the dataset, the figures and the raw run are in
-[github.com/jacano/grokking-rs](https://github.com/jacano/grokking-rs). The code is
-about 1,200 lines of Rust with no dependencies, and every figure of this article
-comes from the CSV of that run.
+The engine, the dataset, the figures and the raw run live in two repositories:
+[grokking-rs](https://github.com/jacano/grokking-rs) and
+[grokking-csharp](https://github.com/jacano/grokking-csharp). Both have no
+dependencies, both are about 1,200 lines, and both start from the same weights.
+Every figure of this article comes from the CSV of the Rust run.

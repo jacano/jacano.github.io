@@ -13,7 +13,7 @@ En 2017, Vaswani y sus colegas publicaron [Attention Is All You Need](https://ar
 
 En 2022, Power y sus colegas describieron un resultado más pequeño y más raro en [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). Entrenaron redes con conjuntos de datos algorítmicos pequeños y vieron que un modelo ajustaba todos los ejemplos que recibía mientras seguía adivinando en los ejemplos que no había visto. Las adivinanzas continuaron mucho más allá del punto de sobreajuste, ese momento en el que los ejemplos de entrenamiento ya salen perfectos y los nuevos siguen fallando. Entonces el modelo cambió: de una medición a la siguiente, empezó a responder bien los ejemplos no vistos, y siguió respondiéndolos bien. Ese cambio es el grokking. El modelo memorizó primero y aprendió la regla después.
 
-Este artículo mete los dos resultados en un solo programa. El programa es un transformer de 56.640 parámetros. El motor son unas 1.200 líneas de Rust sin dependencias, y entrena con una única tarea aritmética. Después muestra el salto.
+Este artículo mete los dos resultados en un solo programa. El programa es un transformer de 56.640 parámetros, y entrena con una única tarea aritmética. Después muestra el salto. El motor existe dos veces, en **Rust** y en **C#**, las dos sin dependencias. Las dos versiones arrancan de los mismos pesos y muestran la misma curva.
 
 ## La tarea: suma modular
 
@@ -177,15 +177,21 @@ Las tres curvas juntas muestran todo el mecanismo: acierto de entrenamiento, aci
 
 ## Reprodúcelo
 
-Necesitas Rust 1.75 o superior. No hay ninguna otra dependencia.
+Necesitas Rust 1.75 o superior. El mismo motor está también en **C#**, y ese necesita el SDK de .NET 10 o superior. En ninguno de los dos casos hay ninguna otra dependencia.
 
 ```bash
+# Rust
 git clone https://github.com/jacano/grokking-rs
 cd grokking-rs
 cargo run --release
+
+# C#
+git clone https://github.com/jacano/grokking-csharp
+cd grokking-csharp
+dotnet run -c Release
 ```
 
-La ejecución tarda unos ocho minutos en un núcleo de un portátil normal. Escribe tres cosas:
+Las dos ejecuciones tardan unos diez minutos en un núcleo de un portátil normal, dan la misma curva y escriben lo mismo:
 
 | Dónde | Qué |
 | --- | --- |
@@ -251,4 +257,4 @@ El prompt es `[START, 12, +, 35, =]`. El modelo lo lee y devuelve una probabilid
 - **El grokking es una transición entre dos soluciones.** La solución que memoriza necesita pesos grandes. La que generaliza necesita menos. El weight decay decide cuál sobrevive, y la decisión tarda miles de pasos.
 - **Mira tres números a la vez.** Acierto de entrenamiento, acierto en pares no vistos y tamaño de los parámetros. Una sola curva esconde el mecanismo.
 
-El motor, el conjunto de datos, las gráficas y la ejecución en crudo están en [github.com/jacano/grokking-rs](https://github.com/jacano/grokking-rs). El código son unas 1.200 líneas de Rust sin dependencias, y cada figura de este artículo sale del CSV de esa ejecución.
+El motor, el conjunto de datos, las gráficas y la ejecución en crudo viven en dos repositorios: [grokking-rs](https://github.com/jacano/grokking-rs) y [grokking-csharp](https://github.com/jacano/grokking-csharp). Los dos están sin dependencias, los dos rondan las 1.200 líneas y los dos arrancan de los mismos pesos. Cada figura de este artículo sale del CSV de la ejecución en Rust.
