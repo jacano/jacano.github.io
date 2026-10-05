@@ -127,8 +127,10 @@ You need the .NET SDK 10 or newer. The first build downloads PyTorch's native li
 ```bash
 git clone https://github.com/jacano/grokking-torchsharp
 cd grokking-torchsharp
-dotnet run -c Release
+make run
 ```
+
+`make` on its own compiles and checks the style. It does not ship with Windows, and every target has a `dotnet` form for that case: `dotnet run -c Release` where the target says `make run`.
 
 The run takes about half a minute and writes three things:
 
@@ -149,11 +151,10 @@ Each row of the CSV has six columns:
 | `test_acc` | exact match on the unseen pairs |
 | `param_norm` | size of every parameter, as one number |
 
-The repository carries a `Makefile`, so the same commands are one line each. `make help` lists them:
+The repository has a `Makefile` with one target per action. `make help` lists them, and the two worth knowing here are:
 
 | command | what it does |
 | --- | --- |
-| `make run` | the full run |
 | `make control` | the same run with the decay at zero, which never learns the rule |
 | `make run ARGS="--p 13 --steps 3000"` | another modulus, or another number of steps |
 
@@ -162,13 +163,13 @@ The repository carries a `Makefile`, so the same commands are one line each. `ma
 Training does not keep the model, so the first step is to write it to disk:
 
 ```bash
-dotnet run -c Release -- --save
+make save
 ```
 
-That leaves `model.pt` in the repository folder. `--infer` loads it and asks for one sum:
+That leaves `model.pt` in the repository folder. `make infer` loads it and asks for one sum:
 
 ```bash
-dotnet run -c Release -- --infer 12+35
+make infer PAIR=12+35
 ```
 
 ```
@@ -177,13 +178,13 @@ inference 12+35 = 47  [ok]  top: 47 (90%), 6 (5%), 17 (3%)
 
 The model reads `[START, 12, +, 35, =]` and returns one probability for every answer it could give. The line prints the three highest. `12 + 35` is one of the pairs held back from training, so the 90% on `47` is the rule at work and not a stored answer.
 
-To see all 53 answers instead of three, add `--explain`:
+To see all 53 answers instead of three:
 
 ```bash
-dotnet run -c Release -- --explain 12+35
+make explain PAIR=12+35
 ```
 
-That writes them to `runs/probabilities.csv` and draws them in `figures/grokking-probabilities.svg`, which is the bar chart from the section above. Both steps are also `make save` and `make infer PAIR=12+35`.
+That writes them to `runs/probabilities.csv` and draws them in `figures/grokking-probabilities.svg`, which is the bar chart from the section above.
 
 ## What I take from this
 

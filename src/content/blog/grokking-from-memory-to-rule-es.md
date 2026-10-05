@@ -127,8 +127,10 @@ Hace falta el SDK de .NET 10 o superior. La primera compilación descarga la bib
 ```bash
 git clone https://github.com/jacano/grokking-torchsharp
 cd grokking-torchsharp
-dotnet run -c Release
+make run
 ```
+
+`make` a secas compila y comprueba el estilo. No viene con Windows, y para ese caso cada objetivo tiene su forma en `dotnet`: `dotnet run -c Release` donde pone `make run`.
 
 El entrenamiento tarda unos treinta segundos y escribe tres cosas:
 
@@ -149,11 +151,10 @@ Cada fila del CSV tiene seis columnas:
 | `test_acc` | acierto exacto en los pares no vistos |
 | `param_norm` | tamaño de todos los parámetros, como un solo número |
 
-El repositorio trae un `Makefile`, así que los mismos comandos son una línea cada uno. `make help` los lista:
+El repositorio trae un `Makefile` con un objetivo por acción. `make help` los lista, y los dos que importan aquí son:
 
 | comando | qué hace |
 | --- | --- |
-| `make run` | el entrenamiento completo |
 | `make control` | el mismo entrenamiento con el decaimiento a cero, que no aprende la regla |
 | `make run ARGS="--p 13 --steps 3000"` | otro módulo, u otro número de pasos |
 
@@ -162,13 +163,13 @@ El repositorio trae un `Makefile`, así que los mismos comandos son una línea c
 El entrenamiento no guarda el modelo, así que el primer paso es escribirlo en disco:
 
 ```bash
-dotnet run -c Release -- --save
+make save
 ```
 
-Eso deja `model.pt` en la carpeta del repositorio. `--infer` lo carga y pregunta por una suma:
+Eso deja `model.pt` en la carpeta del repositorio. `make infer` lo carga y pregunta por una suma:
 
 ```bash
-dotnet run -c Release -- --infer 12+35
+make infer PAIR=12+35
 ```
 
 ```
@@ -177,13 +178,13 @@ inference 12+35 = 47  [ok]  top: 47 (90%), 6 (5%), 17 (3%)
 
 El modelo lee `[START, 12, +, 35, =]` y devuelve una probabilidad por cada respuesta posible; la línea imprime las tres más altas. `12 + 35` es uno de los pares que me guardé, así que ese 90 % en el `47` es la regla funcionando y no una respuesta almacenada.
 
-Para ver las 53 respuestas en lugar de tres, añade `--explain`:
+Para ver las 53 respuestas en lugar de tres:
 
 ```bash
-dotnet run -c Release -- --explain 12+35
+make explain PAIR=12+35
 ```
 
-Eso las escribe en `runs/probabilities.csv` y las dibuja en `figures/grokking-probabilities.svg`, que es la gráfica de barras de la sección anterior. Los dos pasos son también `make save` y `make infer PAIR=12+35`.
+Eso las escribe en `runs/probabilities.csv` y las dibuja en `figures/grokking-probabilities.svg`, que es la gráfica de barras de la sección anterior.
 
 ## Lo que saco en claro
 
