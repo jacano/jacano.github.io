@@ -11,7 +11,7 @@ In 2017, Vaswani and colleagues published [Attention Is All You Need](https://ar
 
 In 2022, Power and colleagues reported a smaller and stranger result in [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). They trained networks on small algorithmic datasets, and they watched a model fit every example it was given while it kept guessing on the examples it had not seen. The guessing lasted long past the point of overfitting, where the training examples are already perfect and new examples still fail. Then the model changed: from one measurement to the next, it started to answer the unseen examples correctly, and it kept answering them. That change is grokking. The model memorized first and it learned the rule later.
 
-This article puts both results in one program. The program is a transformer of 56,640 parameters. The engine is about 1,100 lines of Rust with no dependencies, and it trains on one arithmetic task. Then it shows the jump.
+This article puts both results in one program. The program is a transformer of 56,640 parameters. The engine is about 1,200 lines of Rust with no dependencies, and it trains on one arithmetic task. Then it shows the jump.
 
 ## The task: modular addition
 
@@ -119,15 +119,27 @@ A node always sits after the nodes it was computed from. So the backward pass re
 
 **3. A matrix-vector product becomes one node per row.**
 
-The direct way gives one node per multiplication and one more per addition: a layer of 256 x 64 needs 32,000 nodes. The engine keeps a whole row in one node and writes its derivatives by hand:
+A row of the matrix computes one number: the sum of each weight multiplied by its input. The engine writes that whole sum into a single node.
 
-```
-forward     y[i] = Σ_j W[i][j] · x[j]
-backward    dL/dW[i][j] += g[i] · x[j]
-            dL/dx[j]    += Σ_i g[i] · W[i][j]
+```rust
+let mut y = 0.0;
+for k in 0..len {
+    y += w[k] * x[k];
+}
 ```
 
-The weights of a row sit next to each other in the list, so the forward pass is a dot product over two blocks of consecutive numbers. That is where SIMD applies: the engine runs one arithmetic operation on several numbers at once, with AVX2 and FMA when the processor has them.
+The direct way would give one node per multiplication and one more per addition, so a layer of 256 x 64 would need 32,000 nodes. With one node per row it needs 256.
+
+The backward pass needs two things from that row: how much each weight should change, and how much each input should change. One multiplication gives both. Say the row came out too high by `g`. A weight that was multiplied by a large input is more to blame than a weight multiplied by a small one, so each weight takes a share of `g` proportional to its input, and each input takes a share proportional to the weight that used it:
+
+```rust
+for k in 0..len {
+    grad_w[k] += g * x[k];
+    grad_x[k] += g * w[k];
+}
+```
+
+The weights of a row sit next to each other in the list, so both loops run over two blocks of consecutive numbers. That is where SIMD applies: the engine runs one arithmetic operation on several numbers at once, with AVX2 and FMA when the processor has them.
 
 ## The cliff
 
@@ -155,7 +167,7 @@ This figure has **two axes**, one per curve. The blue line uses the left axis: t
 
 The blue line rises first. The model stores 843 separate answers, and a lookup table needs large parameters. Then the blue line falls: weight decay pulls the parameters down at every step, so the table becomes the expensive option. The red line follows. The small structured answer that adds numbers modulo 53 needs less, and once it is cheaper than the table, the accuracy on unseen pairs jumps.
 
-The three curves together show the whole mechanism: train accuracy, unseen accuracy and the parameter norm.
+The three curves together show the whole mechanism: train accuracy, unseen accuracy and the size of the parameters.
 
 ## Reproduce it
 
@@ -167,7 +179,15 @@ cd grokking-rs
 cargo run --release
 ```
 
-The run takes about eight minutes on one core of a normal laptop. It writes `runs/grokking.csv` and the three figures of this article in `figures/`.
+The run takes about eight minutes on one core of a normal laptop. It writes three things:
+
+| Where | What |
+| --- | --- |
+| `data/train.txt`, `data/test.txt` | the two splits of the dataset, one pair per line: 843 lines and 1,966 lines |
+| `runs/grokking.csv` | the logged numbers of every step |
+| `figures/` | the three figures of this article |
+
+The two text files are the raw pairs, in the same shape the model reads them. They are for reading and counting: training uses the same pairs from memory. The repository keeps a copy of each.
 
 Each row of the CSV has six columns, so you can follow the process from any tool:
 
@@ -205,10 +225,10 @@ cargo run --release -- --steps 40000 --eval-every 100
 
 ## Inference
 
-Training can save the parameters, and the same architecture loads them back.
+Training can save the parameters, and the same architecture loads them back. The file `model.txt` is not part of the repository: the `--save` flag writes it at the end of a run.
 
 ```bash
-cargo run --release -- --save model.txt
+cargo run --release -- --save
 cargo run --release -- --load model.txt --infer 12+35
 ```
 
@@ -223,9 +243,9 @@ The prompt is `[START, 12, +, 35, =]`. The model reads it and returns one probab
 - **Attention moves information between positions; the MLP transforms it inside one.** The rest of the transformer is plumbing around those two operations.
 - **A model can fit the data without learning the rule.** The training accuracy is a bad guide: it reaches 100% while the unseen accuracy is still at chance.
 - **Grokking is a transition between two solutions.** The memorizing solution needs large weights. The generalizing solution needs less. Weight decay decides which one survives, and the decision takes thousands of steps.
-- **Watch three numbers together.** Train accuracy, unseen accuracy and the parameter norm. One curve alone hides the mechanism.
+- **Watch three numbers together.** Train accuracy, unseen accuracy and the size of the parameters. One curve alone hides the mechanism.
 
 The engine, the dataset, the figures and the raw run are in
 [github.com/jacano/grokking-rs](https://github.com/jacano/grokking-rs). The code is
-about 1,100 lines of Rust with no dependencies, and every figure of this article
+about 1,200 lines of Rust with no dependencies, and every figure of this article
 comes from the CSV of that run.
