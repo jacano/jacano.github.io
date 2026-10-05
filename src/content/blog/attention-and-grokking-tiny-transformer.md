@@ -15,23 +15,24 @@ This article puts both results in one program. The program is a transformer of 5
 
 ## The task: modular addition
 
-The model reads a sum and must return the result modulo `p`.
+The modulus is **53**. The model reads a sum and must return the result modulo 53. Every answer is a number from 0 to 52.
 
 ```
-12 + 35 =    →    47        (p = 53)
-40 + 30 =    →    17        (70 mod 53)
+12 + 35 = 47           already below 53
+40 + 30 = 70   →  17   70 - 53 = 17
+50 + 50 = 100  →  47   100 - 53 = 47
 ```
 
 That rule is the whole task. A model can answer it in two ways:
 
 - **Memorize** the pairs it saw during training. This is easy and fast.
-- **Learn** addition modulo `p`. This is slower, and it answers every pair, including the pairs the model never saw.
+- **Learn** addition modulo 53. This is slower, and it answers every pair, including the pairs the model never saw.
 
 The dataset contains every pair, so the task has a known answer for all of them. I keep 30% for training and the rest for testing. The test set is the part that separates the two ways.
 
 | Property | Value |
 | --- | ---: |
-| Modulus `p` | 53 |
+| Modulus | 53 |
 | Number pairs | 2,809 |
 | Train pairs (30%) | 843 |
 | Test pairs (70%) | 1,966 |
