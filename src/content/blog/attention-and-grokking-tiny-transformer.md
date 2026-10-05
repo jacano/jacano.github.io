@@ -73,7 +73,9 @@ let w = softmax(scores);               // turns the scores into weights that add
 let out = w * v;                       // a weighted sum of the values
 ```
 
-The model builds a key and a value for every position it has already read, and it keeps them in a cache. The model can only look backwards: position `t` sees positions `0` to `t`, because the cache grows one token at a time.
+The model builds a key and a value for every position it has already read, and it keeps them in a cache. That cache is the **KV cache** of large language models. It is what lets a model produce one new token without working out the keys and values of the whole conversation again, and it is the reason a long chat stays fast.
+
+The cache also gives the model its only rule about the future: position `t` can look at positions `0` to `t`, and nothing else, because the cache grows one token at a time. This engine builds that cache on every forward pass, training included.
 
 **The MLP does the thinking at one position.** It projects the vector to four times its width, turns negative numbers into zero, and projects it back. Attention moves information between positions. The MLP transforms information inside one position. Both parts add their result back to their input, so the signal has a straight path through the layer.
 
