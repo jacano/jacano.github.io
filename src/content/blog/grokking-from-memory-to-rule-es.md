@@ -76,7 +76,7 @@ El 47 recibe un 90 %, y ninguna otra se le acerca.
 
 La pérdida no mira en qué creía el modelo en su lugar. Una respuesta equivocada sostenida con un 40 % de confianza puntúa peor que una duda, y por eso el acierto en pares reservados puede quedar por debajo del azar: el modelo no se está cubriendo las espaldas, está equivocado con convencimiento.
 
-## Por qué ocurre el salto
+## Qué parece provocar el salto
 
 Dos soluciones encajan con los datos de entrenamiento, y solo una generaliza.
 
@@ -84,9 +84,9 @@ La primera es una tabla: guardar cada uno de los 843 pares. Encaja rápido y no 
 
 La segunda es la aritmética. Solo encaja cuando el modelo encuentra una representación interna que la calcule, y entonces acierta los pares reservados igual de bien que los de entrenamiento.
 
-El optimizador no sabe nada de ninguna de las dos. Reduce una pérdida y nada más. Lo que decide entre ambas es el **decaimiento de pesos** (*weight decay*): en cada paso, el optimizador también tira un poco de cada parámetro hacia cero.
+El optimizador no sabe nada de ninguna de las dos. Reduce una pérdida y nada más. En este entrenamiento, lo que inclina la balanza es el **decaimiento de pesos** (*weight decay*): en cada paso, el optimizador también tira un poco de cada parámetro hacia cero.
 
-Una tabla necesita parámetros grandes, una entrada por respuesta guardada. La solución estructurada necesita menos. Así que el decaimiento encarece la tabla poco a poco, y cuando la regla es la opción barata, el descenso por gradiente entra en ella. Medido como un solo número para todo el modelo, el tamaño de los parámetros sube de 19,1 a 22,3 mientras memoriza, y después baja a 16,0 cuando manda la regla:
+Una tabla necesita parámetros grandes, una entrada por respuesta guardada. La solución estructurada necesita menos. Así que la tabla se va encareciendo con los pasos, y cuando la regla es la opción barata, el descenso por gradiente se desliza hacia ella. Medido como un solo número para todo el modelo, el tamaño de los parámetros sube de 19,1 a 22,3 mientras memoriza, y después baja a 16,0 cuando manda la regla:
 
 ![Dos curvas frente al paso de entrenamiento, cada una en su eje. En el eje izquierdo el tamaño de los parámetros sube de 19,1 a 22,3 mientras el modelo memoriza, y después baja a 16,0. En el eje derecho el acierto en pares no vistos se queda cerca del 1 % durante tres mil pasos y después sube al 97 %.](/blog/grokking-norm.svg)
 
@@ -112,21 +112,13 @@ Si el decaimiento es lo que selecciona la regla, quitarlo debería romper el ent
 
 Sin decaimiento el modelo memoriza los pares de entrenamiento y acierta el 0,2 % de los reservados. Cinco veces más pasos no cambian el resultado: en el paso 60.000 está en el 0,5 %, la cuarta parte del 1,9 % que se saca adivinando, y el tamaño de los parámetros ha pasado de 16 a 348 porque nada en el entrenamiento lo está cobrando.
 
-El salto no es un aprendiz lento que llega tarde. Sin decaimiento no hay ningún mecanismo que prefiera la solución barata, y más pasos no lo crean: solo hacen la tabla más grande.
+El salto no es un aprendiz lento que llega tarde. Sin decaimiento, nada en este entrenamiento prefiere la solución barata, y más pasos no cambian eso: solo hacen la tabla más grande.
 
 ## El modelo
 
 El modelo es el de [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95), de Andrej Karpathy: una capa, 64 dimensiones, 8 cabezas, RMSNorm en lugar de LayerNorm, sin sesgos y ReLU en lugar de GeLU. La *atención* deja que cada posición lea las anteriores. El *perceptrón* (*MLP*) transforma lo que ha leído. Los dos suman su resultado a su entrada, así que la señal tiene un camino directo por la capa.
 
-Esa es toda la arquitectura. El resto del repositorio son el bucle de entrenamiento, el conjunto de datos y las gráficas; la diferenciación automática la pone TorchSharp, así que el modelo son 55 líneas y el bucle 12.
-
-## Dos trampas
-
-Hay dos detalles del entrenamiento que se equivocan con facilidad, y los dos cambian el resultado.
-
-**La inicialización.** TorchSharp arranca la tabla de representaciones en `N(0, 1)` y una capa lineal en un rango uniforme. microgpt usa `N(0, 0,08)`. Medido por el tamaño de los parámetros, el valor por defecto de la biblioteca deja el entrenamiento en 69,6 en vez de 19,1, lo que cambia contra qué tiene que pelear el decaimiento. Se corrige en cuatro líneas.
-
-**`Adam` no es `AdamW`.** `AdamW` resta el decaimiento al peso fuera de la actualización; `Adam` lo suma al gradiente, que es lo que hace microgpt. Con `AdamW` este entrenamiento no saltó nunca, con ningún decaimiento entre 0,002 y 0,5: la norma de los parámetros se quedaba entre 40 y 50 y el modelo seguía en la respuesta memorizada. Con el decaimiento dentro del gradiente funciona `wd = 0,0012`. La misma palabra, otro optimizador y otro entrenamiento.
+Esa es toda la arquitectura. El resto del repositorio son el bucle de entrenamiento, el conjunto de datos y las gráficas; la diferenciación automática la pone TorchSharp, así que el modelo son 55 líneas y el bucle 12. En el repositorio también están escritos los dos ajustes que más me costó acertar.
 
 ## Reprodúcelo
 
@@ -167,12 +159,13 @@ make explain PAIR=12+35                   # dibujar las 53 respuestas que consid
 make run ARGS="--p 13 --steps 3000"       # un módulo más pequeño aprende antes
 ```
 
-## Conclusiones
+## Lo que saco en claro
 
-- **El acierto en entrenamiento es una mala guía.** Llega al 100 % mientras el de los pares reservados está en el azar, y ahí sigue durante dos mil pasos.
-- **El *grokking* es una transición entre dos soluciones.** Una guarda las respuestas y necesita parámetros grandes; la otra calcula la regla y necesita menos. El entrenamiento se queda en la primera hasta que la segunda sale más barata.
-- **El decaimiento de pesos elige entre las dos.** Quítalo y el entrenamiento no sale de la tabla, con ningún número de pasos.
-- **Vigila el tamaño de los parámetros.** Es la señal más barata de en qué solución está un entrenamiento.
+- **El acierto en entrenamiento dice muy poco por sí solo.** Aquí llega al 100 % mientras el de los pares reservados está en el azar, y ahí sigue durante dos mil pasos.
+- **El entrenamiento se comporta como una transición entre dos respuestas.** Una guarda los pares y necesita parámetros grandes; la otra calcula la regla y necesita menos.
+- **El decaimiento de pesos es lo que inclina la balanza.** Con él llega el salto; a cero no llega nunca, con ningún número de pasos que haya probado.
+- **El tamaño de los parámetros se movió antes,** en las dos direcciones: subió mientras el modelo memorizaba y bajó cuando manda la regla.
 
-El código, los datos y los registros están en
-[github.com/jacano/grokking-torchsharp](https://github.com/jacano/grokking-torchsharp).
+No soy investigador de aprendizaje automático. Esto es un experimento pequeño que he podido reproducir de principio a fin, entender y disfrutar viéndolo moverse. El código, los datos y los registros están en
+[github.com/jacano/grokking-torchsharp](https://github.com/jacano/grokking-torchsharp),
+para quien quiera verlo ocurrir: se ejecuta en medio minuto.

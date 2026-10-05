@@ -76,7 +76,7 @@ At step 12,000, the same sum:
 
 The loss pays no attention to what the model believed instead. A wrong answer held with 40% confidence scores worse than a hesitant guess would, which is why held-back accuracy can sit below chance: the model is not hedging, it is confidently wrong.
 
-## Why the jump happens
+## What seems to cause the jump
 
 Two solutions fit the training data, and only one of them generalizes.
 
@@ -84,9 +84,9 @@ The first is a lookup table: store each of the 843 pairs. It fits fast and says 
 
 The second is the arithmetic. It fits only once the model finds an internal representation that computes it, and then it answers the held-back pairs as well as the training ones.
 
-The optimizer knows about neither. It reduces a loss and nothing else. What decides between the two solutions is **weight decay**: at every step, the optimizer also pulls each parameter slightly towards zero.
+The optimizer knows about neither. It reduces a loss and nothing else. In this run, what tips the balance is **weight decay**: at every step, the optimizer also pulls each parameter slightly towards zero.
 
-A lookup table needs large parameters, one entry per stored answer. The structured solution needs less. So decay makes the table progressively more expensive, and once the rule is the cheaper option, gradient descent walks into it. Measured as one number for the whole model, the size of the parameters climbs from 19.1 to 22.3 while the model memorizes, then falls to 16.0 as the rule takes over:
+A lookup table needs large parameters, one entry per stored answer. The structured solution needs less. So the table gets more expensive as the steps go by, and once the rule is the cheaper option, gradient descent drifts into it. Measured as one number for the whole model, the size of the parameters climbs from 19.1 to 22.3 while the model memorizes, then falls to 16.0 as the rule takes over:
 
 ![Two curves against the training step, each on its own axis. On the left axis the size of the parameters rises from 19.1 to 22.3 while the model memorizes, then falls to 16.0. On the right axis the accuracy on unseen pairs stays near 1% for three thousand steps and then rises to 97%.](/blog/grokking-norm.svg)
 
@@ -112,21 +112,13 @@ If decay is what selects the rule, removing it should break the run. It does.
 
 Without decay the model memorizes the training pairs and answers 0.2% of the held-back ones. Five times the steps do not change the outcome: at 60,000 steps it is at 0.5%, which is a quarter of the 1.9% you get by guessing, and the size of the parameters has grown from 16 to 348 because nothing in the run charges for it.
 
-So the jump is not a slow learner arriving late. Without decay there is no mechanism that prefers the cheaper solution, and more steps do not create one. They only make the table bigger.
+So the jump is not a slow learner arriving late. Without decay, nothing in this run prefers the cheaper solution, and more steps do not change that. They only make the table bigger.
 
 ## The model
 
 The model is the one from [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95) by Andrej Karpathy: one layer, 64 dimensions, 8 heads, RMSNorm instead of LayerNorm, no biases, ReLU instead of GeLU. Attention lets each position read the earlier ones. The MLP transforms what it read. Both add their result back to their input, so the signal has a straight path through the layer.
 
-That is the whole architecture. The rest of the repository is the training loop, the dataset and the figures; TorchSharp supplies the automatic differentiation, so the model is 55 lines and the loop is 12.
-
-## Two traps
-
-Two details of the run are easy to get wrong, and both change the outcome.
-
-**The initialisation.** TorchSharp starts an embedding at `N(0, 1)` and a linear layer in a uniform range. microgpt uses `N(0, 0.08)`. Measured by the size of the parameters, the framework default puts the run at 69.6 instead of 19.1, which changes what decay has to work against. Four lines set it.
-
-**Adam is not AdamW.** `AdamW` subtracts decay from the weight outside the update; `Adam` adds it to the gradient, which is what microgpt does. With `AdamW` this run never jumped, at any decay between 0.002 and 0.5: the parameter norm settled between 40 and 50 and the model stayed on the memorizing answer. With the decay inside the gradient, `wd = 0.0012` works. Same word, different optimizer, different run.
+That is the whole architecture. The rest of the repository is the training loop, the dataset and the figures; TorchSharp supplies the automatic differentiation, so the model is 55 lines and the loop is 12. The repository also writes down the two settings that took me longest to get right.
 
 ## Reproduce it
 
@@ -167,12 +159,13 @@ make explain PAIR=12+35                   # draw the 53 answers it considers
 make run ARGS="--p 13 --steps 3000"       # a smaller modulus learns faster
 ```
 
-## What to take away
+## What I take from this
 
-- **Training accuracy is a bad guide.** It reaches 100% while held-back accuracy is at chance, and it stays there for two thousand steps.
-- **Grokking is a transition between two solutions.** One stores the answers and needs large parameters; the other computes the rule and needs less. The run sits on the first until the second becomes cheaper.
-- **Weight decay picks between them.** Remove it and the run never leaves the table, at any number of steps.
-- **Watch the size of the parameters.** It is the cheapest signal of which solution a run is on.
+- **Training accuracy says very little on its own.** It reaches 100% here while the held-back accuracy sits at chance, and it stays there for two thousand steps.
+- **The run behaves like a transition between two answers.** One stores the pairs and needs large parameters; the other computes the rule and needs less.
+- **Weight decay is what tips it.** With decay the jump arrives; at zero it never does, at any number of steps I tried.
+- **The size of the parameters moved first,** in both directions: up while the model memorized, down as the rule took over.
 
-The code, the data and the logs are in
-[github.com/jacano/grokking-torchsharp](https://github.com/jacano/grokking-torchsharp).
+I am not a machine learning researcher. This is a small experiment I could reproduce from end to end, understand, and enjoy watching move. The code, the data and the logs are in
+[github.com/jacano/grokking-torchsharp](https://github.com/jacano/grokking-torchsharp),
+so that anyone who wants to see it happen can run it in half a minute.
