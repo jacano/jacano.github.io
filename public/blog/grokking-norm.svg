@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460" font-family="ui-sans-serif,system-ui,Segoe UI,Helvetica,Arial,sans-serif">
+<text x="78" y="26" font-size="17" font-weight="600" fill="#64748b">Weight decay shrinks the parameters as the pattern appears</text>
+<line x1="78.0" y1="408.0" x2="750.0" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="68.0" y="412.5" font-size="13" fill="#64748b" text-anchor="end">0.0</text>
+<line x1="78.0" y1="317.5" x2="750.0" y2="317.5" stroke="#e2e8f0" stroke-width="1"/>
+<text x="68.0" y="322.0" font-size="13" fill="#64748b" text-anchor="end">6.3</text>
+<line x1="78.0" y1="227.0" x2="750.0" y2="227.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="68.0" y="231.5" font-size="13" fill="#64748b" text-anchor="end">12.7</text>
+<line x1="78.0" y1="136.5" x2="750.0" y2="136.5" stroke="#e2e8f0" stroke-width="1"/>
+<text x="68.0" y="141.0" font-size="13" fill="#64748b" text-anchor="end">19.0</text>
+<line x1="78.0" y1="46.0" x2="750.0" y2="46.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="68.0" y="50.5" font-size="13" fill="#64748b" text-anchor="end">25.3</text>
+<line x1="78.0" y1="46.0" x2="78.0" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="78.0" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">0</text>
+<line x1="212.4" y1="46.0" x2="212.4" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="212.4" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">2400</text>
+<line x1="346.8" y1="46.0" x2="346.8" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="346.8" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">4800</text>
+<line x1="481.2" y1="46.0" x2="481.2" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="481.2" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">7200</text>
+<line x1="615.6" y1="46.0" x2="615.6" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="615.6" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">9600</text>
+<line x1="750.0" y1="46.0" x2="750.0" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="750.0" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">12000</text>
+<line x1="78.0" y1="408.0" x2="750.0" y2="408.0" stroke="#94a3b8" stroke-width="1.5"/>
+<line x1="78.0" y1="46.0" x2="78.0" y2="408.0" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="414.0" y="448.0" font-size="13" fill="#64748b" text-anchor="middle">training step</text>
+<text x="18" y="227.0" font-size="13" fill="#64748b" transform="rotate(-90 18 227.0)" text-anchor="middle">parameter L2 norm (blue) / unseen accuracy (red)</text>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.6" stroke-linejoin="round" points="78.0,133.8 89.2,108.9 100.4,93.2 111.6,111.5 122.8,109.2 134.0,95.3 145.2,97.5 156.4,106.6 167.6,122.1 178.8,129.5 190.0,132.8 201.2,134.2 212.4,137.6 223.6,139.5 234.8,140.9 246.0,142.9 257.2,144.0 268.4,146.2 279.6,148.2 290.8,145.3 302.0,145.4 313.2,135.6 324.4,130.9 335.6,130.4 346.8,140.6 358.0,154.0 369.2,148.4 380.4,179.9 391.6,160.0 402.8,160.2 414.0,184.7 425.2,184.7 436.4,180.4 447.6,154.4 458.8,186.5 470.0,187.7 481.2,183.5 492.4,160.2 503.6,189.1 514.8,186.1 526.0,177.7 537.2,181.2 548.4,188.2 559.6,185.3 570.8,166.5 582.0,181.2 593.2,188.9 604.4,184.6 615.6,171.2 626.8,188.6 638.0,185.2 649.2,157.7 660.4,189.7 671.6,183.9 682.8,189.2 694.0,188.3 705.2,179.0 716.4,188.9 727.6,186.2 738.8,164.2 750.0,189.5"/>
+<line x1="766.0" y1="60.0" x2="790.0" y2="60.0" stroke="#2563eb" stroke-width="2.6"/>
+<text x="796.0" y="64.5" font-size="13" fill="#64748b">||params||</text>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.6" stroke-linejoin="round" points="78.0,401.7 89.2,406.2 100.4,404.1 111.6,404.5 122.8,402.8 134.0,402.8 145.2,400.5 156.4,401.4 167.6,400.1 178.8,397.0 190.0,397.3 201.2,395.5 212.4,393.3 223.6,388.3 234.8,387.6 246.0,385.4 257.2,380.6 268.4,375.2 279.6,371.0 290.8,368.8 302.0,365.6 313.2,349.1 324.4,335.1 335.6,294.6 346.8,254.4 358.0,146.2 369.2,125.5 380.4,100.3 391.6,85.6 402.8,129.8 414.0,75.6 425.2,72.0 436.4,69.9 447.6,75.5 458.8,87.2 470.0,73.1 481.2,68.1 492.4,89.5 503.6,69.0 514.8,71.8 526.0,69.2 537.2,111.4 548.4,72.1 559.6,68.1 570.8,97.2 582.0,102.0 593.2,70.5 604.4,68.1 615.6,74.5 626.8,71.0 638.0,68.5 649.2,88.2 660.4,71.6 671.6,69.9 682.8,73.4 694.0,68.3 705.2,67.7 716.4,71.6 727.6,65.5 738.8,94.4 750.0,68.8"/>
+<line x1="766.0" y1="80.0" x2="790.0" y2="80.0" stroke="#dc2626" stroke-width="2.6"/>
+<text x="796.0" y="84.5" font-size="13" fill="#64748b">unseen acc</text>
+</svg>

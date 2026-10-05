@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460" font-family="ui-sans-serif,system-ui,Segoe UI,Helvetica,Arial,sans-serif">
+<text x="78" y="26" font-size="17" font-weight="600" fill="#64748b">The train loss reaches zero while the test loss stays flat</text>
+<line x1="78.0" y1="165.5" x2="750.0" y2="165.5" stroke="#e2e8f0" stroke-width="1"/>
+<text x="68.0" y="170.0" font-size="13" fill="#64748b" text-anchor="end">0.01</text>
+<line x1="78.0" y1="154.6" x2="750.0" y2="154.6" stroke="#e2e8f0" stroke-width="1"/>
+<text x="68.0" y="159.1" font-size="13" fill="#64748b" text-anchor="end">0.10</text>
+<line x1="78.0" y1="46.0" x2="750.0" y2="46.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="68.0" y="50.5" font-size="13" fill="#64748b" text-anchor="end">1</text>
+<line x1="78.0" y1="46.0" x2="750.0" y2="46.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="68.0" y="50.5" font-size="13" fill="#64748b" text-anchor="end">10</text>
+<line x1="78.0" y1="46.0" x2="78.0" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="78.0" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">0</text>
+<line x1="212.4" y1="46.0" x2="212.4" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="212.4" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">2400</text>
+<line x1="346.8" y1="46.0" x2="346.8" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="346.8" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">4800</text>
+<line x1="481.2" y1="46.0" x2="481.2" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="481.2" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">7200</text>
+<line x1="615.6" y1="46.0" x2="615.6" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="615.6" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">9600</text>
+<line x1="750.0" y1="46.0" x2="750.0" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="750.0" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">12000</text>
+<line x1="78.0" y1="408.0" x2="750.0" y2="408.0" stroke="#94a3b8" stroke-width="1.5"/>
+<line x1="78.0" y1="46.0" x2="78.0" y2="408.0" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="414.0" y="448.0" font-size="13" fill="#64748b" text-anchor="middle">training step</text>
+<text x="18" y="227.0" font-size="13" fill="#64748b" transform="rotate(-90 18 227.0)" text-anchor="middle">cross-entropy loss (log scale)</text>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.6" stroke-linejoin="round" points="78.0,90.0 89.2,143.0 100.4,148.0 111.6,148.3 122.8,145.1 134.0,146.0 145.2,147.2 156.4,149.0 167.6,149.7 178.8,148.9 190.0,149.4 201.2,149.4 212.4,148.9 223.6,149.6 234.8,148.8 246.0,149.1 257.2,149.2 268.4,148.8 279.6,149.1 290.8,148.1 302.0,145.6 313.2,146.9 324.4,144.9 335.6,146.8 346.8,148.6 358.0,148.9 369.2,147.8 380.4,149.6 391.6,149.2 402.8,147.4 414.0,149.5 425.2,149.2 436.4,149.9 447.6,148.6 458.8,148.9 470.0,149.8 481.2,149.3 492.4,148.5 503.6,149.8 514.8,149.3 526.0,149.8 537.2,147.2 548.4,149.2 559.6,149.9 570.8,148.0 582.0,148.6 593.2,149.9 604.4,149.3 615.6,149.1 626.8,149.6 638.0,149.3 649.2,149.0 660.4,149.4 671.6,149.4 682.8,149.8 694.0,149.4 705.2,149.6 716.4,149.8 727.6,149.3 738.8,148.1 750.0,149.6"/>
+<line x1="766.0" y1="60.0" x2="790.0" y2="60.0" stroke="#2563eb" stroke-width="2.6"/>
+<text x="796.0" y="64.5" font-size="13" fill="#64748b">train</text>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.6" stroke-linejoin="round" points="78.0,90.2 89.2,97.4 100.4,94.9 111.6,95.7 122.8,96.4 134.0,97.6 145.2,97.1 156.4,97.8 167.6,98.9 178.8,100.0 190.0,100.6 201.2,101.2 212.4,101.9 223.6,102.7 234.8,102.9 246.0,104.0 257.2,104.4 268.4,105.9 279.6,107.3 290.8,107.9 302.0,108.6 313.2,111.8 324.4,114.6 335.6,117.5 346.8,120.1 358.0,125.9 369.2,128.3 380.4,128.0 391.6,127.7 402.8,128.7 414.0,128.9 425.2,128.8 436.4,128.6 447.6,130.7 458.8,128.5 470.0,128.7 481.2,128.6 492.4,129.8 503.6,128.7 514.8,128.4 526.0,128.6 537.2,127.7 548.4,128.5 559.6,128.3 570.8,128.8 582.0,128.4 593.2,128.4 604.4,128.3 615.6,129.3 626.8,128.8 638.0,128.3 649.2,129.3 660.4,128.6 671.6,128.3 682.8,128.5 694.0,128.4 705.2,128.5 716.4,128.5 727.6,128.2 738.8,129.4 750.0,128.4"/>
+<line x1="766.0" y1="80.0" x2="790.0" y2="80.0" stroke="#dc2626" stroke-width="2.6"/>
+<text x="796.0" y="84.5" font-size="13" fill="#64748b">unseen</text>
+</svg>
