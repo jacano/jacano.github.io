@@ -7,17 +7,17 @@ lang: 'es'
 pair: 'attention-and-grokking-tiny-transformer'
 ---
 
-Dos resultados cambiaron el aprendizaje automático, y son de naturaleza distinta.
+Dos resultados cambiaron el aprendizaje automático, y no tienen nada que ver entre sí.
 
-En 2017, Vaswani y sus colegas publicaron [Attention Is All You Need](https://arxiv.org/abs/1706.03762). El artículo proponía el transformer: una red construida solo con atención, sin recurrencia y sin convoluciones. Esa arquitectura se convirtió en la base de todos los modelos grandes que vinieron después, y el resultado va de **estructura**. Es una forma de construir una red que lee una secuencia y mezcla información entre sus posiciones.
+En 2017, Vaswani y sus colegas publicaron [Attention Is All You Need](https://arxiv.org/abs/1706.03762). El artículo proponía el *transformer*: una red construida únicamente con *atención*, sin recurrencia y sin convoluciones. Esa arquitectura es la base de todos los modelos grandes que vinieron después, y lo que aporta es **estructura**: una forma de construir una red que lee una secuencia y mezcla información entre sus posiciones.
 
-En 2022, Power y sus colegas describieron un resultado más pequeño y más raro en [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). Entrenaron redes con conjuntos de datos algorítmicos pequeños y vieron que un modelo ajustaba todos los ejemplos que recibía mientras seguía adivinando en los ejemplos que no había visto. Las adivinanzas continuaron mucho más allá del punto de sobreajuste, ese momento en el que los ejemplos de entrenamiento ya salen perfectos y los nuevos siguen fallando. Entonces el modelo cambió: de una medición a la siguiente, empezó a responder bien los ejemplos no vistos, y siguió respondiéndolos bien. Ese cambio es el grokking. El modelo memorizó primero y aprendió la regla después.
+En 2022, Power y sus colegas describieron un resultado más pequeño y más extraño en [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). Entrenaron redes con conjuntos de datos algorítmicos pequeños y vieron que el modelo se aprendía de memoria todos los ejemplos que recibía mientras seguía respondiendo al azar los que no había visto. Aquello duró mucho más allá del punto de *sobreajuste*, ese momento en el que los ejemplos de entrenamiento ya salen perfectos y los nuevos siguen fallando. Y entonces el modelo cambió: de una medición a la siguiente empezó a acertar los ejemplos no vistos, y siguió acertándolos. Ese cambio es el *grokking*. El modelo memorizó primero y aprendió la regla después.
 
-Este artículo mete los dos resultados en un solo programa. El programa es un transformer de 56.640 parámetros, y entrena con una única tarea aritmética. Después muestra el salto. El motor existe dos veces, en **Rust** y en **C#**, las dos sin dependencias. Las dos versiones arrancan de los mismos pesos y muestran la misma curva.
+Este artículo reúne los dos resultados en un solo programa. El programa es un *transformer* de 56.640 parámetros que entrena con una única tarea aritmética. Después muestra el salto. El motor está escrito dos veces, en **Rust** y en **C#**, sin dependencias en ninguno de los dos casos. Las dos versiones arrancan de los mismos pesos y dibujan la misma curva.
 
 ## La tarea: suma modular
 
-El módulo es **53**. El modelo lee una suma y debe devolver el resultado módulo 53. Cada respuesta es un número entre 0 y 52.
+El módulo es **53**. El modelo lee una suma y debe devolver el resultado módulo 53, así que cada respuesta es un número entre 0 y 52.
 
 ```
 12 + 35 = 47           ya está por debajo de 53
@@ -25,12 +25,12 @@ El módulo es **53**. El modelo lee una suma y debe devolver el resultado módul
 50 + 50 = 100  →  47   100 - 53 = 47
 ```
 
-Esa regla es toda la tarea. Un modelo puede responderla de dos maneras:
+Esa regla es toda la tarea, y un modelo puede responderla de dos maneras:
 
 - **Memorizar** los pares que vio durante el entrenamiento. Es fácil y rápido.
-- **Aprender** la suma módulo 53. Es más lento, y responde todos los pares, incluidos los que el modelo no vio nunca.
+- **Aprender** la suma módulo 53. Cuesta más, pero responde todos los pares, incluidos los que no vio nunca.
 
-El conjunto de datos contiene todos los pares, así que la tarea tiene respuesta conocida para todos. Yo me quedo con el 30 % para entrenar y dejo el resto para probar. El conjunto de prueba es la parte que separa las dos maneras.
+El conjunto de datos contiene todos los pares, así que hay respuesta conocida para cada uno. Yo me quedo con el 30 % para entrenar y dejo el resto para probar. El conjunto de prueba es lo que permite distinguir una manera de la otra.
 
 | Propiedad | Valor |
 | --- | ---: |
@@ -38,15 +38,15 @@ El conjunto de datos contiene todos los pares, así que la tarea tiene respuesta
 | Número de pares | 2.809 |
 | Pares de entrenamiento (30 %) | 843 |
 | Pares de prueba (70 %) | 1.966 |
-| Vocabulario | 56 tokens |
-| Longitud del documento | 6 tokens |
+| Vocabulario | 56 *tokens* |
+| Longitud del documento | 6 *tokens* |
 | Posiciones de predicción | 5 |
 | Parámetros del modelo | 56.640 |
 | Acierto por azar | 1,9 % |
 
-El vocabulario es pequeño: los 53 números, más `+`, `=` y un token de inicio. Cada número es **un token**, así que el modelo ve los operandos como unidades completas.
+El vocabulario es pequeño: los 53 números, más `+`, `=` y un *token* de inicio. Cada número es **un solo *token***, de modo que el modelo ve los operandos como unidades completas.
 
-El documento es una sola secuencia, igual que una frase en un modelo de lenguaje. El modelo predice cada token siguiente, y solo la última predicción es la tarea:
+El documento es una sola secuencia, igual que una frase en un modelo de lenguaje. El modelo predice cada *token* siguiente, y solo la última predicción es la tarea:
 
 | Posición | Token | Papel |
 | ---: | :---: | --- |
@@ -55,15 +55,15 @@ El documento es una sola secuencia, igual que una frase en un modelo de lenguaje
 | 3 | `+` | el operador |
 | 4 | `35` | segundo operando |
 | 5 | `=` | la entrada en la posición de la respuesta |
-| 6 | `47` | **el objetivo**: el modelo debe predecir este token |
+| 6 | `47` | **el objetivo**: el modelo debe predecir este *token* |
 
 ## El transformer
 
-El modelo es el de [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95), de Andrej Karpathy, con las mismas simplificaciones. Reescala cada vector antes de usarlo, para que los números se queden en un rango estable (RMSNorm). Convierte los números negativos en cero (ReLU). Una capa, 64 dimensiones y 8 cabezas, lo que significa que la atención se ejecuta ocho veces en paralelo sobre ocho trozos del vector.
+El modelo es el de [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95), de Andrej Karpathy, con las mismas simplificaciones: reescala cada vector antes de usarlo para que los números se mantengan en un rango estable (RMSNorm) y convierte los negativos en cero (ReLU). Tiene una capa, 64 dimensiones y 8 cabezas, es decir, la *atención* se ejecuta ocho veces en paralelo sobre ocho trozos del vector.
 
-Para cada posición el modelo construye un vector. La capa hace dos cosas con él.
+Para cada posición, el modelo construye un vector, y la capa hace dos cosas con él.
 
-**La atención deja que las posiciones hablen entre sí.** El vector se convierte en otros tres: una consulta, una clave y un valor. La consulta de la posición actual se compara con las claves de todas las posiciones anteriores. Cada coincidencia se convierte en un peso. La salida es la suma ponderada de los valores:
+**La *atención* deja que las posiciones hablen entre sí.** El vector se convierte en otros tres: una consulta, una clave y un valor. La consulta de la posición actual se compara con las claves de todas las anteriores, y cada coincidencia se convierte en un peso. La salida es la suma ponderada de los valores:
 
 ```rust
 // una cabeza, en la posición pos, sobre las claves 0..=pos
@@ -75,17 +75,17 @@ let w = softmax(scores);               // convierte las puntuaciones en pesos qu
 let out = w * v;                       // una suma ponderada de los valores
 ```
 
-El modelo construye una clave y un valor por cada posición que ya ha leído, y los guarda en una caché. Esa caché es la **caché KV** de los modelos de lenguaje grandes. Es lo que permite producir un token nuevo sin volver a calcular las claves y los valores de toda la conversación, y es la razón de que un chat largo siga siendo rápido.
+El modelo construye una clave y un valor por cada posición que ya ha leído, y los guarda en una caché. Esa caché es la *caché KV* de los modelos de lenguaje grandes: lo que permite producir un *token* nuevo sin volver a calcular las claves y los valores de toda la conversación, y la razón de que un chat largo siga siendo rápido.
 
-La caché también le da al modelo su única regla sobre el futuro: la posición `t` puede mirar las posiciones `0` a `t`, y ninguna más, porque la caché crece de token en token. Este motor construye esa caché en cada pasada hacia delante, también durante el entrenamiento.
+La caché también le impone al modelo su única regla sobre el futuro: la posición `t` puede mirar las posiciones `0` a `t` y ninguna más, porque la caché crece de *token* en *token*. Este motor la construye en cada pasada hacia delante, también durante el entrenamiento.
 
-**El MLP piensa en una sola posición.** Proyecta el vector a cuatro veces su anchura, convierte los negativos en cero y lo proyecta de vuelta. La atención mueve información entre posiciones. El MLP transforma la información dentro de una posición. Las dos partes suman su resultado a su entrada, así que la señal tiene un camino directo por la capa.
+**El *MLP* piensa en una sola posición.** Proyecta el vector a cuatro veces su anchura, convierte los negativos en cero y lo proyecta de vuelta. La *atención* mueve información de unas posiciones a otras; el *MLP* la transforma dentro de una sola. Ambas partes suman su resultado a su entrada, así que la señal tiene un camino directo por la capa.
 
 ## Cómo aprende el modelo
 
-En cada posición el modelo produce una puntuación por cada token del vocabulario. Para esta tarea son 56 puntuaciones: una por cada candidato a ser el token siguiente. Una puntuación alta significa "espero este".
+En cada posición, el modelo produce una puntuación por cada *token* del vocabulario. En esta tarea son 56 puntuaciones: una por cada candidato a ser el siguiente. Una puntuación alta significa «espero este».
 
-**La pérdida es un solo número que dice cuánto se equivocó el modelo.** Solo mira una cosa: la probabilidad que el modelo dio a la respuesta correcta.
+**La pérdida es un único número que dice cuánto se equivocó el modelo.** Solo mira una cosa: la probabilidad que el modelo le dio a la respuesta correcta.
 
 | Probabilidad de la respuesta correcta | Pérdida |
 | ---: | ---: |
@@ -94,15 +94,15 @@ En cada posición el modelo produce una puntuación por cada token del vocabular
 | 10 % | 2,3 |
 | 1 % | 4,6 |
 
-Un modelo que está seguro y acierta saca 0,0. Un modelo que deja la respuesta correcta en una posibilidad entre cien saca 4,6, y saca lo mismo tanto si estaba seguro de otra respuesta como si simplemente dudaba. La pérdida nunca baja de cero, así que la única forma de reducirla es darle más probabilidad a la respuesta correcta.
+Un modelo que está seguro y acierta saca 0,0. Uno que deja la respuesta correcta en una posibilidad entre cien saca 4,6, y saca lo mismo si estaba convencido de otra respuesta que si simplemente dudaba. La pérdida nunca baja de cero, así que la única forma de reducirla es darle más probabilidad a la respuesta correcta.
 
-La regla tiene nombre: **entropía cruzada**. Es la forma estándar de puntuar un modelo que devuelve una probabilidad por opción, y es el número que el bucle de entrenamiento trabaja para reducir.
+La regla tiene nombre: **entropía cruzada**. Es la forma estándar de puntuar a un modelo que devuelve una probabilidad por opción, y el número que el bucle de entrenamiento trata de reducir.
 
-El motor calcula la pérdida en las cinco posiciones del documento y hace la media. Esa media es el número de las gráficas y de las columnas `loss` del CSV.
+El motor calcula la pérdida en las cinco posiciones del documento y hace la media. Esa media es la cifra que aparece en las gráficas y en las columnas `loss` del CSV.
 
-**Aprender significa cambiar los parámetros para que la pérdida sea menor.** Los 56.640 parámetros son los números que aprende el modelo. Para cada parámetro, el motor calcula cuánto mueve la pérdida y en qué dirección. Ese número es el **gradiente**. Después el motor mueve cada parámetro un poco en contra de su gradiente. Un conjunto de movimientos es un **paso de entrenamiento**. El motor usa una regla estándar llamada Adam para elegir el tamaño de cada movimiento.
+**Aprender consiste en cambiar los parámetros para que la pérdida baje.** Los 56.640 parámetros son los números que aprende el modelo. Para cada uno, el motor calcula cuánto mueve la pérdida y en qué dirección; ese número es el **gradiente**. Después mueve el parámetro un poco en la dirección contraria. Un conjunto de movimientos es un **paso de entrenamiento**, y el tamaño de cada movimiento lo decide una regla estándar llamada Adam.
 
-**El decaimiento de pesos** (*weight decay*) **es una segunda fuerza, más pequeña.** En cada paso el motor también tira de cada parámetro un poco hacia cero. De ahí salen dos cosas. La primera, que ningún parámetro puede crecer sin límite. La segunda, y es la que importa aquí, que gana la respuesta más barata. Un modelo puede ajustar los pares de entrenamiento guardándolos uno a uno, y eso necesita parámetros grandes. Un modelo que aprende la regla necesita menos. El decaimiento de pesos abarata la segunda opción a medida que pasan los pasos, y eso es lo que produce el salto de la sección siguiente.
+**El decaimiento de pesos** (*weight decay*) **es una segunda fuerza, más pequeña.** En cada paso, el motor tira también un poco de cada parámetro hacia cero. De ahí salen dos cosas: la primera, que ningún parámetro crece sin límite; la segunda, que es la que importa aquí, que acaba ganando la respuesta más barata. Un modelo puede cuadrar los pares de entrenamiento guardándolos uno a uno, y para eso necesita parámetros grandes; uno que aprende la regla necesita menos. El decaimiento de pesos abarata esa segunda opción a medida que pasan los pasos, y de ahí sale el salto de la sección siguiente.
 
 ## El motor
 
@@ -117,11 +117,11 @@ Un nodo es una entrada de esa lista. Guarda cuatro cosas:
 - **entradas**: los nodos a partir de los cuales se calculó este valor.
 - **derivada local**: cuánto cambia el valor cuando cambia cada entrada.
 
-Tomemos `y = a * b`. El motor añade un nodo: el valor `a * b`, las entradas `a` y `b`, y las dos derivadas locales `b` y `a`. Nada se convierte en un objeto aparte, la lista se reutiliza en cada paso y la memoria se mantiene plana.
+Tomemos `y = a * b`. El motor añade un nodo con el valor `a * b`, las entradas `a` y `b` y las dos derivadas locales `b` y `a`. Nada se convierte en un objeto aparte, la lista se reutiliza en cada paso y la memoria se mantiene plana.
 
 **2. El gradiente viaja hacia atrás por esa misma lista.**
 
-Un nodo siempre está después de los nodos a partir de los cuales se calculó. Así que la pasada hacia atrás lee la lista del final al principio. Cuando llega a un nodo, todos los nodos que dependen de él ya le han pasado su gradiente, y el gradiente de ese nodo está completo. Una pasada, sin recursión y sin ordenar nada.
+Un nodo siempre se crea después de aquellos a partir de los cuales se calculó, así que la pasada hacia atrás recorre la lista del final al principio. Cuando llega a un nodo, todos los que dependen de él ya le han pasado su gradiente, y el gradiente de ese nodo está completo. Una sola pasada, sin recursión y sin ordenar nada.
 
 **3. Un producto matriz-vector se convierte en un nodo por fila.**
 
@@ -134,9 +134,9 @@ for k in 0..len {
 }
 ```
 
-La forma directa daría un nodo por multiplicación y otro más por suma, así que una capa de 256 x 64 necesitaría 32.000 nodos. Con un nodo por fila necesita 256.
+Hacerlo de la forma directa daría un nodo por multiplicación y otro más por suma, así que una capa de 256 x 64 necesitaría 32.000 nodos. Con un nodo por fila necesita 256.
 
-La pasada hacia atrás necesita dos cosas de esa fila: cuánto debe cambiar cada peso y cuánto debe cambiar cada entrada. Una multiplicación da las dos. Supongamos que la fila salió demasiado alta por `g`. Un peso que se multiplicó por una entrada grande tiene más culpa que uno que se multiplicó por una entrada pequeña, así que cada peso se lleva una parte de `g` proporcional a su entrada, y cada entrada se lleva una parte proporcional al peso que la usó:
+La pasada hacia atrás necesita dos cosas de esa fila: cuánto debe cambiar cada peso y cuánto debe cambiar cada entrada. Una multiplicación da las dos. Supongamos que la fila se pasó en `g`. Un peso que se multiplicó por una entrada grande tiene más culpa que uno que se multiplicó por una entrada pequeña, así que cada peso se lleva una parte de `g` proporcional a su entrada, y cada entrada se lleva una parte proporcional al peso que la usó:
 
 ```rust
 for k in 0..len {
@@ -149,35 +149,35 @@ Los pesos de una fila están unos junto a otros en la lista, así que los dos bu
 
 ## El acantilado
 
-![Acierto en entrenamiento y en pares no vistos frente al paso de entrenamiento. El acierto de entrenamiento llega al 99 % en el paso 600, mientras el de pares no vistos está en el 1 %. El acierto en pares no vistos se queda por debajo del 12 % hasta el paso 4000, sube al 72 % en el paso 5000 y llega al 94 % en el paso 8000.](/blog/grokking-cliff.svg)
+![Acierto en entrenamiento y en pares no vistos frente al paso de entrenamiento. El acierto en entrenamiento llega al 99 % en el paso 600, mientras el de pares no vistos está en el 1 %. El acierto en pares no vistos se queda por debajo del 12 % hasta el paso 4.000, sube al 72 % en el paso 5.000 y llega al 94 % en el paso 8.000.](/blog/grokking-cliff.svg)
 
 La línea azul es el conjunto de entrenamiento. La línea roja es el conjunto de prueba.
 
-El acierto de entrenamiento llega al **99 % en el paso 600**. El modelo ya responde todos los pares que ha visto. El acierto de prueba está en el **1,0 %**, por debajo del 1,9 % de adivinar al azar. El modelo ha memorizado.
+El acierto en entrenamiento llega al **99 % en el paso 600**: el modelo ya responde todos los pares que ha visto. El acierto en prueba está en el **1,0 %**, por debajo del 1,9 % que se saca adivinando al azar. El modelo ha memorizado.
 
-Después la línea roja se queda baja 4.000 pasos más. Solo pasa del 12 % en el paso 4.000. En el **paso 5.000** llega al **72 %**, y en el paso 6.000 alcanza el **92 %**. A partir de ahí el modelo responde **1.842 de los 1.966 pares no vistos**, y sigue respondiéndolos.
+A partir de ahí la línea roja se queda baja 4.000 pasos más: no pasa del 12 % hasta el paso 4.000. En el **paso 5.000** llega al **72 %** y en el 6.000 alcanza el **92 %**. Desde ese punto el modelo acierta **1.842 de los 1.966 pares no vistos**, y sigue acertándolos.
 
 La parte plana de la gráfica es la interesante. El modelo no está atascado. Está ocupado.
 
-## Qué pasa por debajo
+## Qué ocurre por debajo
 
 Otros dos números explican qué hace el modelo durante esa parte plana.
 
-![Entropía cruzada frente al paso de entrenamiento, en escala logarítmica. La pérdida de entrenamiento toca su suelo en el paso 600, mientras la de prueba se queda plana en 2,0 hasta el paso 4000 y después baja a 0,2.](/blog/grokking-loss.svg)
+![Entropía cruzada frente al paso de entrenamiento, en escala logarítmica. La pérdida de entrenamiento toca suelo en el paso 600, mientras la de prueba se queda plana en 2,0 hasta el paso 4.000 y después baja a 0,2.](/blog/grokking-loss.svg)
 
-La pérdida de entrenamiento cae rápido y toca su suelo. La de prueba no se mueve en miles de pasos. Un modelo que solo hubiera memorizado mantendría esa forma para siempre. Aquí la pérdida de prueba empieza a caer, y esa caída es la regla que llega. El eje vertical está en escala logarítmica, así que la caída de 2,0 a 0,2 es un factor de diez.
+La pérdida de entrenamiento cae deprisa y toca suelo. La de prueba no se mueve en miles de pasos; un modelo que solo hubiera memorizado mantendría esa forma para siempre. Aquí la pérdida de prueba empieza a caer, y esa caída es la regla que llega. El eje vertical está en escala logarítmica, así que bajar de 2,0 a 0,2 es dividir por diez.
 
-![Dos curvas frente al paso de entrenamiento, cada una en su eje. En el eje izquierdo el tamaño de los parámetros sube de 19,2 a 21,9 mientras el modelo memoriza, y después baja a 15,3. En el eje derecho el acierto en pares no vistos se queda cerca del 1 % hasta el paso 4000 y después sube al 94 %.](/blog/grokking-norm.svg)
+![Dos curvas frente al paso de entrenamiento, cada una en su eje. En el eje izquierdo el tamaño de los parámetros sube de 19,2 a 21,9 mientras el modelo memoriza, y después baja a 15,3. En el eje derecho el acierto en pares no vistos se queda cerca del 1 % hasta el paso 4.000 y después sube al 94 %.](/blog/grokking-norm.svg)
 
 Esta figura tiene **dos ejes**, uno por curva. La línea azul usa el eje izquierdo: el tamaño de los parámetros, de 19 a 22. Es un solo número para todo el modelo, y crece cuando crece cualquier parámetro. La línea roja usa el eje derecho: el acierto en pares que el modelo no ha visto nunca, del 0 % al 100 %.
 
-La línea azul sube primero. El modelo guarda 843 respuestas separadas, y una tabla de consulta necesita parámetros grandes. Después la línea azul baja: el decaimiento de pesos tira de los parámetros en cada paso, así que la tabla se vuelve la opción cara. La línea roja va detrás. La respuesta pequeña y estructurada que suma números módulo 53 necesita menos, y cuando sale más barata que la tabla, el acierto en pares no vistos da el salto.
+La línea azul sube primero: el modelo guarda 843 respuestas separadas, y una tabla de consulta exige parámetros grandes. Después baja, porque el decaimiento de pesos tira de los parámetros en cada paso y la tabla se vuelve la opción cara. La línea roja va detrás: la respuesta pequeña y estructurada que suma números módulo 53 necesita menos, y en cuanto sale más barata que la tabla, el acierto en pares no vistos da el salto.
 
-Las tres curvas juntas muestran todo el mecanismo: acierto de entrenamiento, acierto en pares no vistos y tamaño de los parámetros.
+Las tres curvas juntas muestran todo el mecanismo: acierto en entrenamiento, acierto en pares no vistos y tamaño de los parámetros.
 
 ## Reprodúcelo
 
-Necesitas Rust 1.75 o superior. El mismo motor está también en **C#**, y ese necesita el SDK de .NET 10 o superior. En ninguno de los dos casos hay ninguna otra dependencia.
+Hace falta Rust 1.75 o superior. El mismo motor está también en **C#**, y ese pide el SDK de .NET 10 o superior. En ninguno de los dos casos hay ninguna otra dependencia.
 
 ```bash
 # Rust
@@ -199,7 +199,7 @@ Las dos ejecuciones tardan unos diez minutos en un núcleo de un portátil norma
 | `runs/grokking.csv` | los números registrados en cada paso |
 | `figures/` | las tres gráficas de este artículo |
 
-Los dos ficheros de texto son los pares en crudo, con la misma forma en la que los lee el modelo. Son para leerlos y contarlos: el entrenamiento usa esos mismos pares desde memoria. El repositorio guarda una copia de cada uno.
+Los dos ficheros de texto son los pares en crudo, con la misma forma con la que los lee el modelo. Están para leerlos y contarlos: el entrenamiento usa esos mismos pares desde memoria. El repositorio guarda una copia de cada uno.
 
 Cada fila del CSV tiene seis columnas, así que puedes seguir el proceso desde cualquier herramienta:
 
@@ -222,7 +222,7 @@ tail -f runs/grokking.csv
 Get-Content runs/grokking.csv -Wait
 ```
 
-Unos cuantos experimentos cambian el resultado de forma útil:
+Algunos experimentos cambian el resultado de forma útil:
 
 ```bash
 # control: sin decaimiento de pesos, así que nada saca al modelo de la solución que memoriza
@@ -248,13 +248,13 @@ cargo run --release -- --load model.txt --infer 12+35
 inference 12+35 = 47  [ok]  top: 47 (97%), 38 (1%), 3 (1%)
 ```
 
-La entrada es `[START, 12, +, 35, =]`. El modelo lo lee y devuelve una probabilidad por cada una de las 53 respuestas posibles. La inferencia es una sola pasada hacia delante: sin gradiente y sin pasada hacia atrás. `--infer` imprime las tres respuestas más probables con su probabilidad.
+La entrada es `[START, 12, +, 35, =]`. El modelo la lee y devuelve una probabilidad por cada una de las 53 respuestas posibles. La inferencia es una sola pasada hacia delante: sin gradiente y sin pasada hacia atrás. `--infer` imprime las tres respuestas más probables junto a su probabilidad.
 
-## Qué llevarse
+## Conclusiones
 
-- **La atención mueve información entre posiciones; el MLP la transforma dentro de una.** El resto del transformer es fontanería alrededor de esas dos operaciones.
-- **Un modelo puede ajustar los datos sin aprender la regla.** El acierto de entrenamiento es una mala guía: llega al 100 % mientras el de pares no vistos sigue en el azar.
-- **El grokking es una transición entre dos soluciones.** La solución que memoriza necesita pesos grandes. La que generaliza necesita menos. El decaimiento de pesos decide cuál sobrevive, y la decisión tarda miles de pasos.
-- **Mira tres números a la vez.** Acierto de entrenamiento, acierto en pares no vistos y tamaño de los parámetros. Una sola curva esconde el mecanismo.
+- **La *atención* mueve información de unas posiciones a otras; el *MLP* la transforma dentro de una sola.** Todo lo demás en el *transformer* es andamiaje alrededor de esas dos operaciones.
+- **Un modelo puede cuadrar los datos sin aprender la regla.** El acierto en entrenamiento es una mala guía: llega al 100 % mientras el de pares no vistos sigue en el azar.
+- **El *grokking* es una transición entre dos soluciones.** La que memoriza necesita pesos grandes; la que generaliza necesita menos. El decaimiento de pesos decide cuál sobrevive, y la decisión tarda miles de pasos.
+- **Vigila tres números a la vez.** Acierto en entrenamiento, acierto en pares no vistos y tamaño de los parámetros. Una sola curva esconde el mecanismo.
 
-El motor, el conjunto de datos, las gráficas y la ejecución en crudo viven en dos repositorios: [grokking-rs](https://github.com/jacano/grokking-rs) y [grokking-csharp](https://github.com/jacano/grokking-csharp). Los dos están sin dependencias, los dos rondan las 1.200 líneas y los dos arrancan de los mismos pesos. Cada figura de este artículo sale del CSV de la ejecución en Rust.
+El motor, el conjunto de datos, las gráficas y la ejecución en crudo están en dos repositorios: [grokking-rs](https://github.com/jacano/grokking-rs) y [grokking-csharp](https://github.com/jacano/grokking-csharp). Ninguno de los dos tiene dependencias, los dos rondan las 1.200 líneas y los dos arrancan de los mismos pesos. Cada figura de este artículo sale del CSV de la ejecución en Rust.
