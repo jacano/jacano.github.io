@@ -2,18 +2,18 @@
 title: 'Attention and grokking: a tiny transformer that learns the rule'
 date: '2026-10-05'
 tag: 'Machine Learning'
-excerpt: 'A small transformer learns modular addition. It memorizes the training pairs in 750 steps, waits 4,750 steps more, and then answers pairs it never saw. The article builds the transformer and the C# engine that shows the jump, twice: once written by hand and once with a framework.'
+excerpt: 'A 56,640-parameter transformer memorizes 843 sums, fails almost every unseen one for three thousand steps, and then learns to add. The article builds it in C# with TorchSharp, in about three hundred lines, and shows the jump.'
 lang: 'en'
 pair: 'attention-and-grokking-tiny-transformer'
 ---
 
-A model learns to add two numbers. It sees 843 sums, and after 750 steps it answers every one of them without a mistake.
+A model learns to add two numbers. It sees 843 sums, and after 1,000 steps it answers 98% of them without a mistake.
 
-Then you give it a sum it has never seen, and it gets it wrong. It gets **1,943 of the 1,966** sums you held back wrong, and it scores below the 1.9% it would get by guessing, because it is not unsure of itself. It is confidently wrong.
+Then you give it a sum it has never seen, and it gets it wrong. It gets **1,942 of the 1,966** sums you held back wrong, and it scores below the 1.9% it would get by guessing, because it is not unsure of itself. It is confidently wrong.
 
-You wait. The training accuracy stays perfect the whole time, so a quick reading says the run is finished, and the number that matters does not move for almost five thousand steps. Then, between one measurement and the next, the model starts answering the held-back sums. Four measurements later it is right almost every time.
+You wait. The training accuracy stays high the whole time, so a quick reading says the run is finished, and the number that matters does not move for another three thousand steps. Then, between one measurement and the next, the model starts answering the held-back sums. Four measurements later it is right almost every time.
 
-That is **grokking**, and this article makes it happen: a 56,640-parameter transformer, one arithmetic task, one laptop core.
+That is **grokking**, and this article makes it happen: a 56,640-parameter transformer, one arithmetic task, and a run of twenty-six seconds on one laptop core.
 
 Two papers meet in the middle of it.
 
@@ -23,7 +23,7 @@ In 2022, Power and colleagues described the surprise in [Grokking: Generalizatio
 
 ## The task: modular addition
 
-The modulus is **53**. The model reads a sum and must return the result modulo 53. Every answer is a number from 0 to 52.
+The modulus is **53**. The model reads a sum and returns the result modulo 53, so every answer is a number from 0 to 52.
 
 ```
 12 + 35 = 47           already below 53
@@ -67,13 +67,13 @@ Now the interesting part: the run itself.
 
 ## The cliff
 
-![Train and unseen accuracy against the training step. Train accuracy reaches 100% by step 750 while unseen accuracy is at 1.2%. Unseen accuracy stays under 26% until step 5000, rises to 70% at step 5500 and reaches 96% by step 10000.](/blog/grokking-cliff.svg)
+![Train and unseen accuracy against the training step. Train accuracy reaches 98% by step 1000 while unseen accuracy is at 1.2%. Unseen accuracy rises from 13% at step 3000 to 74% at step 3750 and reaches 97% by step 5000.](/blog/grokking-cliff.svg)
 
 The blue line is the training set. The red line is the held-back set.
 
-Training accuracy hits **100% at step 750**. The model answers every pair it has seen, and the unseen accuracy is **1.2%**, below the 1.9% of guessing. The model has memorized 843 sums and learned nothing.
+Training accuracy reaches **98% at step 1,000**, and it does not fall far below that again. The model answers almost every pair it has seen, and the unseen accuracy is **1.2%**, below the 1.9% of guessing. The model has memorized 843 sums and learned nothing.
 
-Then the red line stays flat for 4,750 steps. It passes 9% only at step 4,000 and 26% at step 5,000. At **step 5,500** it reaches **70%**, and by step 6,000 it reaches **91%**. From there the model answers **1,891 of the 1,966 unseen pairs**, and it keeps answering them.
+Then the red line stays flat for another two thousand steps. It passes 13% only at step 3,000 and 28% at step 3,500. At **step 3,750** it reaches **74%**, and by step 5,000 it reaches **92%**. From there the model answers **1,912 of the 1,966 unseen pairs**, and it keeps answering them.
 
 The flat part of that graph is the part worth explaining. The model is not stuck. It is busy.
 
@@ -98,11 +98,27 @@ double[] w = Softmax(scores);             // turn the scores into weights that a
 double[] output = Weighted(w, v);         // one weighted sum of the values
 ```
 
-The model builds a key and a value for every position it has already read, and it keeps them in a cache. That cache is the **KV cache** of large language models. It is what lets a model produce one new token without working out the keys and values of the whole conversation again, and it is the reason a long chat stays fast.
-
-The cache also gives the model its only rule about the future: position `t` can look at positions `0` to `t`, and nothing else, because the cache grows one token at a time. This engine builds that cache on every forward pass, training included.
+The model builds a key and a value for every position it has already read, and those vectors are the **KV cache** of large language models. It is what lets a model produce one new token without working out the keys and values of the whole conversation again, and it is the reason a long chat stays fast. The framework keeps that cache for you: it computes the keys and values of the whole document at once and masks the future, which is the same idea done in parallel.
 
 **The MLP does the thinking at one position.** It projects the vector to four times its width, turns negative numbers into zero, and projects it back. Attention moves information between positions. The MLP transforms information inside one position. Both parts add their result back to their input, so the signal has a straight path through the layer.
+
+That is the whole model, and with a framework it is one method. This is all of it:
+
+```csharp
+public override Tensor forward(Tensor index)
+{
+    Tensor positions = arange(index.shape[1], dtype: ScalarType.Int64, device: index.device);
+    Tensor x = _wte.forward(index) + _wpe.forward(positions);
+    Tensor h = RmsNorm(x);
+    Tensor q = _wq.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
+    Tensor k = _wk.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
+    Tensor v = _wv.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
+    Tensor attended = scaled_dot_product_attention(q, k, v, is_casual: true);
+    x = x + _wo.forward(attended.transpose(1, 2).reshape(batch, length, _embd));
+    x = x + _fc2.forward(relu(_fc1.forward(RmsNorm(x))));
+    return _lmHead.forward(x);
+}
+```
 
 ## How the model learns
 
@@ -121,41 +137,34 @@ A model that is sure and right scores 0.0. A model that leaves the right answer 
 
 The rule has a name: **cross-entropy**. It is the standard way to score a model that returns one probability per option, and it is the number that the training loop works to reduce.
 
-The engine computes the loss at the five positions of the document and takes the average. That average is the number in the figures and in the `loss` columns of the CSV.
+The model computes the loss at the five positions of the document and takes the average. That average is the number in the figures and in the `loss` columns of the CSV.
 
-**Learning means changing the parameters to make the loss smaller.** The 56,640 parameters are the numbers the model learns. For each parameter, the engine works out how much it moves the loss and in which direction. That number is the **gradient**. Then the engine moves every parameter a little against its gradient. One set of moves is one **training step**. The engine uses a standard rule called Adam to choose the size of each move.
+**Learning means changing the parameters to make the loss smaller.** The 56,640 parameters are the numbers the model learns. For each parameter, the framework works out how much it moves the loss and in which direction. That number is the **gradient**. Then it moves every parameter a little against its gradient. One set of moves is one **training step**, and the size of each move comes from an optimiser. This run uses one called Adam.
 
-**Weight decay is a second and smaller force.** At every step the engine also pulls every parameter a little towards zero. Two things follow from that. First, no parameter can grow without limit. Second, and this is the part that matters here, the cheapest answer wins. A model can fit the training pairs by storing them one at a time, and that needs large parameters. A model that learns the rule needs less. Weight decay makes the second option cheaper as the steps go by, and that is what produces the jump in the next section.
+**Weight decay is a second and smaller force.** At every step the optimiser also pulls every parameter a little towards zero. Two things follow from that. First, no parameter can grow without limit. Second, and this is the part that matters here, the cheapest answer wins. A model can fit the training pairs by storing them one at a time, and that needs large parameters. A model that learns the rule needs less. Weight decay makes the second option cheaper as the steps go by, and that is what produces the jump.
 
-## The engine
+## What the framework does for you
 
-The engine is 1,160 lines, and three ideas keep it that small.
+The model is 55 lines and the training loop is 12. Everything else in a run like this is the automatic differentiation, and that is the part TorchSharp writes instead of you. Three ideas are the whole of it.
 
 **1. Every value of the computation is one node in a single list.**
 
-A node is one entry of that list. It holds four things:
+A node holds four things:
 
 - **value**: the number itself.
 - **gradient**: how much this number moves the loss. The backward pass fills it in later.
 - **inputs**: the nodes this value was computed from.
 - **local derivative**: how the value changes when each input changes.
 
-Take `y = a * b`. The engine adds one node: the value `a * b`, the inputs `a` and `b`, and the two local derivatives `b` and `a`. Nothing becomes a separate object, the list is reused on every step, and the memory stays flat.
+Take `y = a * b`. One node: the value `a * b`, the inputs `a` and `b`, and the two local derivatives `b` and `a`. Nothing becomes a separate object, the list is reused on every step, and the memory stays flat.
 
 **2. The gradient travels backwards through the same list.**
 
 A node always sits after the nodes it was computed from. So the backward pass reads the list from the end to the start. When it reaches a node, every node that depends on it has already passed its gradient down, and the gradient of that node is complete. One pass, no recursion and no sorting.
 
-**3. A matrix-vector product becomes one node per row.**
+**3. A matrix product is not a thousand small nodes.**
 
-A row of the matrix computes one number: the sum of each weight multiplied by its input. The engine writes that whole sum into a single node.
-
-```csharp
-double y = 0;
-for (int k = 0; k < len; k++) y += w[k] * x[k];
-```
-
-The direct way would give one node per multiplication and one more per addition, so a layer of 256 x 64 would need 32,000 nodes. With one node per row it needs 256.
+A row of a weight matrix computes one number: the sum of each weight multiplied by its input. A framework keeps that whole sum in one node, and it writes the two derivatives of the row by hand.
 
 The backward pass needs two things from that row: how much each weight should change, and how much each input should change. One multiplication gives both. Say the row came out too high by `g`. A weight that was multiplied by a large input is more to blame than a weight multiplied by a small one, so each weight takes a share of `g` proportional to its input, and each input takes a share proportional to the weight that used it:
 
@@ -164,21 +173,19 @@ for (int k = 0; k < len; k++) gradW[k] += g * x[k];
 for (int k = 0; k < len; k++) gradX[k] += g * w[k];
 ```
 
-The weights of a row sit next to each other in the list, so both loops run over two blocks of consecutive numbers. That is where SIMD applies: the engine runs one arithmetic operation on several numbers at once, with AVX2 and FMA when the processor has them.
+The weights of a row sit next to each other in memory, so both loops run over two blocks of consecutive numbers. That is where a framework reaches for SIMD, and runs one arithmetic operation on several numbers at once.
 
-That is the engine: one list, one backward pass, and one node per row. It is the reason the whole experiment fits in 1,160 lines with no dependencies, and the reason a run takes ten minutes on one core instead of a day.
-
-Now back to the flat part of the graph, and the two numbers that explain it.
+Those three ideas are the difference between the twelve lines of the training loop and the thousand lines of engine you would otherwise read. None of them is about transformers. All of them are in the line that says `loss.backward()`.
 
 ## What happens underneath
 
-Two more numbers explain what the model does during that flat stretch.
+Two more numbers explain the flat part of the graph.
 
-![Cross-entropy loss against the training step, on a log scale. The train loss reaches its floor by step 750 while the test loss stays flat at 3.9 until step 4000, then falls to 2.0.](/blog/grokking-loss.svg)
+![Cross-entropy loss against the training step, on a log scale. The train loss reaches its floor by step 1000 while the test loss stays near 3.9, then falls to 2.0 as the unseen accuracy jumps.](/blog/grokking-loss.svg)
 
 The train loss falls fast and reaches its floor. The test loss does not move for thousands of steps. A model that only memorized would keep that shape forever. Here the test loss starts to fall, and the fall is the rule arriving. The vertical axis is on a log scale, so the fall from 3.9 to 2.0 is a factor of two, and the last decimal matters more than it looks: the loss of a model that answers well is already close to the floor.
 
-![Two curves against the training step, each on its own axis. On the left axis the size of the parameters rises from 19.2 to 21.8 while the model memorizes, then falls to 15.2. On the right axis the accuracy on unseen pairs stays near 1% until step 4000 and then rises to 96%.](/blog/grokking-norm.svg)
+![Two curves against the training step, each on its own axis. On the left axis the size of the parameters rises from 19.1 to 22.3 while the model memorizes, then falls to 16.0. On the right axis the accuracy on unseen pairs stays near 1% for three thousand steps and then rises to 97%.](/blog/grokking-norm.svg)
 
 This figure has **two axes**, one per curve. The blue line uses the left axis: the size of the parameters, from 19 to 22. That is one number for the whole model, and it grows when any parameter grows. The red line uses the right axis: the accuracy on pairs the model has never seen, from 0% to 100%.
 
@@ -192,39 +199,37 @@ Take the decay away and the model does not learn the rule. It memorizes, and tha
 
 | step | decay | train acc | unseen acc | size |
 | ---: | :--- | ---: | ---: | ---: |
-| 750 | with | 100% | 1.2% | 20.7 |
-| 750 | without | 100% | 0.7% | 48.4 |
-| 6,000 | with | 100% | 90.9% | 15.9 |
-| 6,000 | without | 100% | 2.2% | 100.9 |
-| 12,000 | with | 100% | **96.2%** | 15.2 |
-| 12,000 | without | 93.6% | **1.6%** | 135.5 |
-| 40,000 | without | 100% | **3.3%** | 245.2 |
+| 2,000 | with | 94% | 3.4% | 21.5 |
+| 2,000 | without | 99.8% | 0.1% | 74.0 |
+| 4,000 | with | 99.6% | 82.2% | 17.0 |
+| 4,000 | without | 99.8% | 0.3% | 94.7 |
+| 12,000 | with | 100% | **97.3%** | 16.0 |
+| 12,000 | without | 100% | **0.2%** | 157.1 |
+| 60,000 | without | 100% | **0.5%** | 348.2 |
 
-Read the last row against the one above it. Three times the steps of the run that learned the rule, and the accuracy on unseen pairs has crawled from 1.6% to 3.3%: barely above the 1.9% of guessing, and still **65 of the 1,966 pairs**. Waiting does not help. The model is not a slow learner that needs more time; it found the table, and it has no reason to leave it.
+Read the last two rows against the one above them. Five times the steps of the run that learned the rule, and the accuracy on unseen pairs has crawled from 0.2% to 0.5%: **a quarter of the 1.9% of guessing**, and still about ten pairs out of 1,966. Waiting does not help. The model is not a slow learner that needs more time; it found the table, and it has no reason to leave it.
 
-An accuracy below chance is the signature of that. A model that memorized is not unsure about the pairs it never stored, it is confidently wrong about them. The size of the parameters says the same thing: it grows without end, to sixteen times the model that learned the rule, because nothing in the run charges for it.
+An accuracy below chance is the signature of that. A model that memorized is not unsure about the pairs it never stored, it is confidently wrong about them. The size of the parameters says the same thing: it grows without end, to twenty times the model that learned the rule, because nothing in the run charges for it.
 
 The decay is not a detail of the recipe that happens to work. It is the only force in the run that makes the generalizing answer cheaper than the table, and without it the rule never arrives.
 
 ## Reproduce it
 
-You need the .NET SDK 10 or newer, and nothing else. The first build downloads the native library, which is a few hundred megabytes.
+You need the .NET SDK 10 or newer. The first build downloads the native library of PyTorch, which is a few hundred megabytes.
 
 ```bash
-git clone https://github.com/jacano/grokking-csharp
-cd grokking-csharp
+git clone https://github.com/jacano/grokking-torchsharp
+cd grokking-torchsharp
 dotnet run -c Release
 ```
 
-The run takes about ten minutes on one core of a normal laptop, and it writes the same three things:
+The whole run takes about half a minute on one core of a normal laptop, and it writes three things:
 
 | Where | What |
 | --- | --- |
 | `data/train.txt`, `data/test.txt` | the two splits of the dataset, one pair per line: 843 lines and 1,966 lines |
 | `runs/grokking.csv` | the logged numbers of every step |
 | `figures/` | the three figures of this article |
-
-The two text files are the raw pairs, in the same shape the model reads them. They are for reading and counting: training uses the same pairs from memory. The repository keeps a copy of each.
 
 Each row of the CSV has six columns, so you can follow the process from any tool:
 
@@ -237,82 +242,39 @@ Each row of the CSV has six columns, so you can follow the process from any tool
 | `test_acc` | exact match on the unseen pairs |
 | `param_norm` | size of every parameter, as one number for the whole model |
 
-To watch the learning while it happens:
+The repository carries a `Makefile` for the rest, so the same commands work on a laptop and in a runner:
 
 ```bash
-# Linux and macOS
-tail -f runs/grokking.csv
-
-# Windows PowerShell
-Get-Content runs/grokking.csv -Wait
-```
-
-A few experiments change the result in a useful way:
-
-```bash
-# control: no weight decay, so nothing pulls the model off the memorizing solution
-dotnet run -c Release -- --wd 0
-
-# a smaller modulus learns faster and shows the same shape
-dotnet run -c Release -- --p 13 --steps 3000
-
-# a longer run with a finer log
-dotnet run -c Release -- --steps 40000 --eval-every 100
+make run                                  # the run above
+make control                              # the run with the decay at zero
+make save                                 # train, then keep the model
+make infer PAIR=12+35                     # ask the saved model
+make run ARGS="--p 13 --steps 3000"       # a smaller modulus learns faster
+make validate                             # compile and check the style
 ```
 
 ## Inference
 
-Training can save the parameters, and the same architecture loads them back. The file `model.txt` is not part of the repository: the `--save` flag writes it at the end of a run.
+`model.pt` is **not part of the repository**. The `--save` flag writes it at the end of a run and the model reads it back. This is one line in each direction, because a framework keeps the whole state dictionary for you:
 
 ```bash
 dotnet run -c Release -- --save
-dotnet run -c Release -- --load model.txt --infer 12+35
+dotnet run -c Release -- --infer 12+35
 ```
 
 ```
-inference 12+35 = 47  [ok]  top: 47 (92%), 36 (3%), 17 (2%)
+inference 12+35 = 47  [ok]  top: 47 (90%), 6 (5%), 17 (3%)
 ```
 
 The prompt is `[START, 12, +, 35, =]`. The model reads it and returns one probability for each of the 53 possible answers. Inference is a single forward pass: no gradient and no backward pass. `--infer` prints the three most likely answers with their probability.
 
-## The same thing without the engine
+## What the framework does not do
 
-The engine of this article is 1,160 lines, and most of them exist to compute derivatives. A framework does that part for you. The same experiment, with the model written in **55 lines** and the training loop in **12**, is in
-[grokking-torchsharp](https://github.com/jacano/grokking-torchsharp), on
-[TorchSharp](https://github.com/dotnet/TorchSharp), the .NET binding of PyTorch.
+A framework removes the arithmetic, not the decisions. Two of them went wrong here before the run jumped, and both are worth knowing.
 
-```bash
-git clone https://github.com/jacano/grokking-torchsharp
-cd grokking-torchsharp
-dotnet run -c Release
-```
+**The initialisation.** TorchSharp starts an embedding at `N(0, 1)` and a linear layer in a uniform range. The article uses microgpt's `N(0, 0.08)`, so the program sets it in four lines. Measured by the size of the parameters, the run starts at 19.1 instead of 69.6, and the difference decides whether the decay has anything to work with.
 
-That version is 26 seconds instead of ten minutes, it shows the same jump at step 3,750, and it ends at **97.3%**: 1,912 of the 1,966 unseen pairs. Its model file in full is this:
-
-```csharp
-public override Tensor forward(Tensor index)
-{
-    Tensor positions = arange(index.shape[1], dtype: ScalarType.Int64, device: index.device);
-    Tensor x = _wte.forward(index) + _wpe.forward(positions);
-    Tensor h = RmsNorm(x);
-    Tensor q = _wq.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
-    Tensor k = _wk.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
-    Tensor v = _wv.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
-    Tensor attended = scaled_dot_product_attention(q, k, v, is_casual: true);
-    x = x + _wo.forward(attended.transpose(1, 2).reshape(batch, length, _embd));
-    x = x + _fc2.forward(relu(_fc1.forward(RmsNorm(x))));
-    return _lmHead.forward(x);
-}
-```
-
-The backward pass and the optimizer become three more lines:
-
-```csharp
-loss.backward();
-optimiser.step();
-```
-
-What the framework does not remove is the thinking. It still starts an embedding at the wrong scale, and its `AdamW` is not microgpt's `Adam`: the decay sits outside the update instead of inside the gradient. With `AdamW` that version never jumped, at any decay between 0.002 and 0.5. With the decay inside the gradient, the same `wd` as the engine works. Read the two repositories side by side: one shows what a transformer does, and the other shows how little of it you have to write.
+**The decay is not the same decay.** `AdamW` subtracts the decay from the weight outside the update, and `Adam` adds it to the gradient, as microgpt does. With `AdamW` this run never jumped, at any decay between 0.002 and 0.5: the parameter norm settled at 40 to 50 and the model stayed on the memorizing answer. With the decay inside the gradient, `wd = 0.0012` works. Two names for the same word, two different runs, one afternoon of confusion.
 
 ## What to take away
 
@@ -321,12 +283,11 @@ What the framework does not remove is the thinking. It still starts an embedding
 - **Grokking is a transition between two solutions.** The memorizing solution needs large weights. The generalizing solution needs less. Weight decay decides which one survives, and the decision takes thousands of steps.
 - **Watch three numbers together.** Train accuracy, unseen accuracy and the size of the parameters. One curve alone hides the mechanism.
 
-The engine, the dataset, the figures and the raw run live in two repositories:
-[grokking-csharp](https://github.com/jacano/grokking-csharp), with the engine written
-by hand, and [grokking-torchsharp](https://github.com/jacano/grokking-torchsharp),
-with the same experiment on a framework. Every figure of this article comes from the
-CSV of the first one.
+The engine, the dataset, the figures and the raw run are in
+[github.com/jacano/grokking-torchsharp](https://github.com/jacano/grokking-torchsharp):
+the task, the model and the training loop, on a framework, with no dependency
+beyond TorchSharp itself.
 
-If you run one thing from this article, run that one. Ten minutes on a laptop core,
-and you get to watch a model sit on the wrong answer for four thousand steps and then
+If you run one thing from this article, run that. Half a minute on a laptop core, and
+you get to watch a model sit on the wrong answer for three thousand steps and then
 walk away from it.

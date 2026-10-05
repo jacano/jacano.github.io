@@ -2,18 +2,18 @@
 title: 'Atención y grokking: un transformer diminuto que aprende la regla'
 date: '2026-10-05'
 tag: 'Machine Learning'
-excerpt: 'Un transformer pequeño aprende suma modular. Memoriza los pares de entrenamiento en 750 pasos, espera 4.750 pasos más y entonces acierta pares que no vio nunca. El artículo construye el transformer y el motor en C#, dos veces: una escrito a mano y otra con un framework.'
+excerpt: 'Un transformer de 56.640 parámetros memoriza 843 sumas, falla casi todas las que no ha visto durante tres mil pasos y entonces aprende a sumar. El artículo lo construye en C# con TorchSharp, en unas trescientas líneas, y muestra el salto.'
 lang: 'es'
 pair: 'attention-and-grokking-tiny-transformer'
 ---
 
-Un modelo aprende a sumar dos números. Ve 843 sumas y, en el paso 750, las responde todas sin fallar ni una.
+Un modelo aprende a sumar dos números. Ve 843 sumas y, en el paso 1.000, acierta el 98 % sin fallar ninguna.
 
-Entonces le das una suma que no ha visto nunca y la falla. Y no falla una: falla **1.943 de las 1.966** sumas que me había guardado, y acierta menos que el 1,9 % que sacaría adivinando, porque no duda de sí mismo. Está convencido y se equivoca.
+Entonces le das una suma que no ha visto nunca y la falla. Y no falla una: falla **1.942 de las 1.966** sumas que me había guardado, y acierta menos que el 1,9 % que sacaría adivinando, porque no duda de sí mismo. Está convencido y se equivoca.
 
-Esperas. El acierto en entrenamiento sigue perfecto todo el rato, así que una lectura rápida diría que la corrida ha terminado, y el número que importa no se mueve durante casi cinco mil pasos. Y entonces, de una medición a la siguiente, el modelo empieza a acertar las sumas que tenía guardadas. Cuatro mediciones después acierta casi todas.
+Esperas. El acierto en entrenamiento se mantiene alto todo el rato, así que una lectura rápida diría que la corrida ha terminado, y el número que importa no se mueve durante otros tres mil pasos. Y entonces, de una medición a la siguiente, el modelo empieza a acertar las sumas que tenía guardadas. Cuatro mediciones después acierta casi todas.
 
-Eso es el *grokking*, y este artículo lo hace ocurrir: un *transformer* de 56.640 parámetros, una tarea aritmética y un núcleo de portátil.
+Eso es el *grokking*, y este artículo lo hace ocurrir: un *transformer* de 56.640 parámetros, una tarea aritmética y una corrida de veintiséis segundos en un núcleo de portátil.
 
 En el camino se cruzan dos artículos científicos.
 
@@ -23,7 +23,7 @@ En 2022, Power y sus colegas describieron la sorpresa en [Grokking: Generalizati
 
 ## La tarea: suma modular
 
-El módulo es **53**. El modelo lee una suma y debe devolver el resultado módulo 53, así que cada respuesta es un número entre 0 y 52.
+El módulo es **53**. El modelo lee una suma y devuelve el resultado módulo 53, así que cada respuesta es un número entre 0 y 52.
 
 ```
 12 + 35 = 47           ya está por debajo de 53
@@ -67,13 +67,13 @@ Ahora viene lo interesante: la corrida.
 
 ## El acantilado
 
-![Acierto en entrenamiento y en pares no vistos frente al paso de entrenamiento. El acierto en entrenamiento llega al 100 % en el paso 750, mientras el de pares no vistos está en el 1,2 %. El acierto en pares no vistos se queda por debajo del 26 % hasta el paso 5.000, sube al 70 % en el paso 5.500 y llega al 96 % en el paso 10.000.](/blog/grokking-cliff.svg)
+![Acierto en entrenamiento y en pares no vistos frente al paso de entrenamiento. El acierto en entrenamiento llega al 98 % en el paso 1.000, mientras el de pares no vistos está en el 1,2 %. El acierto en pares no vistos sube del 13 % en el paso 3.000 al 74 % en el 3.750 y llega al 97 % en el 5.000.](/blog/grokking-cliff.svg)
 
 La línea azul es el conjunto de entrenamiento. La línea roja es el conjunto que me guardé.
 
-El acierto en entrenamiento toca el **100 % en el paso 750**. El modelo responde todos los pares que ha visto, y el acierto en los que no ha visto está en el **1,2 %**, por debajo del 1,9 % que se saca adivinando. Ha memorizado 843 sumas y no ha aprendido nada.
+El acierto en entrenamiento llega al **98 % en el paso 1.000**, y ya no vuelve a caer muy por debajo de ahí. El modelo responde casi todos los pares que ha visto, y el acierto en los que no ha visto está en el **1,2 %**, por debajo del 1,9 % que se saca adivinando. Ha memorizado 843 sumas y no ha aprendido nada.
 
-Después la línea roja se queda plana 4.750 pasos. No pasa del 9 % hasta el paso 4.000 ni del 26 % hasta el 5.000. En el **paso 5.500** llega al **70 %**, y en el 6.000 alcanza el **91 %**. Desde ahí el modelo acierta **1.891 de los 1.966 pares que no había visto**, y sigue acertándolos.
+Después la línea roja se queda plana otros dos mil pasos. No pasa del 13 % hasta el paso 3.000 ni del 28 % hasta el 3.500. En el **paso 3.750** llega al **74 %**, y en el 5.000 alcanza el **92 %**. Desde ahí el modelo acierta **1.912 de los 1.966 pares que no había visto**, y sigue acertándolos.
 
 La parte plana de esa gráfica es la que hay que explicar. El modelo no está atascado. Está ocupado.
 
@@ -98,11 +98,27 @@ double[] w = Softmax(scores);             // convierte las puntuaciones en pesos
 double[] salida = Weighted(w, v);         // una suma ponderada de los valores
 ```
 
-El modelo construye una clave y un valor por cada posición que ya ha leído, y los guarda en una caché. Esa caché es la *caché KV* de los modelos de lenguaje grandes: lo que permite producir un *token* nuevo sin volver a calcular las claves y los valores de toda la conversación, y la razón de que un chat largo siga siendo rápido.
-
-La caché también le impone al modelo su única regla sobre el futuro: la posición `t` puede mirar las posiciones `0` a `t` y ninguna más, porque la caché crece de *token* en *token*. Este motor la construye en cada pasada hacia delante, también durante el entrenamiento.
+El modelo construye una clave y un valor por cada posición que ya ha leído, y esos vectores son la *caché KV* de los modelos de lenguaje grandes: lo que permite producir un *token* nuevo sin volver a calcular las claves y los valores de toda la conversación, y la razón de que un chat largo siga siendo rápido. La biblioteca te mantiene esa caché: calcula de una vez las claves y los valores de todo el documento y enmascara el futuro, que es la misma idea hecha en paralelo.
 
 **El *MLP* piensa en una sola posición.** Proyecta el vector a cuatro veces su anchura, convierte los negativos en cero y lo proyecta de vuelta. La *atención* mueve información de unas posiciones a otras; el *MLP* la transforma dentro de una sola. Ambas partes suman su resultado a su entrada, así que la señal tiene un camino directo por la capa.
+
+Ese es todo el modelo, y con una biblioteca cabe en un método. Esto es entero:
+
+```csharp
+public override Tensor forward(Tensor index)
+{
+    Tensor positions = arange(index.shape[1], dtype: ScalarType.Int64, device: index.device);
+    Tensor x = _wte.forward(index) + _wpe.forward(positions);
+    Tensor h = RmsNorm(x);
+    Tensor q = _wq.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
+    Tensor k = _wk.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
+    Tensor v = _wv.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
+    Tensor attended = scaled_dot_product_attention(q, k, v, is_casual: true);
+    x = x + _wo.forward(attended.transpose(1, 2).reshape(batch, length, _embd));
+    x = x + _fc2.forward(relu(_fc1.forward(RmsNorm(x))));
+    return _lmHead.forward(x);
+}
+```
 
 ## Cómo aprende el modelo
 
@@ -121,41 +137,34 @@ Un modelo que está seguro y acierta saca 0,0. Uno que deja la respuesta correct
 
 La regla tiene nombre: **entropía cruzada**. Es la forma estándar de puntuar a un modelo que devuelve una probabilidad por opción, y el número que el bucle de entrenamiento trata de reducir.
 
-El motor calcula la pérdida en las cinco posiciones del documento y hace la media. Esa media es la cifra que aparece en las gráficas y en las columnas `loss` del CSV.
+El modelo calcula la pérdida en las cinco posiciones del documento y hace la media. Esa media es la cifra que aparece en las gráficas y en las columnas `loss` del CSV.
 
-**Aprender consiste en cambiar los parámetros para que la pérdida baje.** Los 56.640 parámetros son los números que aprende el modelo. Para cada uno, el motor calcula cuánto mueve la pérdida y en qué dirección; ese número es el **gradiente**. Después mueve el parámetro un poco en la dirección contraria. Un conjunto de movimientos es un **paso de entrenamiento**, y el tamaño de cada movimiento lo decide una regla estándar llamada Adam.
+**Aprender consiste en cambiar los parámetros para que la pérdida baje.** Los 56.640 parámetros son los números que aprende el modelo. Para cada uno, la biblioteca calcula cuánto mueve la pérdida y en qué dirección; ese número es el **gradiente**. Después mueve el parámetro un poco en la dirección contraria. Un conjunto de movimientos es un **paso de entrenamiento**, y el tamaño de cada movimiento lo decide un optimizador. Esta corrida usa uno llamado Adam.
 
-**El decaimiento de pesos** (*weight decay*) **es una segunda fuerza, más pequeña.** En cada paso, el motor tira también un poco de cada parámetro hacia cero. De ahí salen dos cosas: la primera, que ningún parámetro crece sin límite; la segunda, que es la que importa aquí, que acaba ganando la respuesta más barata. Un modelo puede cuadrar los pares de entrenamiento guardándolos uno a uno, y para eso necesita parámetros grandes; uno que aprende la regla necesita menos. El decaimiento de pesos abarata esa segunda opción a medida que pasan los pasos, y de ahí sale el salto de la sección siguiente.
+**El decaimiento de pesos** (*weight decay*) **es una segunda fuerza, más pequeña.** En cada paso, el optimizador tira también un poco de cada parámetro hacia cero. De ahí salen dos cosas: la primera, que ningún parámetro crece sin límite; la segunda, que es la que importa aquí, que acaba ganando la respuesta más barata. Un modelo puede cuadrar los pares de entrenamiento guardándolos uno a uno, y para eso necesita parámetros grandes; uno que aprende la regla necesita menos. El decaimiento de pesos abarata esa segunda opción a medida que pasan los pasos, y de ahí sale el salto.
 
-## El motor
+## Lo que la biblioteca hace por ti
 
-El motor son 1.160 líneas, y tres ideas lo mantienen así de pequeño.
+El modelo son 55 líneas y el bucle de entrenamiento 12. Todo lo demás en una corrida así es la diferenciación automática, y esa es la parte que TorchSharp escribe en tu lugar. Son tres ideas.
 
 **1. Cada valor del cálculo es un nodo dentro de una sola lista.**
 
-Un nodo es una entrada de esa lista. Guarda cuatro cosas:
+Un nodo guarda cuatro cosas:
 
 - **valor**: el número en sí.
 - **gradiente**: cuánto mueve este número la pérdida. La pasada hacia atrás lo rellena después.
 - **entradas**: los nodos a partir de los cuales se calculó este valor.
 - **derivada local**: cuánto cambia el valor cuando cambia cada entrada.
 
-Tomemos `y = a * b`. El motor añade un nodo con el valor `a * b`, las entradas `a` y `b` y las dos derivadas locales `b` y `a`. Nada se convierte en un objeto aparte, la lista se reutiliza en cada paso y la memoria se mantiene plana.
+Tomemos `y = a * b`. Un nodo: el valor `a * b`, las entradas `a` y `b` y las dos derivadas locales `b` y `a`. Nada se convierte en un objeto aparte, la lista se reutiliza en cada paso y la memoria se mantiene plana.
 
 **2. El gradiente viaja hacia atrás por esa misma lista.**
 
 Un nodo siempre se crea después de aquellos a partir de los cuales se calculó, así que la pasada hacia atrás recorre la lista del final al principio. Cuando llega a un nodo, todos los que dependen de él ya le han pasado su gradiente, y el gradiente de ese nodo está completo. Una sola pasada, sin recursión y sin ordenar nada.
 
-**3. Un producto matriz-vector se convierte en un nodo por fila.**
+**3. Un producto de matrices no son mil nodos pequeños.**
 
-Una fila de la matriz calcula un número: la suma de cada peso multiplicado por su entrada. El motor escribe toda esa suma en un solo nodo.
-
-```csharp
-double y = 0;
-for (int k = 0; k < len; k++) y += w[k] * x[k];
-```
-
-Hacerlo de la forma directa daría un nodo por multiplicación y otro más por suma, así que una capa de 256 x 64 necesitaría 32.000 nodos. Con un nodo por fila necesita 256.
+Una fila de una matriz de pesos calcula un número: la suma de cada peso multiplicado por su entrada. La biblioteca guarda toda esa suma en un solo nodo, y escribe a mano las dos derivadas de la fila.
 
 La pasada hacia atrás necesita dos cosas de esa fila: cuánto debe cambiar cada peso y cuánto debe cambiar cada entrada. Una multiplicación da las dos. Supongamos que la fila se pasó en `g`. Un peso que se multiplicó por una entrada grande tiene más culpa que uno que se multiplicó por una entrada pequeña, así que cada peso se lleva una parte de `g` proporcional a su entrada, y cada entrada se lleva una parte proporcional al peso que la usó:
 
@@ -164,21 +173,19 @@ for (int k = 0; k < len; k++) gradW[k] += g * x[k];
 for (int k = 0; k < len; k++) gradX[k] += g * w[k];
 ```
 
-Los pesos de una fila están unos junto a otros en la lista, así que los dos bucles recorren dos bloques de números consecutivos. Ahí es donde entra SIMD: el motor ejecuta una operación aritmética sobre varios números a la vez, con AVX2 y FMA cuando el procesador los tiene.
+Los pesos de una fila están unos junto a otros en memoria, así que los dos bucles recorren dos bloques de números consecutivos. Ahí es donde la biblioteca echa mano de SIMD y ejecuta una operación aritmética sobre varios números a la vez.
 
-Ese es el motor: una lista, una pasada hacia atrás y un nodo por fila. Es la razón de que el experimento entero quepa en 1.160 líneas sin dependencias, y de que una corrida tarde diez minutos en un núcleo en vez de un día.
-
-Volvamos a la parte plana de la gráfica, y a los dos números que la explican.
+Esas tres ideas son la diferencia entre las doce líneas del bucle de entrenamiento y el motor de mil líneas que tendrías que leer si no existieran. Ninguna va de *transformers*. Todas están dentro de la línea que dice `loss.backward()`.
 
 ## Qué ocurre por debajo
 
-Otros dos números explican qué hace el modelo durante ese tramo plano.
+Otros dos números explican la parte plana de la gráfica.
 
-![Entropía cruzada frente al paso de entrenamiento, en escala logarítmica. La pérdida de entrenamiento toca suelo en el paso 750, mientras la de prueba se queda plana en 3,9 hasta el paso 4.000 y después baja a 2,0.](/blog/grokking-loss.svg)
+![Entropía cruzada frente al paso de entrenamiento, en escala logarítmica. La pérdida de entrenamiento toca suelo en el paso 1.000, mientras la de prueba se queda cerca de 3,9 y después baja a 2,0 a la vez que el acierto en pares no vistos da el salto.](/blog/grokking-loss.svg)
 
 La pérdida de entrenamiento cae deprisa y toca suelo. La de prueba no se mueve en miles de pasos; un modelo que solo hubiera memorizado mantendría esa forma para siempre. Aquí la pérdida de prueba empieza a caer, y esa caída es la regla que llega. El eje vertical está en escala logarítmica, así que bajar de 3,9 a 2,0 es dividir por dos, y el último decimal importa más de lo que parece: la pérdida de un modelo que responde bien ya está cerca del suelo.
 
-![Dos curvas frente al paso de entrenamiento, cada una en su eje. En el eje izquierdo el tamaño de los parámetros sube de 19,2 a 21,8 mientras el modelo memoriza, y después baja a 15,2. En el eje derecho el acierto en pares no vistos se queda cerca del 1 % hasta el paso 4.000 y después sube al 96 %.](/blog/grokking-norm.svg)
+![Dos curvas frente al paso de entrenamiento, cada una en su eje. En el eje izquierdo el tamaño de los parámetros sube de 19,1 a 22,3 mientras el modelo memoriza, y después baja a 16,0. En el eje derecho el acierto en pares no vistos se queda cerca del 1 % durante tres mil pasos y después sube al 97 %.](/blog/grokking-norm.svg)
 
 Esta figura tiene **dos ejes**, uno por curva. La línea azul usa el eje izquierdo: el tamaño de los parámetros, de 19 a 22. Es un solo número para todo el modelo, y crece cuando crece cualquier parámetro. La línea roja usa el eje derecho: el acierto en pares que el modelo no ha visto nunca, del 0 % al 100 %.
 
@@ -192,39 +199,37 @@ Quita el decaimiento y el modelo no aprende la regla. Memoriza, y eso es todo lo
 
 | paso | decaimiento | acierto en entrenamiento | acierto en no vistos | tamaño |
 | ---: | :--- | ---: | ---: | ---: |
-| 750 | sí | 100 % | 1,2 % | 20,7 |
-| 750 | no | 100 % | 0,7 % | 48,4 |
-| 6.000 | sí | 100 % | 90,9 % | 15,9 |
-| 6.000 | no | 100 % | 2,2 % | 100,9 |
-| 12.000 | sí | 100 % | **96,2 %** | 15,2 |
-| 12.000 | no | 93,6 % | **1,6 %** | 135,5 |
-| 40.000 | no | 100 % | **3,3 %** | 245,2 |
+| 2.000 | sí | 94 % | 3,4 % | 21,5 |
+| 2.000 | no | 99,8 % | 0,1 % | 74,0 |
+| 4.000 | sí | 99,6 % | 82,2 % | 17,0 |
+| 4.000 | no | 99,8 % | 0,3 % | 94,7 |
+| 12.000 | sí | 100 % | **97,3 %** | 16,0 |
+| 12.000 | no | 100 % | **0,2 %** | 157,1 |
+| 60.000 | no | 100 % | **0,5 %** | 348,2 |
 
-Compara la última fila con la de arriba. Tres veces los pasos de la corrida que aprendió la regla, y el acierto en pares no vistos ha trepado del 1,6 % al 3,3 %: poco más que el 1,9 % que se saca adivinando, y todavía **65 de los 1.966 pares**. Esperar no sirve de nada. El modelo no es un aprendiz lento al que le falte tiempo; encontró la tabla y no tiene ninguna razón para dejarla.
+Compara las dos últimas filas con la de arriba. Cinco veces los pasos de la corrida que aprendió la regla, y el acierto en pares no vistos ha trepado del 0,2 % al 0,5 %: **la cuarta parte del 1,9 % que se saca adivinando**, y todavía unos diez pares de 1.966. Esperar no sirve de nada. El modelo no es un aprendiz lento al que le falte tiempo; encontró la tabla y no tiene ninguna razón para dejarla.
 
-Un acierto por debajo del azar es la firma de eso. Un modelo que ha memorizado no duda de los pares que no guardó: está convencido de ellos y se equivoca. El tamaño de los parámetros dice lo mismo, porque crece sin freno hasta dieciséis veces el del modelo que aprendió la regla: nada en la corrida lo está cobrando.
+Un acierto por debajo del azar es la firma de eso. Un modelo que ha memorizado no duda de los pares que no guardó: está convencido de ellos y se equivoca. El tamaño de los parámetros dice lo mismo, porque crece sin freno hasta veinte veces el del modelo que aprendió la regla: nada en la corrida lo está cobrando.
 
 El decaimiento no es un detalle de la receta que da la casualidad de funcionar. Es la única fuerza de la corrida que abarata la respuesta que generaliza frente a la tabla, y sin él la regla no llega nunca.
 
 ## Reprodúcelo
 
-Hace falta el SDK de .NET 10 o superior, y nada más. La primera compilación descarga la biblioteca nativa, que son unos cientos de megabytes.
+Hace falta el SDK de .NET 10 o superior. La primera compilación descarga la biblioteca nativa de PyTorch, que son unos cientos de megabytes.
 
 ```bash
-git clone https://github.com/jacano/grokking-csharp
-cd grokking-csharp
+git clone https://github.com/jacano/grokking-torchsharp
+cd grokking-torchsharp
 dotnet run -c Release
 ```
 
-La ejecución tarda unos diez minutos en un núcleo de un portátil normal, y escribe tres cosas:
+La corrida entera tarda unos treinta segundos en un núcleo de un portátil normal, y escribe tres cosas:
 
 | Dónde | Qué |
 | --- | --- |
 | `data/train.txt`, `data/test.txt` | los dos conjuntos, un par por línea: 843 líneas y 1.966 líneas |
 | `runs/grokking.csv` | los números registrados en cada paso |
 | `figures/` | las tres gráficas de este artículo |
-
-Los dos ficheros de texto son los pares en crudo, con la misma forma con la que los lee el modelo. Están para leerlos y contarlos: el entrenamiento usa esos mismos pares desde memoria. El repositorio guarda una copia de cada uno.
 
 Cada fila del CSV tiene seis columnas, así que puedes seguir el proceso desde cualquier herramienta:
 
@@ -237,80 +242,39 @@ Cada fila del CSV tiene seis columnas, así que puedes seguir el proceso desde c
 | `test_acc` | acierto exacto en los pares no vistos |
 | `param_norm` | tamaño de todos los parámetros, como un solo número |
 
-Para seguir el aprendizaje mientras ocurre:
+El repositorio trae un `Makefile` para el resto, así que los mismos comandos funcionan en un portátil y en un runner:
 
 ```bash
-# Linux y macOS
-tail -f runs/grokking.csv
-
-# Windows PowerShell
-Get-Content runs/grokking.csv -Wait
-```
-
-Algunos experimentos cambian el resultado de forma útil:
-
-```bash
-# control: sin decaimiento de pesos, así que nada saca al modelo de la solución que memoriza
-dotnet run -c Release -- --wd 0
-
-# un módulo más pequeño aprende antes y muestra la misma forma
-dotnet run -c Release -- --p 13 --steps 3000
-
-# una ejecución más larga, con registro más fino
-dotnet run -c Release -- --steps 40000 --eval-every 100
+make run                                  # la corrida de arriba
+make control                              # la corrida con el decaimiento a cero
+make save                                 # entrenar y guardar el modelo
+make infer PAIR=12+35                     # preguntarle al modelo guardado
+make run ARGS="--p 13 --steps 3000"       # un módulo más pequeño aprende antes
+make validate                             # compilar y comprobar el estilo
 ```
 
 ## Inferencia
 
-El entrenamiento puede guardar los parámetros, y la misma arquitectura los vuelve a cargar. El fichero `model.txt` no forma parte del repositorio: lo escribe la opción `--save` al final de una ejecución.
+El fichero `model.pt` **no forma parte del repositorio**. La opción `--save` lo escribe al final de una ejecución y el modelo lo vuelve a cargar. Es una línea en cada dirección, porque una biblioteca guarda por ti el diccionario de estado entero:
 
 ```bash
 dotnet run -c Release -- --save
-dotnet run -c Release -- --load model.txt --infer 12+35
+dotnet run -c Release -- --infer 12+35
 ```
 
 ```
-inference 12+35 = 47  [ok]  top: 47 (92%), 36 (3%), 17 (2%)
+inference 12+35 = 47  [ok]  top: 47 (90%), 6 (5%), 17 (3%)
 ```
 
 La entrada es `[START, 12, +, 35, =]`. El modelo la lee y devuelve una probabilidad por cada una de las 53 respuestas posibles. La inferencia es una sola pasada hacia delante: sin gradiente y sin pasada hacia atrás. `--infer` imprime las tres respuestas más probables junto a su probabilidad.
 
-## Lo mismo sin el motor
+## Lo que la biblioteca no hace por ti
 
-El motor de este artículo son 1.160 líneas, y la mayoría existen para calcular derivadas. Una biblioteca hace esa parte por ti. El mismo experimento, con el modelo escrito en **55 líneas** y el bucle de entrenamiento en **12**, está en [grokking-torchsharp](https://github.com/jacano/grokking-torchsharp), sobre [TorchSharp](https://github.com/dotnet/TorchSharp), el enlace de PyTorch para .NET.
+Una biblioteca quita la aritmética, no las decisiones. Dos de ellas salieron mal aquí antes de que la corrida diera el salto, y las dos conviene conocerlas.
 
-```bash
-git clone https://github.com/jacano/grokking-torchsharp
-cd grokking-torchsharp
-dotnet run -c Release
-```
+**La inicialización.** TorchSharp arranca un *embedding* en `N(0, 1)` y una capa lineal en un rango uniforme. El artículo usa la de microgpt, `N(0, 0,08)`, así que el programa la fija en cuatro líneas. Medido por el tamaño de los parámetros, la corrida empieza en 19,1 en vez de en 69,6, y esa diferencia decide si el decaimiento tiene algo con lo que trabajar.
 
-Esa versión tarda 26 segundos en vez de diez minutos, da el mismo salto en el paso 3.750 y termina en el **97,3 %**: 1.912 de los 1.966 pares no vistos. Su modelo, entero, es esto:
-
-```csharp
-public override Tensor forward(Tensor index)
-{
-    Tensor positions = arange(index.shape[1], dtype: ScalarType.Int64, device: index.device);
-    Tensor x = _wte.forward(index) + _wpe.forward(positions);
-    Tensor h = RmsNorm(x);
-    Tensor q = _wq.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
-    Tensor k = _wk.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
-    Tensor v = _wv.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
-    Tensor attended = scaled_dot_product_attention(q, k, v, is_casual: true);
-    x = x + _wo.forward(attended.transpose(1, 2).reshape(batch, length, _embd));
-    x = x + _fc2.forward(relu(_fc1.forward(RmsNorm(x))));
-    return _lmHead.forward(x);
-}
-```
-
-La pasada hacia atrás y el optimizador se quedan en tres líneas más:
-
-```csharp
-loss.backward();
-optimiser.step();
-```
-
-Lo que la biblioteca no te quita es el pensamiento. Sigue inicializando los vectores a la escala equivocada, y su `AdamW` no es el `Adam` de microgpt: ahí el decaimiento va fuera de la actualización en vez de dentro del gradiente. Con `AdamW` esa versión no saltó nunca, con ningún decaimiento entre 0,002 y 0,5. Con el decaimiento dentro del gradiente funciona el mismo `wd` que en el motor. Lee los dos repositorios en paralelo: uno enseña qué hace un *transformer*, y el otro, qué poco de él hay que escribir.
+**El decaimiento no es el mismo decaimiento.** `AdamW` resta el decaimiento al peso fuera de la actualización, y `Adam` lo suma al gradiente, como hace microgpt. Con `AdamW` esta corrida no saltó nunca, con ningún decaimiento entre 0,002 y 0,5: la norma de los parámetros se quedaba en 40 o 50 y el modelo seguía en la respuesta memorizada. Con el decaimiento dentro del gradiente funciona `wd = 0,0012`. Dos nombres para la misma palabra, dos corridas distintas y una tarde de confusión.
 
 ## Conclusiones
 
@@ -319,6 +283,6 @@ Lo que la biblioteca no te quita es el pensamiento. Sigue inicializando los vect
 - **El *grokking* es una transición entre dos soluciones.** La que memoriza necesita pesos grandes; la que generaliza necesita menos. El decaimiento de pesos decide cuál sobrevive, y la decisión tarda miles de pasos.
 - **Vigila tres números a la vez.** Acierto en entrenamiento, acierto en pares no vistos y tamaño de los parámetros. Una sola curva esconde el mecanismo.
 
-El motor, el conjunto de datos, las gráficas y la ejecución en crudo están en dos repositorios: [grokking-csharp](https://github.com/jacano/grokking-csharp), con el motor escrito a mano, y [grokking-torchsharp](https://github.com/jacano/grokking-torchsharp), con el mismo experimento sobre una biblioteca. Cada figura de este artículo sale del CSV del primero.
+El motor, el conjunto de datos, las gráficas y la ejecución en crudo están en [github.com/jacano/grokking-torchsharp](https://github.com/jacano/grokking-torchsharp): la tarea, el modelo y el bucle de entrenamiento, sobre una biblioteca y sin más dependencia que TorchSharp.
 
-Si vas a ejecutar una sola cosa de este artículo, ejecuta esa. Diez minutos en un núcleo de portátil, y ves al modelo sentado encima de la respuesta equivocada durante cuatro mil pasos para después levantarse y dejarla.
+Si vas a ejecutar una sola cosa de este artículo, ejecuta esa. Medio minuto en un núcleo de portátil, y ves al modelo sentado encima de la respuesta equivocada durante tres mil pasos para después levantarse y dejarla.
