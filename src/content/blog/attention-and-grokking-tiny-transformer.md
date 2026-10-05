@@ -7,13 +7,19 @@ lang: 'en'
 pair: 'attention-and-grokking-tiny-transformer'
 ---
 
-Two results changed machine learning, and they are different in kind.
+A model learns to add two numbers. It sees 843 sums, and after 750 steps it answers every one of them without a mistake.
 
-In 2017, Vaswani and colleagues published [Attention Is All You Need](https://arxiv.org/abs/1706.03762). The paper proposed the transformer: a network built only from attention, with no recurrence and no convolutions. That architecture became the base of every large model that followed, and the result is about **structure**. It is a way to build a network that reads a sequence and mixes information across its positions.
+Then you give it a sum it has never seen, and it gets it wrong. It gets **1,943 of the 1,966** sums you held back wrong, and it scores below the 1.9% it would get by guessing, because it is not unsure of itself. It is confidently wrong.
 
-In 2022, Power and colleagues reported a smaller and stranger result in [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). They trained networks on small algorithmic datasets, and they watched a model fit every example it was given while it kept guessing on the examples it had not seen. The guessing lasted long past the point of overfitting, where the training examples are already perfect and new examples still fail. Then the model changed: from one measurement to the next, it started to answer the unseen examples correctly, and it kept answering them. That change is grokking. The model memorized first and it learned the rule later.
+You wait. The training accuracy stays perfect the whole time, so a quick reading says the run is finished, and the number that matters does not move for almost five thousand steps. Then, between one measurement and the next, the model starts answering the held-back sums. Four measurements later it is right almost every time.
 
-This article puts both results in one program. The program is a transformer of 56,640 parameters, and it trains on one arithmetic task. Then it shows the jump. The program exists twice, both times in **C#**: one version writes the engine, and the other hands the engine to a framework. The two show the same jump.
+That is **grokking**, and this article makes it happen: a 56,640-parameter transformer, one arithmetic task, one laptop core.
+
+Two papers meet in the middle of it.
+
+In 2017, Vaswani and colleagues published [Attention Is All You Need](https://arxiv.org/abs/1706.03762). The paper proposed the transformer: a network built only from attention, with no recurrence and no convolutions. Every large model that followed is a descendant of that structure, and what it contributes is **structure**: a way to read a sequence and mix information between its positions.
+
+In 2022, Power and colleagues described the surprise in [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). They trained small networks on small algorithmic datasets, and they watched one fit every example it was given while it failed the examples it had not seen. The failure lasted thousands of steps, long past the point of overfitting. Then it stopped. The name of that jump comes from their paper.
 
 ## The task: modular addition
 
@@ -25,12 +31,12 @@ The modulus is **53**. The model reads a sum and must return the result modulo 5
 50 + 50 = 100  →  47   100 - 53 = 47
 ```
 
-That rule is the whole task. A model can answer it in two ways:
+The rule fits in one line, and it has one property that makes the next 12,000 steps worth watching: **a model can pass the task by memorizing**. Nothing forces it to do the arithmetic, and memorizing is the easier answer at the start.
 
-- **Memorize** the pairs it saw during training. This is easy and fast.
-- **Learn** addition modulo 53. This is slower, and it answers every pair, including the pairs the model never saw.
+- **Memorize** the pairs it saw. Fast, and it answers only those.
+- **Learn** addition modulo 53. Slower, and it answers every pair, including the ones it never saw.
 
-The dataset contains every pair, so the task has a known answer for all of them. I keep 30% for training and the rest for testing. The test set is the part that separates the two ways.
+The dataset holds every pair, so the answer is known for all of them. I keep 30% for training and hold the rest back. Those unseen pairs are the only thing that separates the two answers.
 
 | Property | Value |
 | --- | ---: |
@@ -56,6 +62,22 @@ The document is one sequence, exactly like a sentence in a language model. The m
 | 4 | `35` | second operand |
 | 5 | `=` | the input at the answer position |
 | 6 | `47` | **the target**: the model must predict this token |
+
+Now the interesting part: the run itself.
+
+## The cliff
+
+![Train and unseen accuracy against the training step. Train accuracy reaches 100% by step 750 while unseen accuracy is at 1.2%. Unseen accuracy stays under 26% until step 5000, rises to 70% at step 5500 and reaches 96% by step 10000.](/blog/grokking-cliff.svg)
+
+The blue line is the training set. The red line is the held-back set.
+
+Training accuracy hits **100% at step 750**. The model answers every pair it has seen, and the unseen accuracy is **1.2%**, below the 1.9% of guessing. The model has memorized 843 sums and learned nothing.
+
+Then the red line stays flat for 4,750 steps. It passes 9% only at step 4,000 and 26% at step 5,000. At **step 5,500** it reaches **70%**, and by step 6,000 it reaches **91%**. From there the model answers **1,891 of the 1,966 unseen pairs**, and it keeps answering them.
+
+The flat part of that graph is the part worth explaining. The model is not stuck. It is busy.
+
+Two things explain it: what the model is, and what pushes it. Start with the model.
 
 ## The transformer
 
@@ -107,7 +129,7 @@ The engine computes the loss at the five positions of the document and takes the
 
 ## The engine
 
-Three ideas keep the training engine small.
+The engine is 1,160 lines, and three ideas keep it that small.
 
 **1. Every value of the computation is one node in a single list.**
 
@@ -144,21 +166,13 @@ for (int k = 0; k < len; k++) gradX[k] += g * w[k];
 
 The weights of a row sit next to each other in the list, so both loops run over two blocks of consecutive numbers. That is where SIMD applies: the engine runs one arithmetic operation on several numbers at once, with AVX2 and FMA when the processor has them.
 
-## The cliff
+That is the engine: one list, one backward pass, and one node per row. It is the reason the whole experiment fits in 1,160 lines with no dependencies, and the reason a run takes ten minutes on one core instead of a day.
 
-![Train and unseen accuracy against the training step. Train accuracy reaches 100% by step 750 while unseen accuracy is at 1.2%. Unseen accuracy stays under 26% until step 5000, rises to 70% at step 5500 and reaches 96% by step 10000.](/blog/grokking-cliff.svg)
-
-The blue line is the training set. The red line is the test set.
-
-The training accuracy reaches **100% at step 750**. The model already answers every pair it has seen. The test accuracy is at **1.2%**, below the 1.9% of random guessing. The model has memorized.
-
-Then the red line stays low for 4,750 more steps. It passes 9% only at step 4,000 and 26% at step 5,000. At **step 5,500** it reaches **70%**, and by step 6,000 it reaches **91%**. From that point the model answers **1,891 of the 1,966 unseen pairs**, and it keeps answering them.
-
-The flat part of the graph is the interesting part. The model is not stuck. It is busy.
+Now back to the flat part of the graph, and the two numbers that explain it.
 
 ## What happens underneath
 
-Two more numbers explain what the model does during that flat part.
+Two more numbers explain what the model does during that flat stretch.
 
 ![Cross-entropy loss against the training step, on a log scale. The train loss reaches its floor by step 750 while the test loss stays flat at 3.9 until step 4000, then falls to 2.0.](/blog/grokking-loss.svg)
 
@@ -312,3 +326,7 @@ The engine, the dataset, the figures and the raw run live in two repositories:
 by hand, and [grokking-torchsharp](https://github.com/jacano/grokking-torchsharp),
 with the same experiment on a framework. Every figure of this article comes from the
 CSV of the first one.
+
+If you run one thing from this article, run that one. Ten minutes on a laptop core,
+and you get to watch a model sit on the wrong answer for four thousand steps and then
+walk away from it.

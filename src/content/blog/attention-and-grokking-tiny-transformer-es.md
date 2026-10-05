@@ -7,13 +7,19 @@ lang: 'es'
 pair: 'attention-and-grokking-tiny-transformer'
 ---
 
-Dos resultados cambiaron el aprendizaje automático, y no tienen nada que ver entre sí.
+Un modelo aprende a sumar dos números. Ve 843 sumas y, en el paso 750, las responde todas sin fallar ni una.
 
-En 2017, Vaswani y sus colegas publicaron [Attention Is All You Need](https://arxiv.org/abs/1706.03762). El artículo proponía el *transformer*: una red construida únicamente con *atención*, sin recurrencia y sin convoluciones. Esa arquitectura es la base de todos los modelos grandes que vinieron después, y lo que aporta es **estructura**: una forma de construir una red que lee una secuencia y mezcla información entre sus posiciones.
+Entonces le das una suma que no ha visto nunca y la falla. Y no falla una: falla **1.943 de las 1.966** sumas que me había guardado, y acierta menos que el 1,9 % que sacaría adivinando, porque no duda de sí mismo. Está convencido y se equivoca.
 
-En 2022, Power y sus colegas describieron un resultado más pequeño y más extraño en [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). Entrenaron redes con conjuntos de datos algorítmicos pequeños y vieron que el modelo se aprendía de memoria todos los ejemplos que recibía mientras seguía respondiendo al azar los que no había visto. Aquello duró mucho más allá del punto de *sobreajuste*, ese momento en el que los ejemplos de entrenamiento ya salen perfectos y los nuevos siguen fallando. Y entonces el modelo cambió: de una medición a la siguiente empezó a acertar los ejemplos no vistos, y siguió acertándolos. Ese cambio es el *grokking*. El modelo memorizó primero y aprendió la regla después.
+Esperas. El acierto en entrenamiento sigue perfecto todo el rato, así que una lectura rápida diría que la corrida ha terminado, y el número que importa no se mueve durante casi cinco mil pasos. Y entonces, de una medición a la siguiente, el modelo empieza a acertar las sumas que tenía guardadas. Cuatro mediciones después acierta casi todas.
 
-Este artículo reúne los dos resultados en un solo programa. El programa es un *transformer* de 56.640 parámetros que entrena con una única tarea aritmética. Después muestra el salto. Y está escrito dos veces, las dos en **C#**: una versión escribe el motor a mano y la otra se lo encarga a una biblioteca. Las dos dan el mismo salto.
+Eso es el *grokking*, y este artículo lo hace ocurrir: un *transformer* de 56.640 parámetros, una tarea aritmética y un núcleo de portátil.
+
+En el camino se cruzan dos artículos científicos.
+
+En 2017, Vaswani y sus colegas publicaron [Attention Is All You Need](https://arxiv.org/abs/1706.03762). Proponían el *transformer*: una red construida únicamente con *atención*, sin recurrencia y sin convoluciones. Todos los modelos grandes que vinieron después descienden de esa estructura, y lo que aporta es **estructura**: una forma de leer una secuencia y mezclar información entre sus posiciones.
+
+En 2022, Power y sus colegas describieron la sorpresa en [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). Entrenaron redes pequeñas con conjuntos de datos algorítmicos pequeños y vieron que una de ellas se aprendía de memoria todos los ejemplos que recibía mientras fallaba los que no había visto. El fallo duró miles de pasos, mucho más allá del punto de *sobreajuste*. Y entonces paró. El nombre de ese salto viene de su artículo.
 
 ## La tarea: suma modular
 
@@ -25,12 +31,12 @@ El módulo es **53**. El modelo lee una suma y debe devolver el resultado módul
 50 + 50 = 100  →  47   100 - 53 = 47
 ```
 
-Esa regla es toda la tarea, y un modelo puede responderla de dos maneras:
+La regla cabe en una línea, y tiene una propiedad que hace que los siguientes 12.000 pasos merezcan la pena: **un modelo puede aprobar la tarea memorizando**. Nada le obliga a hacer la aritmética, y memorizar es la respuesta fácil al principio.
 
-- **Memorizar** los pares que vio durante el entrenamiento. Es fácil y rápido.
-- **Aprender** la suma módulo 53. Cuesta más, pero responde todos los pares, incluidos los que no vio nunca.
+- **Memorizar** los pares que vio. Rápido, y solo responde esos.
+- **Aprender** la suma módulo 53. Cuesta más, y responde todos los pares, incluidos los que no vio nunca.
 
-El conjunto de datos contiene todos los pares, así que hay respuesta conocida para cada uno. Yo me quedo con el 30 % para entrenar y dejo el resto para probar. El conjunto de prueba es lo que permite distinguir una manera de la otra.
+El conjunto de datos contiene todos los pares, así que hay respuesta conocida para cada uno. Yo me quedo con el 30 % para entrenar y guardo el resto. Esos pares sin ver son lo único que separa una respuesta de la otra.
 
 | Propiedad | Valor |
 | --- | ---: |
@@ -56,6 +62,22 @@ El documento es una sola secuencia, igual que una frase en un modelo de lenguaje
 | 4 | `35` | segundo operando |
 | 5 | `=` | la entrada en la posición de la respuesta |
 | 6 | `47` | **el objetivo**: el modelo debe predecir este *token* |
+
+Ahora viene lo interesante: la corrida.
+
+## El acantilado
+
+![Acierto en entrenamiento y en pares no vistos frente al paso de entrenamiento. El acierto en entrenamiento llega al 100 % en el paso 750, mientras el de pares no vistos está en el 1,2 %. El acierto en pares no vistos se queda por debajo del 26 % hasta el paso 5.000, sube al 70 % en el paso 5.500 y llega al 96 % en el paso 10.000.](/blog/grokking-cliff.svg)
+
+La línea azul es el conjunto de entrenamiento. La línea roja es el conjunto que me guardé.
+
+El acierto en entrenamiento toca el **100 % en el paso 750**. El modelo responde todos los pares que ha visto, y el acierto en los que no ha visto está en el **1,2 %**, por debajo del 1,9 % que se saca adivinando. Ha memorizado 843 sumas y no ha aprendido nada.
+
+Después la línea roja se queda plana 4.750 pasos. No pasa del 9 % hasta el paso 4.000 ni del 26 % hasta el 5.000. En el **paso 5.500** llega al **70 %**, y en el 6.000 alcanza el **91 %**. Desde ahí el modelo acierta **1.891 de los 1.966 pares que no había visto**, y sigue acertándolos.
+
+La parte plana de esa gráfica es la que hay que explicar. El modelo no está atascado. Está ocupado.
+
+Hay dos cosas que la explican: qué es el modelo y qué lo empuja. Empecemos por el modelo.
 
 ## El transformer
 
@@ -107,7 +129,7 @@ El motor calcula la pérdida en las cinco posiciones del documento y hace la med
 
 ## El motor
 
-Tres ideas mantienen pequeño el motor de entrenamiento.
+El motor son 1.160 líneas, y tres ideas lo mantienen así de pequeño.
 
 **1. Cada valor del cálculo es un nodo dentro de una sola lista.**
 
@@ -144,21 +166,13 @@ for (int k = 0; k < len; k++) gradX[k] += g * w[k];
 
 Los pesos de una fila están unos junto a otros en la lista, así que los dos bucles recorren dos bloques de números consecutivos. Ahí es donde entra SIMD: el motor ejecuta una operación aritmética sobre varios números a la vez, con AVX2 y FMA cuando el procesador los tiene.
 
-## El acantilado
+Ese es el motor: una lista, una pasada hacia atrás y un nodo por fila. Es la razón de que el experimento entero quepa en 1.160 líneas sin dependencias, y de que una corrida tarde diez minutos en un núcleo en vez de un día.
 
-![Acierto en entrenamiento y en pares no vistos frente al paso de entrenamiento. El acierto en entrenamiento llega al 100 % en el paso 750, mientras el de pares no vistos está en el 1,2 %. El acierto en pares no vistos se queda por debajo del 26 % hasta el paso 5.000, sube al 70 % en el paso 5.500 y llega al 96 % en el paso 10.000.](/blog/grokking-cliff.svg)
-
-La línea azul es el conjunto de entrenamiento. La línea roja es el conjunto de prueba.
-
-El acierto en entrenamiento llega al **100 % en el paso 750**: el modelo ya responde todos los pares que ha visto. El acierto en prueba está en el **1,2 %**, por debajo del 1,9 % que se saca adivinando al azar. El modelo ha memorizado.
-
-A partir de ahí la línea roja se queda baja 4.750 pasos más: no pasa del 9 % hasta el paso 4.000 ni del 26 % hasta el 5.000. En el **paso 5.500** llega al **70 %** y en el 6.000 alcanza el **91 %**. Desde ese punto el modelo acierta **1.891 de los 1.966 pares no vistos**, y sigue acertándolos.
-
-La parte plana de la gráfica es la interesante. El modelo no está atascado. Está ocupado.
+Volvamos a la parte plana de la gráfica, y a los dos números que la explican.
 
 ## Qué ocurre por debajo
 
-Otros dos números explican qué hace el modelo durante esa parte plana.
+Otros dos números explican qué hace el modelo durante ese tramo plano.
 
 ![Entropía cruzada frente al paso de entrenamiento, en escala logarítmica. La pérdida de entrenamiento toca suelo en el paso 750, mientras la de prueba se queda plana en 3,9 hasta el paso 4.000 y después baja a 2,0.](/blog/grokking-loss.svg)
 
@@ -306,3 +320,5 @@ Lo que la biblioteca no te quita es el pensamiento. Sigue inicializando los vect
 - **Vigila tres números a la vez.** Acierto en entrenamiento, acierto en pares no vistos y tamaño de los parámetros. Una sola curva esconde el mecanismo.
 
 El motor, el conjunto de datos, las gráficas y la ejecución en crudo están en dos repositorios: [grokking-csharp](https://github.com/jacano/grokking-csharp), con el motor escrito a mano, y [grokking-torchsharp](https://github.com/jacano/grokking-torchsharp), con el mismo experimento sobre una biblioteca. Cada figura de este artículo sale del CSV del primero.
+
+Si vas a ejecutar una sola cosa de este artículo, ejecuta esa. Diez minutos en un núcleo de portátil, y ves al modelo sentado encima de la respuesta equivocada durante cuatro mil pasos para después levantarse y dejarla.
