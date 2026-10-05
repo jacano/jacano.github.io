@@ -17,7 +17,7 @@ MESSAGE ?=
 
 .DEFAULT_GOAL := validate
 
-.PHONY: help install dev build preview check test lint format validate clean publish redeploy status
+.PHONY: help install dev build preview check test lint format validate clean publish deploy watch status
 
 help:
 	@echo make install    install the dependencies from the lock file
@@ -30,8 +30,9 @@ help:
 	@echo make format     write the formatting
 	@echo make validate   check, test, lint and build: exactly what the workflow runs
 	@echo make clean      remove the caches and the build output
-	@echo make publish    validate, commit, push and wait for the deployment
-	@echo make redeploy   deploy the current commit again, without a new commit
+	@echo make publish    validate, commit and push. It does not wait for anything
+	@echo make deploy     publish the site now: triggers the workflow and returns
+	@echo make watch      follow the deployment until it ends
 	@echo make status     the last deployments and how they ended
 	@echo make publish MESSAGE=what changed        the subject of the commit
 
@@ -70,8 +71,13 @@ clean:
 publish: validate
 	$(NODE) scripts/publish.mjs --repo $(REPO) --branch $(BRANCH) --message "$(MESSAGE)"
 
-redeploy:
+# The site is published when you say so, not when you push. This triggers the
+# workflow and returns; `make watch` is there for when you want to see it land.
+deploy:
 	$(GH) workflow run deploy.yml --repo $(REPO)
+	@echo "deployment started. make watch to follow it, make status for the result"
+
+watch:
 	$(NODE) scripts/wait-deploy.mjs --repo $(REPO)
 
 status:

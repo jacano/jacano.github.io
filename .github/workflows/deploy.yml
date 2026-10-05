@@ -1,8 +1,8 @@
 name: Deploy to GitHub Pages
 
+# The deployment is deliberate: it runs when you ask for it, from
+# `make deploy`, and it does not run on a push. A push is a commit.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

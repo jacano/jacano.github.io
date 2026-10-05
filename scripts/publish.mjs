@@ -7,7 +7,6 @@
 // failure, so a rejected push or a red deployment exits non-zero.
 
 import { execFileSync } from 'node:child_process';
-import { waitForDeployment } from './wait-deploy.mjs';
 
 function parseArgs(argv) {
   const options = { repo: 'jacano/jacano.github.io', branch: 'main', message: '' };
@@ -57,7 +56,6 @@ if (succeeds('git', ['diff', '--cached', '--quiet'])) {
 
 run('git', ['push', 'origin', branch]);
 
-// Wait for the run of the commit that was just pushed, not for whatever run
-// happens to be the newest: GitHub takes a few seconds to register the new one.
-const head = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
-await waitForDeployment({ repo, commit: head });
+// No waiting. The site is published when someone runs make deploy, so this ends
+// with the push and leaves the deployment to whoever wants it.
+console.log('pushed. make deploy publishes the site, make status shows the runs.');

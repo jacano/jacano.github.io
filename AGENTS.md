@@ -85,7 +85,7 @@ docs: fix the agent guide
 
 ## Deployment
 
-- Workflow is `.github/workflows/deploy.yml` (`Deploy to GitHub Pages`). It is a thin wrapper: `make install`, `make validate`, and then the two Pages actions that exist only in Actions (`upload-pages-artifact`, `deploy-pages`).
+- Workflow is `.github/workflows/deploy.yml` (`Deploy to GitHub Pages`). It runs on demand (`workflow_dispatch`), never on a push, and it is a thin wrapper: `make install`, `make validate`, and then the two Pages actions that exist only in Actions (`upload-pages-artifact`, `deploy-pages`).
 - `build_type` is `workflow` (not `legacy`). Verify with `gh api repos/jacano/jacano.github.io/pages`.
 
 ## How to work
@@ -101,16 +101,17 @@ docs: fix the agent guide
   make preview    # build, then serve dist/ the way the host serves it
   make validate   # check, test, lint and build: what the workflow runs
   make clean      # remove dist/ and the Astro caches
-  make publish    # validate, commit, push and wait for the deployment
-  make redeploy   # deploy the current commit again, without a new commit
+  make publish    # validate, commit and push. No waiting.
+  make deploy     # publish the site now, and return
+  make watch      # follow the deployment until it ends
   make status     # the last deployments and how they ended
   ```
-  `make` alone runs `validate`. `make publish MESSAGE="what changed"` is the whole release: it validates, commits, pushes, watches the run and exits non-zero when the deployment fails. That logic is `scripts/publish.mjs` and `scripts/wait-deploy.mjs`, not YAML, so it can be read and run on its own.
+  `make` alone runs `validate`. `make publish MESSAGE="what changed"` validates, commits and pushes, and stops: a push does not publish the site. `make deploy` is the deliberate step that does, and it returns at once. That logic is `scripts/publish.mjs` and `scripts/wait-deploy.mjs`, not YAML, so it can be read and run on its own.
 - **Clear the caches when a build plugin changes.** Astro caches the content store and the rendered Markdown in `.astro` and `node_modules/.astro`. After you edit `astro.config.mjs`, `src/utils/satteri-figure-size.mjs` or `src/utils/image-size.mjs`, run `make clean`, or the next build reuses the output of the previous plugin.
 - **Refresh the numbers of the CV:** `npm run sync:stats` reads GitHub and NuGet and rewrites `stars`, `forks`, `downloads` and the verification date of `src/data/cv.json`. `npm run sync:stats:check` reports drift and exits non-zero. The script never touches `lang` or `updated`: both are editorial, and the comment at the top of `scripts/sync-stats.mjs` says why.
 - **Add a featured project:** Edit `src/data/cv.json` `projects` array, then `make build` and `make publish MESSAGE="..."`.
 - **Add a blog post:** Create `src/content/blog/<slug>.md` with the four fields of the schema in `src/content.config.ts`: `title`, `date`, `tag` and `excerpt`. The blog list, the home preview, `rss.xml` and the sitemap read the collection, so no page needs an edit. Then run `make build`. A figure in the post gets its width and height from the file itself, so the page reserves the box: keep the file in `public/` and the path correct, and the build stops with a message when the file is missing.
 - **Before you push:** run `make validate` in the local folder. The deploy workflow runs the same target, so a failure there is a failure you could have seen.
 - **Verify contributions:** Use `gh api search/issues?q=author:jacano+type=pr&per_page=100` — never invent data.
-- **Deploy:** `make publish MESSAGE="..."` validates, commits, pushes and waits for `deployment success`. To publish a commit that is already pushed, use `make redeploy`.
-- **A deployment can fail before it starts.** GitHub sometimes cannot give the job a hosted runner, and cancels the run after fifteen minutes with "The job was not acquired by Runner of type hosted". The build job still says whether the site itself is fine, so read its result and retry with `make redeploy`.
+- **Publish and deploy are two steps.** `make publish` validates, commits and pushes, and stops there: it never waits for a runner. `make deploy` publishes the site (it triggers the workflow and returns), `make watch` follows that run when you care, and `make status` lists the last runs.
+- **A deployment can fail before it starts.** GitHub sometimes cannot give the job a hosted runner, and cancels the run after fifteen minutes with "The job was not acquired by Runner of type hosted". The build job still says whether the site itself is fine, so read its result with `make status` and try `make deploy` again.

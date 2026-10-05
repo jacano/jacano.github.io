@@ -77,7 +77,17 @@ Then the red line stays flat for another two thousand steps. It passes 13% only 
 
 The flat part of that graph is the part worth explaining. The model is not stuck. It is busy.
 
-Two things explain it: what the model is, and what pushes it. Start with the model.
+Two pictures say what changes. Here is what the model thinks about `12 + 35`, a sum it never saw, at the moment when it has memorized everything and stopped improving:
+
+![A bar chart of the 53 answers the model is considering for 12 + 35, after 1,000 steps. The bar for the correct answer, 47, reaches 0.3%, and the tallest bar, for the answer 6, reaches 40%.](/blog/grokking-probs-early.svg)
+
+And here is the same sum after the rule arrives:
+
+![The same bar chart after 12,000 steps. The bar for the correct answer, 47, reaches 90%, and every other bar is close to zero.](/blog/grokking-probs-late.svg)
+
+The model is never undecided. It picks an answer and defends it, which is why an accuracy below the 1.9% of guessing is possible at all. What changes at step 3,750 is not the confidence. It is where the confidence goes.
+
+Two things explain that: what the model is, and what pushes it. Start with the model.
 
 ## The transformer
 

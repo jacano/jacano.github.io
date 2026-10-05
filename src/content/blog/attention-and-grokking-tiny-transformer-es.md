@@ -1,8 +1,8 @@
 ---
-title: 'Atención y grokking: un transformer diminuto que aprende la regla'
+title: 'Atención y grokking: un transformador diminuto que aprende la regla'
 date: '2026-10-05'
 tag: 'Machine Learning'
-excerpt: 'Un transformer de 56.640 parámetros memoriza 843 sumas, falla casi todas las que no ha visto durante tres mil pasos y entonces aprende a sumar. El artículo lo construye en C# con TorchSharp, en unas trescientas líneas, y muestra el salto.'
+excerpt: 'Un transformador de 56.640 parámetros memoriza 843 sumas, falla casi todas las que no ha visto durante tres mil pasos y entonces aprende a sumar. El artículo lo construye en C# con TorchSharp, en unas trescientas líneas, y muestra el salto.'
 lang: 'es'
 pair: 'attention-and-grokking-tiny-transformer'
 ---
@@ -13,11 +13,11 @@ Entonces le das una suma que no ha visto nunca y la falla. Y no falla una: falla
 
 Esperas. El acierto en entrenamiento se mantiene alto todo el rato, así que una lectura rápida diría que la corrida ha terminado, y el número que importa no se mueve durante otros tres mil pasos. Y entonces, de una medición a la siguiente, el modelo empieza a acertar las sumas que tenía guardadas. Cuatro mediciones después acierta casi todas.
 
-Eso es el *grokking*, y este artículo lo hace ocurrir: un *transformer* de 56.640 parámetros, una tarea aritmética y una corrida de veintiséis segundos en un núcleo de portátil.
+Eso es el *grokking*, la comprensión que llega de golpe, y este artículo lo hace ocurrir: un *transformador* (*transformer*) de 56.640 parámetros, una tarea aritmética y una corrida de veintiséis segundos en un núcleo de portátil.
 
 En el camino se cruzan dos artículos científicos.
 
-En 2017, Vaswani y sus colegas publicaron [Attention Is All You Need](https://arxiv.org/abs/1706.03762). Proponían el *transformer*: una red construida únicamente con *atención*, sin recurrencia y sin convoluciones. Todos los modelos grandes que vinieron después descienden de esa estructura, y lo que aporta es **estructura**: una forma de leer una secuencia y mezclar información entre sus posiciones.
+En 2017, Vaswani y sus colegas publicaron [Attention Is All You Need](https://arxiv.org/abs/1706.03762). Proponían el *transformador*: una red construida únicamente con *atención*, sin recurrencia y sin convoluciones. Todos los modelos grandes que vinieron después descienden de esa estructura, y lo que aporta es **estructura**: una forma de leer una secuencia y mezclar información entre sus posiciones.
 
 En 2022, Power y sus colegas describieron la sorpresa en [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). Entrenaron redes pequeñas con conjuntos de datos algorítmicos pequeños y vieron que una de ellas se aprendía de memoria todos los ejemplos que recibía mientras fallaba los que no había visto. El fallo duró miles de pasos, mucho más allá del punto de *sobreajuste*. Y entonces paró. El nombre de ese salto viene de su artículo.
 
@@ -44,24 +44,24 @@ El conjunto de datos contiene todos los pares, así que hay respuesta conocida p
 | Número de pares | 2.809 |
 | Pares de entrenamiento (30 %) | 843 |
 | Pares de prueba (70 %) | 1.966 |
-| Vocabulario | 56 *tokens* |
-| Longitud del documento | 6 *tokens* |
+| Vocabulario | 56 *símbolos* (*tokens*) |
+| Longitud del documento | 6 *símbolos* |
 | Posiciones de predicción | 5 |
 | Parámetros del modelo | 56.640 |
 | Acierto por azar | 1,9 % |
 
-El vocabulario es pequeño: los 53 números, más `+`, `=` y un *token* de inicio. Cada número es **un solo *token***, de modo que el modelo ve los operandos como unidades completas.
+El vocabulario es pequeño: los 53 números, más `+`, `=` y un *símbolo* de inicio. Cada número es **un solo *símbolo***, de modo que el modelo ve los operandos como unidades completas.
 
-El documento es una sola secuencia, igual que una frase en un modelo de lenguaje. El modelo predice cada *token* siguiente, y solo la última predicción es la tarea:
+El documento es una sola secuencia, igual que una frase en un modelo de lenguaje. El modelo predice cada *símbolo* siguiente, y solo la última predicción es la tarea:
 
-| Posición | Token | Papel |
+| Posición | Símbolo | Papel |
 | ---: | :---: | --- |
 | 1 | `[START]` | inicio del documento |
 | 2 | `12` | primer operando |
 | 3 | `+` | el operador |
 | 4 | `35` | segundo operando |
 | 5 | `=` | la entrada en la posición de la respuesta |
-| 6 | `47` | **el objetivo**: el modelo debe predecir este *token* |
+| 6 | `47` | **el objetivo**: el modelo debe predecir este *símbolo* |
 
 Ahora viene lo interesante: la corrida.
 
@@ -77,9 +77,19 @@ Después la línea roja se queda plana otros dos mil pasos. No pasa del 13 % has
 
 La parte plana de esa gráfica es la que hay que explicar. El modelo no está atascado. Está ocupado.
 
+Dos imágenes dicen qué cambia. Esto es lo que el modelo piensa de `12 + 35`, una suma que no vio nunca, en el momento en que ya se lo ha aprendido todo de memoria y ha dejado de mejorar:
+
+![Gráfica de barras con las 53 respuestas que el modelo considera para 12 + 35, tras 1.000 pasos. La respuesta correcta, 47, tiene una barra del 0,3 %, y la barra más alta, la de la respuesta 6, llega al 40 %.](/blog/grokking-probs-early.svg)
+
+Y esta es la misma suma después de que llegue la regla:
+
+![La misma gráfica tras 12.000 pasos. La barra de la respuesta correcta, 47, llega al 90 %, y todas las demás están cerca de cero.](/blog/grokking-probs-late.svg)
+
+El modelo no duda nunca. Elige una respuesta y la defiende, y por eso es posible un acierto por debajo del 1,9 % que se saca adivinando. Lo que cambia en el paso 3.750 no es la confianza: es a dónde va esa confianza.
+
 Hay dos cosas que la explican: qué es el modelo y qué lo empuja. Empecemos por el modelo.
 
-## El transformer
+## El transformador
 
 El modelo es el de [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95), de Andrej Karpathy, con las mismas simplificaciones: reescala cada vector antes de usarlo para que los números se mantengan en un rango estable (RMSNorm) y convierte los negativos en cero (ReLU). Tiene una capa, 64 dimensiones y 8 cabezas, es decir, la *atención* se ejecuta ocho veces en paralelo sobre ocho trozos del vector.
 
@@ -98,9 +108,9 @@ double[] w = Softmax(scores);             // convierte las puntuaciones en pesos
 double[] salida = Weighted(w, v);         // una suma ponderada de los valores
 ```
 
-El modelo construye una clave y un valor por cada posición que ya ha leído, y esos vectores son la *caché KV* de los modelos de lenguaje grandes: lo que permite producir un *token* nuevo sin volver a calcular las claves y los valores de toda la conversación, y la razón de que un chat largo siga siendo rápido. La biblioteca te mantiene esa caché: calcula de una vez las claves y los valores de todo el documento y enmascara el futuro, que es la misma idea hecha en paralelo.
+El modelo construye una clave y un valor por cada posición que ya ha leído, y esos vectores son la *caché de claves y valores* (*KV cache*) de los modelos de lenguaje grandes: lo que permite producir un *símbolo* nuevo sin volver a calcular las claves y los valores de toda la conversación, y la razón de que un chat largo siga siendo rápido. La biblioteca te mantiene esa caché: calcula de una vez las claves y los valores de todo el documento y enmascara el futuro, que es la misma idea hecha en paralelo.
 
-**El *MLP* piensa en una sola posición.** Proyecta el vector a cuatro veces su anchura, convierte los negativos en cero y lo proyecta de vuelta. La *atención* mueve información de unas posiciones a otras; el *MLP* la transforma dentro de una sola. Ambas partes suman su resultado a su entrada, así que la señal tiene un camino directo por la capa.
+**El *perceptrón* (*MLP*) piensa en una sola posición.** Proyecta el vector a cuatro veces su anchura, convierte los negativos en cero y lo proyecta de vuelta. La *atención* mueve información de unas posiciones a otras; el *perceptrón* la transforma dentro de una sola. Ambas partes suman su resultado a su entrada, así que la señal tiene un camino directo por la capa.
 
 Ese es todo el modelo, y con una biblioteca cabe en un método. Esto es entero:
 
@@ -122,7 +132,7 @@ public override Tensor forward(Tensor index)
 
 ## Cómo aprende el modelo
 
-En cada posición, el modelo produce una puntuación por cada *token* del vocabulario. En esta tarea son 56 puntuaciones: una por cada candidato a ser el siguiente. Una puntuación alta significa «espero este».
+En cada posición, el modelo produce una puntuación por cada *símbolo* del vocabulario. En esta tarea son 56 puntuaciones: una por cada candidato a ser el siguiente. Una puntuación alta significa «espero este».
 
 **La pérdida es un único número que dice cuánto se equivocó el modelo.** Solo mira una cosa: la probabilidad que el modelo le dio a la respuesta correcta.
 
@@ -272,13 +282,13 @@ La entrada es `[START, 12, +, 35, =]`. El modelo la lee y devuelve una probabili
 
 Una biblioteca quita la aritmética, no las decisiones. Dos de ellas salieron mal aquí antes de que la corrida diera el salto, y las dos conviene conocerlas.
 
-**La inicialización.** TorchSharp arranca un *embedding* en `N(0, 1)` y una capa lineal en un rango uniforme. El artículo usa la de microgpt, `N(0, 0,08)`, así que el programa la fija en cuatro líneas. Medido por el tamaño de los parámetros, la corrida empieza en 19,1 en vez de en 69,6, y esa diferencia decide si el decaimiento tiene algo con lo que trabajar.
+**La inicialización.** TorchSharp arranca la tabla de representaciones de los *símbolos* en `N(0, 1)` y una capa lineal en un rango uniforme. El artículo usa la de microgpt, `N(0, 0,08)`, así que el programa la fija en cuatro líneas. Medido por el tamaño de los parámetros, la corrida empieza en 19,1 en vez de en 69,6, y esa diferencia decide si el decaimiento tiene algo con lo que trabajar.
 
 **El decaimiento no es el mismo decaimiento.** `AdamW` resta el decaimiento al peso fuera de la actualización, y `Adam` lo suma al gradiente, como hace microgpt. Con `AdamW` esta corrida no saltó nunca, con ningún decaimiento entre 0,002 y 0,5: la norma de los parámetros se quedaba en 40 o 50 y el modelo seguía en la respuesta memorizada. Con el decaimiento dentro del gradiente funciona `wd = 0,0012`. Dos nombres para la misma palabra, dos corridas distintas y una tarde de confusión.
 
 ## Conclusiones
 
-- **La *atención* mueve información de unas posiciones a otras; el *MLP* la transforma dentro de una sola.** Todo lo demás en el *transformer* es andamiaje alrededor de esas dos operaciones.
+- **La *atención* mueve información de unas posiciones a otras; el *perceptrón* la transforma dentro de una sola.** Todo lo demás en el *transformador* es andamiaje alrededor de esas dos operaciones.
 - **Un modelo puede cuadrar los datos sin aprender la regla.** El acierto en entrenamiento es una mala guía: llega al 100 % mientras el de pares no vistos sigue en el azar.
 - **El *grokking* es una transición entre dos soluciones.** La que memoriza necesita pesos grandes; la que generaliza necesita menos. El decaimiento de pesos decide cuál sobrevive, y la decisión tarda miles de pasos.
 - **Vigila tres números a la vez.** Acierto en entrenamiento, acierto en pares no vistos y tamaño de los parámetros. Una sola curva esconde el mecanismo.
