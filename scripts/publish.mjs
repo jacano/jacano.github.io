@@ -56,4 +56,8 @@ if (succeeds('git', ['diff', '--cached', '--quiet'])) {
 }
 
 run('git', ['push', 'origin', branch]);
-await waitForDeployment({ repo });
+
+// Wait for the run of the commit that was just pushed, not for whatever run
+// happens to be the newest: GitHub takes a few seconds to register the new one.
+const head = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+await waitForDeployment({ repo, commit: head });

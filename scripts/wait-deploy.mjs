@@ -9,39 +9,55 @@ import { fileURLToPath } from 'node:url';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** The newest run of the deploy workflow, as gh reports it. */
-function newestRun(repo) {
-  const json = execFileSync(
-    'gh',
-    ['run', 'list', '--repo', repo, '--limit', '1', '--json', 'databaseId,status,conclusion,displayTitle,headSha'],
-    { encoding: 'utf8' },
-  );
+/**
+ * The run of the deploy workflow for one commit.
+ *
+ * The commit matters: right after a push GitHub has not registered the new run
+ * yet, and "the newest run" is still the previous one. Asking for the commit
+ * removes that race. Without a commit the newest run is the only thing to ask for.
+ */
+function runFor(repo, commit) {
+  const args = [
+    'run',
+    'list',
+    '--repo',
+    repo,
+    '--limit',
+    '1',
+    '--json',
+    'databaseId,status,conclusion,displayTitle,headSha',
+  ];
+  if (commit) args.push('--commit', commit);
+  const json = execFileSync('gh', args, { encoding: 'utf8' });
   const [run] = JSON.parse(json);
-  return run;
+  return run ?? null;
 }
 
-export async function waitForDeployment({ repo, timeoutMinutes = 30, quiet = false }) {
+export async function waitForDeployment({ repo, commit, timeoutMinutes = 30, quiet = false }) {
   const started = Date.now();
   let seen = null;
 
   while (Date.now() - started < timeoutMinutes * 60_000) {
-    const run = newestRun(repo);
-    if (!run) throw new Error('gh returned no runs for the deploy workflow');
+    const run = runFor(repo, commit);
 
-    if (run.databaseId !== seen) {
-      seen = run.databaseId;
-      if (!quiet) console.log(`watching run ${run.databaseId}: ${run.displayTitle}`);
-    }
+    if (!run) {
+      if (!quiet) console.log(`no run for ${commit ?? 'this repository'} yet, waiting`);
+    } else {
+      if (run.databaseId !== seen) {
+        seen = run.databaseId;
+        if (!quiet) console.log(`watching run ${run.databaseId}: ${run.displayTitle}`);
+      }
 
-    if (run.status === 'completed') {
-      const url = `https://github.com/${repo}/actions/runs/${run.databaseId}`;
-      if (run.conclusion === 'success') {
-        console.log(`deployment ${run.conclusion}: ${url}`);
+      if (run.status === 'completed') {
+        const url = `https://github.com/${repo}/actions/runs/${run.databaseId}`;
+        if (run.conclusion === 'success') {
+          console.log(`deployment ${run.conclusion}: ${url}`);
+          return run;
+        }
+        console.error(`deployment ${run.conclusion}: ${url}`);
+        process.exitCode = 1;
         return run;
       }
-      console.error(`deployment ${run.conclusion}: ${url}`);
-      process.exitCode = 1;
-      return run;
     }
 
     await sleep(15_000);
@@ -55,6 +71,8 @@ export async function waitForDeployment({ repo, timeoutMinutes = 30, quiet = fal
 // Run on its own, as `make redeploy` does.
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const index = process.argv.indexOf('--repo');
+  const commitIndex = process.argv.indexOf('--commit');
   const repo = index === -1 ? 'jacano/jacano.github.io' : process.argv[index + 1];
-  await waitForDeployment({ repo });
+  const commit = commitIndex === -1 ? undefined : process.argv[commitIndex + 1];
+  await waitForDeployment({ repo, commit });
 }
