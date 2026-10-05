@@ -174,7 +174,7 @@ The three curves together show the whole mechanism: train accuracy, unseen accur
 
 ## The control
 
-Remove the decay and none of this happens. The same program, with `--wd 0`:
+Take the decay away and the model does not learn the rule. It memorizes, and that is all it ever does:
 
 | step | decay | train acc | unseen acc | size |
 | ---: | :--- | ---: | ---: | ---: |
@@ -184,8 +184,13 @@ Remove the decay and none of this happens. The same program, with `--wd 0`:
 | 6,000 | without | 100% | 2.2% | 100.9 |
 | 12,000 | with | 100% | **96.2%** | 15.2 |
 | 12,000 | without | 93.6% | **1.6%** | 135.5 |
+| 40,000 | without | 100% | **3.3%** | 245.2 |
 
-Without the decay the model still memorizes: the train accuracy is 100% at step 750, and the parameters simply keep growing, to nine times the size of the model that learned the rule. The accuracy on unseen pairs never passes **3.46%** against the 1.9% of guessing, and it ends at 1.6%: **32 of the 1,966 pairs**. The decay is not a detail of the recipe that happens to work. It is the force that decides which of the two answers survives, and without it the only answer on offer is the table.
+Read the last row against the one above it. Three times the steps of the run that learned the rule, and the accuracy on unseen pairs has crawled from 1.6% to 3.3%: barely above the 1.9% of guessing, and still **65 of the 1,966 pairs**. Waiting does not help. The model is not a slow learner that needs more time; it found the table, and it has no reason to leave it.
+
+An accuracy below chance is the signature of that. A model that memorized is not unsure about the pairs it never stored, it is confidently wrong about them. The size of the parameters says the same thing: it grows without end, to sixteen times the model that learned the rule, because nothing in the run charges for it.
+
+The decay is not a detail of the recipe that happens to work. It is the only force in the run that makes the generalizing answer cheaper than the table, and without it the rule never arrives.
 
 ## Reproduce it
 

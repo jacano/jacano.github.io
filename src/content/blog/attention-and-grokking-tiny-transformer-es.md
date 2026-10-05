@@ -174,7 +174,7 @@ Las tres curvas juntas muestran todo el mecanismo: acierto en entrenamiento, aci
 
 ## El control
 
-Quita el decaimiento y nada de esto ocurre. El mismo programa, con `--wd 0`:
+Quita el decaimiento y el modelo no aprende la regla. Memoriza, y eso es todo lo que hace:
 
 | paso | decaimiento | acierto en entrenamiento | acierto en no vistos | tamaño |
 | ---: | :--- | ---: | ---: | ---: |
@@ -184,8 +184,13 @@ Quita el decaimiento y nada de esto ocurre. El mismo programa, con `--wd 0`:
 | 6.000 | no | 100 % | 2,2 % | 100,9 |
 | 12.000 | sí | 100 % | **96,2 %** | 15,2 |
 | 12.000 | no | 93,6 % | **1,6 %** | 135,5 |
+| 40.000 | no | 100 % | **3,3 %** | 245,2 |
 
-Sin el decaimiento el modelo memoriza igual: el acierto en entrenamiento está al 100 % en el paso 750, y los parámetros simplemente no dejan de crecer, hasta nueve veces el tamaño del modelo que aprendió la regla. El acierto en pares no vistos no pasa nunca del **3,46 %** frente al 1,9 % de adivinar, y acaba en el 1,6 %: **32 de los 1.966 pares**. El decaimiento no es un detalle de la receta que da la casualidad de funcionar. Es la fuerza que decide cuál de las dos respuestas sobrevive, y sin él la única respuesta que queda sobre la mesa es la tabla.
+Compara la última fila con la de arriba. Tres veces los pasos de la corrida que aprendió la regla, y el acierto en pares no vistos ha trepado del 1,6 % al 3,3 %: poco más que el 1,9 % que se saca adivinando, y todavía **65 de los 1.966 pares**. Esperar no sirve de nada. El modelo no es un aprendiz lento al que le falte tiempo; encontró la tabla y no tiene ninguna razón para dejarla.
+
+Un acierto por debajo del azar es la firma de eso. Un modelo que ha memorizado no duda de los pares que no guardó: está convencido de ellos y se equivoca. El tamaño de los parámetros dice lo mismo, porque crece sin freno hasta dieciséis veces el del modelo que aprendió la regla: nada en la corrida lo está cobrando.
+
+El decaimiento no es un detalle de la receta que da la casualidad de funcionar. Es la única fuerza de la corrida que abarata la respuesta que generaliza frente a la tabla, y sin él la regla no llega nunca.
 
 ## Reprodúcelo
 
