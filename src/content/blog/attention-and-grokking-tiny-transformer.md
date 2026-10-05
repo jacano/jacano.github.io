@@ -81,11 +81,24 @@ The model builds a key and a value for every position it has already read, and i
 
 Three ideas keep the training engine small.
 
-**1. One flat arena of nodes.** Every value in the computation graph is a node in one vector. A node holds its data, its gradient, the indices of its children, and the local derivative of the operation.
+**1. Every value of the computation is one node in a single list.**
 
-**2. The reverse order is already a topological order.** A node is created after its inputs, so its children always have smaller indices. Backprop is one loop from the last node to the first. There is no recursion, no visited set and no topological list.
+A node is one entry of that list. It holds four things:
 
-**3. A matrix-vector product is one node per row.** The direct way creates one node per product and one node per sum: a layer of 256x64 becomes 32,000 nodes. Here the whole row is one node, and its backward pass is analytic:
+- **value**: the number itself.
+- **gradient**: how much this number moves the loss. The backward pass fills it in later.
+- **inputs**: the nodes this value was computed from.
+- **local derivative**: how the value changes when each input changes.
+
+Take `y = a * b`. The engine adds one node: the value `a * b`, the inputs `a` and `b`, and the two local derivatives `b` and `a`. Nothing becomes a separate object, the list is reused on every step, and the memory stays flat.
+
+**2. The gradient travels backwards through the same list.**
+
+A node always sits after the nodes it was computed from. So the backward pass reads the list from the end to the start. When it reaches a node, every node that depends on it has already passed its gradient down, and the gradient of that node is complete. One pass, no recursion and no sorting.
+
+**3. A matrix-vector product becomes one node per row.**
+
+The direct way gives one node per multiplication and one more per addition: a layer of 256 x 64 needs 32,000 nodes. The engine keeps a whole row in one node and writes its derivatives by hand:
 
 ```
 forward     y[i] = Σ_j W[i][j] · x[j]
@@ -93,7 +106,7 @@ backward    dL/dW[i][j] += g[i] · x[j]
             dL/dx[j]    += Σ_i g[i] · W[i][j]
 ```
 
-The weights of a row are contiguous in memory, so the forward pass is a dot product between two contiguous slices. That is where SIMD applies: the engine uses AVX2 and FMA when the processor has them.
+The weights of a row sit next to each other in the list, so the forward pass is a dot product over two blocks of consecutive numbers. That is where SIMD applies: the engine runs one arithmetic operation on several numbers at once, with AVX2 and FMA when the processor has them.
 
 ## The cliff
 
