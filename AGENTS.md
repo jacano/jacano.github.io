@@ -32,6 +32,7 @@ Read this before you change code.
   - Put the file in `public/blog/` and reference it as `/blog/<name>.svg`.
   - Use a vector (`.svg`) for a diagram, a chart, or an infographic: it stays sharp at every size and it is small. Use a raster (`.png`, `.jpg`) for a screenshot or a photograph.
   - Write the alt text as a full sentence that states what the figure shows, including the numbers that matter, because for a reader who cannot see it the alt text is the figure.
+  - A figure that comes from a run is a **copy** of what the engine drew, so it goes stale on its own. `npm test` reads every `public/blog/*.svg` and fails when a line draws fewer than three points, which is the signature of a figure built from the wrong CSV: it renders, and it says nothing.
 - **Site text** follows **Simple English (ASD-STE100)** via https://github.com/AminBlg/SimpleEnglish. Short sentences, active voice, no contractions.
 - **Social image:** `public/og-image.png` (1200×630). Use PNG or JPG. Social sites do not show an SVG.
 - **Avatar:** `public/avatar.jpg` plus `public/avatar.webp`. The pages use `<picture>`. Keep both files small.

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460" font-family="ui-sans-serif,system-ui,Segoe UI,Helvetica,Arial,sans-serif">
 <text x="78" y="26" font-size="17" font-weight="600" fill="#64748b">Generalization happens after memorization</text>
-<rect x="78.0" y="46.0" width="100.8" height="362.0" fill="#f1f5f9" opacity="0.85"/>
-<text x="88.4" y="64.0" font-size="12" fill="#64748b">memorization</text>
+<rect x="78.0" y="46.0" width="308.0" height="362.0" fill="#f1f5f9" opacity="0.85"/>
+<text x="192.0" y="64.0" font-size="12" fill="#64748b">memorization</text>
 <line x1="78.0" y1="401.2" x2="750.0" y2="401.2" stroke="#e2e8f0" stroke-width="1"/>
 <text x="68.0" y="405.7" font-size="13" fill="#64748b" text-anchor="end">0%</text>
 <line x1="78.0" y1="316.7" x2="750.0" y2="316.7" stroke="#e2e8f0" stroke-width="1"/>
@@ -15,23 +15,23 @@
 <line x1="78.0" y1="46.0" x2="78.0" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
 <text x="78.0" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">0</text>
 <line x1="212.4" y1="46.0" x2="212.4" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
-<text x="212.4" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">1</text>
+<text x="212.4" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">2400</text>
 <line x1="346.8" y1="46.0" x2="346.8" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
-<text x="346.8" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">1</text>
+<text x="346.8" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">4800</text>
 <line x1="481.2" y1="46.0" x2="481.2" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
-<text x="481.2" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">2</text>
+<text x="481.2" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">7200</text>
 <line x1="615.6" y1="46.0" x2="615.6" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
-<text x="615.6" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">2</text>
+<text x="615.6" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">9600</text>
 <line x1="750.0" y1="46.0" x2="750.0" y2="408.0" stroke="#e2e8f0" stroke-width="1"/>
-<text x="750.0" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">3</text>
+<text x="750.0" y="428.0" font-size="13" fill="#64748b" text-anchor="middle">12000</text>
 <line x1="78.0" y1="408.0" x2="750.0" y2="408.0" stroke="#94a3b8" stroke-width="1.5"/>
 <line x1="78.0" y1="46.0" x2="78.0" y2="408.0" stroke="#94a3b8" stroke-width="1.5"/>
 <text x="414.0" y="448.0" font-size="13" fill="#64748b" text-anchor="middle">training step</text>
 <text x="18" y="227.0" font-size="13" fill="#64748b" transform="rotate(-90 18 227.0)" text-anchor="middle">exact-match accuracy</text>
-<polyline fill="none" stroke="#2563eb" stroke-width="2.6" stroke-linejoin="round" points="78.0,392.6 750.0,397.9"/>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.6" stroke-linejoin="round" points="78.0,392.6 92.0,91.3 106.0,113.1 120.0,62.9 134.0,87.4 148.0,62.9 162.0,93.3 176.0,62.9 190.0,62.9 204.0,92.7 218.0,62.9 232.0,62.9 246.0,99.3 260.0,62.9 274.0,62.9 288.0,68.9 302.0,86.7 316.0,62.9 330.0,62.9 344.0,108.5 358.0,80.8 372.0,62.9 386.0,62.9 400.0,62.9 414.0,62.9 428.0,62.9 442.0,62.9 456.0,62.9 470.0,62.9 484.0,66.9 498.0,75.5 512.0,71.5 526.0,77.5 540.0,70.8 554.0,68.9 568.0,62.9 582.0,62.9 596.0,62.9 610.0,68.2 624.0,76.8 638.0,62.9 652.0,62.9 666.0,62.9 680.0,62.9 694.0,62.9 708.0,66.2 722.0,76.1 736.0,62.9 750.0,62.9"/>
 <line x1="766.0" y1="60.0" x2="790.0" y2="60.0" stroke="#2563eb" stroke-width="2.6"/>
 <text x="796.0" y="64.5" font-size="13" fill="#64748b">train pairs</text>
-<polyline fill="none" stroke="#dc2626" stroke-width="2.6" stroke-linejoin="round" points="78.0,395.4 750.0,400.0"/>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.6" stroke-linejoin="round" points="78.0,395.4 92.0,398.5 106.0,398.7 120.0,397.3 134.0,397.3 148.0,395.6 162.0,396.2 176.0,394.5 190.0,392.5 204.0,392.8 218.0,388.7 232.0,387.5 246.0,387.5 260.0,381.4 274.0,379.7 288.0,378.9 302.0,370.8 316.0,359.9 330.0,345.1 344.0,342.4 358.0,313.6 372.0,241.4 386.0,164.3 400.0,119.4 414.0,93.7 428.0,81.2 442.0,82.2 456.0,79.1 470.0,80.8 484.0,99.1 498.0,113.5 512.0,113.5 526.0,110.6 540.0,122.6 554.0,103.0 568.0,76.0 582.0,77.5 596.0,77.2 610.0,98.7 624.0,110.6 638.0,76.3 652.0,75.0 666.0,74.4 680.0,74.3 694.0,77.2 708.0,83.0 722.0,107.5 736.0,75.1 750.0,75.8"/>
 <line x1="766.0" y1="80.0" x2="790.0" y2="80.0" stroke="#dc2626" stroke-width="2.6"/>
 <text x="796.0" y="84.5" font-size="13" fill="#64748b">unseen pairs</text>
 </svg>
