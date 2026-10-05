@@ -2,7 +2,7 @@
 title: 'Attention and grokking: a tiny transformer that learns the rule'
 date: '2026-10-05'
 tag: 'Machine Learning'
-excerpt: 'A small transformer learns modular addition. It memorizes the training pairs in 600 steps, waits 4,000 steps more, and then answers pairs it never saw. The article builds the transformer and the Rust engine that shows the jump.'
+excerpt: 'A small transformer learns modular addition. It memorizes the training pairs in 750 steps, waits 4,750 steps more, and then answers pairs it never saw. The article builds the transformer and the C# engine that shows the jump, twice: once written by hand and once with a framework.'
 lang: 'en'
 pair: 'attention-and-grokking-tiny-transformer'
 ---
@@ -13,7 +13,7 @@ In 2017, Vaswani and colleagues published [Attention Is All You Need](https://ar
 
 In 2022, Power and colleagues reported a smaller and stranger result in [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). They trained networks on small algorithmic datasets, and they watched a model fit every example it was given while it kept guessing on the examples it had not seen. The guessing lasted long past the point of overfitting, where the training examples are already perfect and new examples still fail. Then the model changed: from one measurement to the next, it started to answer the unseen examples correctly, and it kept answering them. That change is grokking. The model memorized first and it learned the rule later.
 
-This article puts both results in one program. The program is a transformer of 56,640 parameters, and it trains on one arithmetic task. Then it shows the jump. The engine exists twice, in **Rust** and in **C#**, both with no dependencies. The two versions start from the same weights and show the same curve.
+This article puts both results in one program. The program is a transformer of 56,640 parameters, and it trains on one arithmetic task. Then it shows the jump. The program exists twice, both times in **C#**: one version writes the engine, and the other hands the engine to a framework. The two show the same jump.
 
 ## The task: modular addition
 
@@ -65,14 +65,15 @@ For each position the model builds a vector. The layer does two things with it.
 
 **Attention lets positions talk to each other.** The vector becomes three new vectors: a query, a key and a value. The query of the current position meets the keys of every earlier position. Each match becomes a weight. The output is the weighted sum of the values:
 
-```rust
-// one head, at position pos, over the keys 0..=pos
-for t in 0..nkeys {
-    let d = dot(q, k[t]);              // how much this key matches the query
-    scores[t] = d / (head_dim as f64).sqrt();
+```csharp
+// one head, at the position pos, over the keys 0..=pos
+for (int t = 0; t < nkeys; t++)
+{
+    double d = Dot(q, k[t]);              // how well this key matches the query
+    scores[t] = d / Math.Sqrt(headDim);
 }
-let w = softmax(scores);               // turns the scores into weights that add up to 1
-let out = w * v;                       // a weighted sum of the values
+double[] w = Softmax(scores);             // turn the scores into weights that add up to 1
+double[] output = Weighted(w, v);         // one weighted sum of the values
 ```
 
 The model builds a key and a value for every position it has already read, and it keeps them in a cache. That cache is the **KV cache** of large language models. It is what lets a model produce one new token without working out the keys and values of the whole conversation again, and it is the reason a long chat stays fast.
@@ -127,35 +128,31 @@ A node always sits after the nodes it was computed from. So the backward pass re
 
 A row of the matrix computes one number: the sum of each weight multiplied by its input. The engine writes that whole sum into a single node.
 
-```rust
-let mut y = 0.0;
-for k in 0..len {
-    y += w[k] * x[k];
-}
+```csharp
+double y = 0;
+for (int k = 0; k < len; k++) y += w[k] * x[k];
 ```
 
 The direct way would give one node per multiplication and one more per addition, so a layer of 256 x 64 would need 32,000 nodes. With one node per row it needs 256.
 
 The backward pass needs two things from that row: how much each weight should change, and how much each input should change. One multiplication gives both. Say the row came out too high by `g`. A weight that was multiplied by a large input is more to blame than a weight multiplied by a small one, so each weight takes a share of `g` proportional to its input, and each input takes a share proportional to the weight that used it:
 
-```rust
-for k in 0..len {
-    grad_w[k] += g * x[k];
-    grad_x[k] += g * w[k];
-}
+```csharp
+for (int k = 0; k < len; k++) gradW[k] += g * x[k];
+for (int k = 0; k < len; k++) gradX[k] += g * w[k];
 ```
 
 The weights of a row sit next to each other in the list, so both loops run over two blocks of consecutive numbers. That is where SIMD applies: the engine runs one arithmetic operation on several numbers at once, with AVX2 and FMA when the processor has them.
 
 ## The cliff
 
-![Train and unseen accuracy against the training step. Train accuracy reaches 99% by step 600 while unseen accuracy is at 1%. Unseen accuracy stays under 12% until step 4000, rises to 72% at step 5000 and reaches 94% by step 8000.](/blog/grokking-cliff.svg)
+![Train and unseen accuracy against the training step. Train accuracy reaches 100% by step 750 while unseen accuracy is at 1.2%. Unseen accuracy stays under 26% until step 5000, rises to 70% at step 5500 and reaches 96% by step 10000.](/blog/grokking-cliff.svg)
 
 The blue line is the training set. The red line is the test set.
 
-The training accuracy reaches **99% at step 600**. The model already answers every pair it has seen. The test accuracy is at **1.0%**, below the 1.9% of random guessing. The model has memorized.
+The training accuracy reaches **100% at step 750**. The model already answers every pair it has seen. The test accuracy is at **1.2%**, below the 1.9% of random guessing. The model has memorized.
 
-Then the red line stays low for 4,000 more steps. It passes 12% only at step 4,000. At **step 5,000** it reaches **72%**, and by step 6,000 it reaches **92%**. From that point the model answers **1,842 of the 1,966 unseen pairs**, and it keeps answering them.
+Then the red line stays low for 4,750 more steps. It passes 9% only at step 4,000 and 26% at step 5,000. At **step 5,500** it reaches **70%**, and by step 6,000 it reaches **91%**. From that point the model answers **1,891 of the 1,966 unseen pairs**, and it keeps answering them.
 
 The flat part of the graph is the interesting part. The model is not stuck. It is busy.
 
@@ -163,11 +160,11 @@ The flat part of the graph is the interesting part. The model is not stuck. It i
 
 Two more numbers explain what the model does during that flat part.
 
-![Cross-entropy loss against the training step, on a log scale. The train loss reaches its floor by step 600 while the test loss stays flat at 2.0 until step 4000, then falls to 0.2.](/blog/grokking-loss.svg)
+![Cross-entropy loss against the training step, on a log scale. The train loss reaches its floor by step 750 while the test loss stays flat at 3.9 until step 4000, then falls to 2.0.](/blog/grokking-loss.svg)
 
-The train loss falls fast and reaches its floor. The test loss does not move for thousands of steps. A model that only memorized would keep that shape forever. Here the test loss starts to fall, and the fall is the rule arriving. The vertical axis is on a log scale, so the fall from 2.0 to 0.2 is a factor of ten.
+The train loss falls fast and reaches its floor. The test loss does not move for thousands of steps. A model that only memorized would keep that shape forever. Here the test loss starts to fall, and the fall is the rule arriving. The vertical axis is on a log scale, so the fall from 3.9 to 2.0 is a factor of two, and the last decimal matters more than it looks: the loss of a model that answers well is already close to the floor.
 
-![Two curves against the training step, each on its own axis. On the left axis the size of the parameters rises from 19.2 to 21.9 while the model memorizes, then falls to 15.3. On the right axis the accuracy on unseen pairs stays near 1% until step 4000 and then rises to 94%.](/blog/grokking-norm.svg)
+![Two curves against the training step, each on its own axis. On the left axis the size of the parameters rises from 19.2 to 21.8 while the model memorizes, then falls to 15.2. On the right axis the accuracy on unseen pairs stays near 1% until step 4000 and then rises to 96%.](/blog/grokking-norm.svg)
 
 This figure has **two axes**, one per curve. The blue line uses the left axis: the size of the parameters, from 19 to 22. That is one number for the whole model, and it grows when any parameter grows. The red line uses the right axis: the accuracy on pairs the model has never seen, from 0% to 100%.
 
@@ -177,21 +174,15 @@ The three curves together show the whole mechanism: train accuracy, unseen accur
 
 ## Reproduce it
 
-You need Rust 1.75 or newer. The same engine is also written in **C#**, and that one needs the .NET SDK 10 or newer. There is no other dependency in either case.
+You need the .NET SDK 10 or newer, and nothing else. The first build downloads the native library, which is a few hundred megabytes.
 
 ```bash
-# Rust
-git clone https://github.com/jacano/grokking-rs
-cd grokking-rs
-cargo run --release
-
-# C#
 git clone https://github.com/jacano/grokking-csharp
 cd grokking-csharp
 dotnet run -c Release
 ```
 
-Both runs take about ten minutes on one core of a normal laptop, show the same curve, and write the same three things:
+The run takes about ten minutes on one core of a normal laptop, and it writes the same three things:
 
 | Where | What |
 | --- | --- |
@@ -226,13 +217,13 @@ A few experiments change the result in a useful way:
 
 ```bash
 # control: no weight decay, so nothing pulls the model off the memorizing solution
-cargo run --release -- --wd 0
+dotnet run -c Release -- --wd 0
 
 # a smaller modulus learns faster and shows the same shape
-cargo run --release -- --p 13 --steps 3000
+dotnet run -c Release -- --p 13 --steps 3000
 
 # a longer run with a finer log
-cargo run --release -- --steps 40000 --eval-every 100
+dotnet run -c Release -- --steps 40000 --eval-every 100
 ```
 
 ## Inference
@@ -240,15 +231,54 @@ cargo run --release -- --steps 40000 --eval-every 100
 Training can save the parameters, and the same architecture loads them back. The file `model.txt` is not part of the repository: the `--save` flag writes it at the end of a run.
 
 ```bash
-cargo run --release -- --save
-cargo run --release -- --load model.txt --infer 12+35
+dotnet run -c Release -- --save
+dotnet run -c Release -- --load model.txt --infer 12+35
 ```
 
 ```
-inference 12+35 = 47  [ok]  top: 47 (97%), 38 (1%), 3 (1%)
+inference 12+35 = 47  [ok]  top: 47 (92%), 36 (3%), 17 (2%)
 ```
 
 The prompt is `[START, 12, +, 35, =]`. The model reads it and returns one probability for each of the 53 possible answers. Inference is a single forward pass: no gradient and no backward pass. `--infer` prints the three most likely answers with their probability.
+
+## The same thing without the engine
+
+The engine of this article is 1,160 lines, and most of them exist to compute derivatives. A framework does that part for you. The same experiment, with the model written in **55 lines** and the training loop in **12**, is in
+[grokking-torchsharp](https://github.com/jacano/grokking-torchsharp), on
+[TorchSharp](https://github.com/dotnet/TorchSharp), the .NET binding of PyTorch.
+
+```bash
+git clone https://github.com/jacano/grokking-torchsharp
+cd grokking-torchsharp
+dotnet run -c Release
+```
+
+That version is 26 seconds instead of ten minutes, it shows the same jump at step 3,750, and it ends at **97.3%**: 1,912 of the 1,966 unseen pairs. Its model file in full is this:
+
+```csharp
+public override Tensor forward(Tensor index)
+{
+    Tensor positions = arange(index.shape[1], dtype: ScalarType.Int64, device: index.device);
+    Tensor x = _wte.forward(index) + _wpe.forward(positions);
+    Tensor h = RmsNorm(x);
+    Tensor q = _wq.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
+    Tensor k = _wk.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
+    Tensor v = _wv.forward(h).reshape(batch, length, _heads, _headDim).transpose(1, 2);
+    Tensor attended = scaled_dot_product_attention(q, k, v, is_casual: true);
+    x = x + _wo.forward(attended.transpose(1, 2).reshape(batch, length, _embd));
+    x = x + _fc2.forward(relu(_fc1.forward(RmsNorm(x))));
+    return _lmHead.forward(x);
+}
+```
+
+The backward pass and the optimizer become three more lines:
+
+```csharp
+loss.backward();
+optimiser.step();
+```
+
+What the framework does not remove is the thinking. It still starts an embedding at the wrong scale, and its `AdamW` is not microgpt's `Adam`: the decay sits outside the update instead of inside the gradient. With `AdamW` that version never jumped, at any decay between 0.002 and 0.5. With the decay inside the gradient, the same `wd` as the engine works. Read the two repositories side by side: one shows what a transformer does, and the other shows how little of it you have to write.
 
 ## What to take away
 
@@ -258,7 +288,7 @@ The prompt is `[START, 12, +, 35, =]`. The model reads it and returns one probab
 - **Watch three numbers together.** Train accuracy, unseen accuracy and the size of the parameters. One curve alone hides the mechanism.
 
 The engine, the dataset, the figures and the raw run live in two repositories:
-[grokking-rs](https://github.com/jacano/grokking-rs) and
-[grokking-csharp](https://github.com/jacano/grokking-csharp). Both have no
-dependencies, both are about 1,200 lines, and both start from the same weights.
-Every figure of this article comes from the CSV of the Rust run.
+[grokking-csharp](https://github.com/jacano/grokking-csharp), with the engine written
+by hand, and [grokking-torchsharp](https://github.com/jacano/grokking-torchsharp),
+with the same experiment on a framework. Every figure of this article comes from the
+CSV of the first one.
