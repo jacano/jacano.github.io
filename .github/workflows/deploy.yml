@@ -23,11 +23,10 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci
-      - run: npm run check
-      - run: npm run test
-      - run: npm run format:check
-      - run: npm run build
+      # The pipeline lives in the Makefile, so a runner and a laptop run the same
+      # commands: `make install`, then `make validate`. Add a check there, not here.
+      - run: make install
+      - run: make validate
       - uses: actions/upload-pages-artifact@v5
         with:
           path: ./dist

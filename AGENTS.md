@@ -84,24 +84,32 @@ docs: fix the agent guide
 
 ## Deployment
 
-- Workflow is `.github/workflows/deploy.yml` (`Deploy to GitHub Pages`). Push to `main` builds with `npm ci` and `npm run build` and deploys `dist` via `upload-pages-artifact` / `deploy-pages`.
+- Workflow is `.github/workflows/deploy.yml` (`Deploy to GitHub Pages`). It is a thin wrapper: `make install`, `make validate`, and then the two Pages actions that exist only in Actions (`upload-pages-artifact`, `deploy-pages`).
 - `build_type` is `workflow` (not `legacy`). Verify with `gh api repos/jacano/jacano.github.io/pages`.
 
 ## How to work
 
-- **Develop:**
+- **The Makefile is the pipeline.** It holds every command the site needs, and the workflow calls it, so a laptop and a runner do the same thing. Add a check to the Makefile, never to the workflow file alone. `make help` prints the list.
   ```
-  npm install
-  npm run dev           # http://localhost:4321/
-  npm run check         # astro check (types and Astro diagnostics)
-  npm test              # vitest: the helpers and the figure reader
-  npm run format:check  # prettier; npm run format writes
-  npm run build
+  make install    # npm ci
+  make dev        # http://localhost:4321/
+  make check      # astro check (types and Astro diagnostics)
+  make test       # vitest: the helpers and the figure reader
+  make lint       # prettier --check; `make format` writes
+  make build      # the static site in dist/
+  make preview    # build, then serve dist/ the way the host serves it
+  make validate   # check, test, lint and build: what the workflow runs
+  make clean      # remove dist/ and the Astro caches
+  make publish    # validate, commit, push and wait for the deployment
+  make redeploy   # deploy the current commit again, without a new commit
+  make status     # the last deployments and how they ended
   ```
-- **Clear the caches when a build plugin changes.** Astro caches the content store and the rendered Markdown in `.astro` and `node_modules/.astro`. After you edit `astro.config.mjs`, `src/utils/satteri-figure-size.mjs` or `src/utils/image-size.mjs`, remove both directories, or the next build reuses the output of the previous plugin.
+  `make` alone runs `validate`. `make publish MESSAGE="what changed"` is the whole release: it validates, commits, pushes, watches the run and exits non-zero when the deployment fails. That logic is `scripts/publish.mjs` and `scripts/wait-deploy.mjs`, not YAML, so it can be read and run on its own.
+- **Clear the caches when a build plugin changes.** Astro caches the content store and the rendered Markdown in `.astro` and `node_modules/.astro`. After you edit `astro.config.mjs`, `src/utils/satteri-figure-size.mjs` or `src/utils/image-size.mjs`, run `make clean`, or the next build reuses the output of the previous plugin.
 - **Refresh the numbers of the CV:** `npm run sync:stats` reads GitHub and NuGet and rewrites `stars`, `forks`, `downloads` and the verification date of `src/data/cv.json`. `npm run sync:stats:check` reports drift and exits non-zero. The script never touches `lang` or `updated`: both are editorial, and the comment at the top of `scripts/sync-stats.mjs` says why.
-- **Add a featured project:** Edit `src/data/cv.json` `projects` array, then `npm run build` and `git push`.
-- **Add a blog post:** Create `src/content/blog/<slug>.md` with the four fields of the schema in `src/content.config.ts`: `title`, `date`, `tag` and `excerpt`. The blog list, the home preview, `rss.xml` and the sitemap read the collection, so no page needs an edit. Then run `npm run build`. A figure in the post gets its width and height from the file itself, so the page reserves the box: keep the file in `public/` and the path correct, and the build stops with a message when the file is missing.
-- **Before you push:** run `npm run check`, `npm test`, `npm run format:check` and `npm run build` in the local folder. The deploy workflow runs the same four, so a failure there is a failure you could have seen.
-- **Verify contributions:** Use `gh api search/issues?q=author:jacano+type:pr&per_page=100` — never invent data.
-- **Deploy:** `git push` → wait for `Deploy to GitHub Pages` to succeed → `https://jacano.github.io/` is live.
+- **Add a featured project:** Edit `src/data/cv.json` `projects` array, then `make build` and `make publish MESSAGE="..."`.
+- **Add a blog post:** Create `src/content/blog/<slug>.md` with the four fields of the schema in `src/content.config.ts`: `title`, `date`, `tag` and `excerpt`. The blog list, the home preview, `rss.xml` and the sitemap read the collection, so no page needs an edit. Then run `make build`. A figure in the post gets its width and height from the file itself, so the page reserves the box: keep the file in `public/` and the path correct, and the build stops with a message when the file is missing.
+- **Before you push:** run `make validate` in the local folder. The deploy workflow runs the same target, so a failure there is a failure you could have seen.
+- **Verify contributions:** Use `gh api search/issues?q=author:jacano+type=pr&per_page=100` — never invent data.
+- **Deploy:** `make publish MESSAGE="..."` validates, commits, pushes and waits for `deployment success`. To publish a commit that is already pushed, use `make redeploy`.
+- **A deployment can fail before it starts.** GitHub sometimes cannot give the job a hosted runner, and cancels the run after fifteen minutes with "The job was not acquired by Runner of type hosted". The build job still says whether the site itself is fine, so read its result and retry with `make redeploy`.
