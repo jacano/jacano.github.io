@@ -75,7 +75,7 @@ let w = softmax(scores);               // convierte las puntuaciones en pesos qu
 let out = w * v;                       // una suma ponderada de los valores
 ```
 
-El modelo construye una clave y un valor por cada posición que ya ha leído, y los guarda en una caché. Esa caché es la **KV cache** de los modelos de lenguaje grandes. Es lo que permite producir un token nuevo sin volver a calcular las claves y los valores de toda la conversación, y es la razón de que un chat largo siga siendo rápido.
+El modelo construye una clave y un valor por cada posición que ya ha leído, y los guarda en una caché. Esa caché es la **caché KV** de los modelos de lenguaje grandes. Es lo que permite producir un token nuevo sin volver a calcular las claves y los valores de toda la conversación, y es la razón de que un chat largo siga siendo rápido.
 
 La caché también le da al modelo su única regla sobre el futuro: la posición `t` puede mirar las posiciones `0` a `t`, y ninguna más, porque la caché crece de token en token. Este motor construye esa caché en cada pasada hacia delante, también durante el entrenamiento.
 
@@ -85,16 +85,16 @@ La caché también le da al modelo su única regla sobre el futuro: la posición
 
 En cada posición el modelo produce una puntuación por cada token del vocabulario. Para esta tarea son 56 puntuaciones: una por cada candidato a ser el token siguiente. Una puntuación alta significa "espero este".
 
-**La pérdida es un solo número que dice cuánto se equivocó el modelo.** Solo mira la probabilidad que el modelo dio a la respuesta correcta:
+**La pérdida es un solo número que dice cuánto se equivocó el modelo.** Solo mira una cosa: la probabilidad que el modelo dio a la respuesta correcta.
 
-| Probabilidad | En palabras | Pérdida |
-| ---: | :--- | ---: |
-| 1,00 | seguro, y acierta | 0,0 |
-| 0,50 | una moneda al aire | 0,7 |
-| 0,10 | una posibilidad entre diez | 2,3 |
-| 0,01 | una posibilidad entre cien | 4,6 |
+| Probabilidad de la respuesta correcta | Pérdida |
+| ---: | ---: |
+| 100 % | 0,0 |
+| 50 % | 0,7 |
+| 10 % | 2,3 |
+| 1 % | 4,6 |
 
-Lee la tabla de arriba abajo. Cuando el modelo está seguro y acierta, la pérdida es cero. Cuando está seguro y falla, la pérdida es grande. La pérdida nunca baja de cero, así que la única forma de reducirla es darle más probabilidad a la respuesta correcta.
+Un modelo que está seguro y acierta saca 0,0. Un modelo que deja la respuesta correcta en una posibilidad entre cien saca 4,6, y saca lo mismo tanto si estaba seguro de otra respuesta como si simplemente dudaba. La pérdida nunca baja de cero, así que la única forma de reducirla es darle más probabilidad a la respuesta correcta.
 
 La regla tiene nombre: **entropía cruzada**. Es la forma estándar de puntuar un modelo que devuelve una probabilidad por opción, y es el número que el bucle de entrenamiento trabaja para reducir.
 
@@ -102,7 +102,7 @@ El motor calcula la pérdida en las cinco posiciones del documento y hace la med
 
 **Aprender significa cambiar los parámetros para que la pérdida sea menor.** Los 56.640 parámetros son los números que aprende el modelo. Para cada parámetro, el motor calcula cuánto mueve la pérdida y en qué dirección. Ese número es el **gradiente**. Después el motor mueve cada parámetro un poco en contra de su gradiente. Un conjunto de movimientos es un **paso de entrenamiento**. El motor usa una regla estándar llamada Adam para elegir el tamaño de cada movimiento.
 
-**El weight decay es una segunda fuerza, más pequeña.** En cada paso el motor también tira de cada parámetro un poco hacia cero. De ahí salen dos cosas. La primera, que ningún parámetro puede crecer sin límite. La segunda, y es la que importa aquí, que gana la respuesta más barata. Un modelo puede ajustar los pares de entrenamiento guardándolos uno a uno, y eso necesita parámetros grandes. Un modelo que aprende la regla necesita menos. El weight decay abarata la segunda opción a medida que pasan los pasos, y eso es lo que produce el salto de la sección siguiente.
+**El decaimiento de pesos** (*weight decay*) **es una segunda fuerza, más pequeña.** En cada paso el motor también tira de cada parámetro un poco hacia cero. De ahí salen dos cosas. La primera, que ningún parámetro puede crecer sin límite. La segunda, y es la que importa aquí, que gana la respuesta más barata. Un modelo puede ajustar los pares de entrenamiento guardándolos uno a uno, y eso necesita parámetros grandes. Un modelo que aprende la regla necesita menos. El decaimiento de pesos abarata la segunda opción a medida que pasan los pasos, y eso es lo que produce el salto de la sección siguiente.
 
 ## El motor
 
@@ -171,7 +171,7 @@ La pérdida de entrenamiento cae rápido y toca su suelo. La de prueba no se mue
 
 Esta figura tiene **dos ejes**, uno por curva. La línea azul usa el eje izquierdo: el tamaño de los parámetros, de 19 a 22. Es un solo número para todo el modelo, y crece cuando crece cualquier parámetro. La línea roja usa el eje derecho: el acierto en pares que el modelo no ha visto nunca, del 0 % al 100 %.
 
-La línea azul sube primero. El modelo guarda 843 respuestas separadas, y una tabla de consulta necesita parámetros grandes. Después la línea azul baja: el weight decay tira de los parámetros en cada paso, así que la tabla se vuelve la opción cara. La línea roja va detrás. La respuesta pequeña y estructurada que suma números módulo 53 necesita menos, y cuando sale más barata que la tabla, el acierto en pares no vistos da el salto.
+La línea azul sube primero. El modelo guarda 843 respuestas separadas, y una tabla de consulta necesita parámetros grandes. Después la línea azul baja: el decaimiento de pesos tira de los parámetros en cada paso, así que la tabla se vuelve la opción cara. La línea roja va detrás. La respuesta pequeña y estructurada que suma números módulo 53 necesita menos, y cuando sale más barata que la tabla, el acierto en pares no vistos da el salto.
 
 Las tres curvas juntas muestran todo el mecanismo: acierto de entrenamiento, acierto en pares no vistos y tamaño de los parámetros.
 
@@ -225,7 +225,7 @@ Get-Content runs/grokking.csv -Wait
 Unos cuantos experimentos cambian el resultado de forma útil:
 
 ```bash
-# control: sin weight decay, así que nada saca al modelo de la solución que memoriza
+# control: sin decaimiento de pesos, así que nada saca al modelo de la solución que memoriza
 cargo run --release -- --wd 0
 
 # un módulo más pequeño aprende antes y muestra la misma forma
@@ -237,7 +237,7 @@ cargo run --release -- --steps 40000 --eval-every 100
 
 ## Inferencia
 
-El entrenamiento puede guardar los parámetros, y la misma arquitectura los vuelve a cargar. El fichero `model.txt` no forma parte del repositorio: lo escribe el flag `--save` al final de una ejecución.
+El entrenamiento puede guardar los parámetros, y la misma arquitectura los vuelve a cargar. El fichero `model.txt` no forma parte del repositorio: lo escribe la opción `--save` al final de una ejecución.
 
 ```bash
 cargo run --release -- --save
@@ -248,13 +248,13 @@ cargo run --release -- --load model.txt --infer 12+35
 inference 12+35 = 47  [ok]  top: 47 (97%), 38 (1%), 3 (1%)
 ```
 
-El prompt es `[START, 12, +, 35, =]`. El modelo lo lee y devuelve una probabilidad por cada una de las 53 respuestas posibles. La inferencia es una sola pasada hacia delante: sin gradiente y sin pasada hacia atrás. `--infer` imprime las tres respuestas más probables con su probabilidad.
+La entrada es `[START, 12, +, 35, =]`. El modelo lo lee y devuelve una probabilidad por cada una de las 53 respuestas posibles. La inferencia es una sola pasada hacia delante: sin gradiente y sin pasada hacia atrás. `--infer` imprime las tres respuestas más probables con su probabilidad.
 
 ## Qué llevarse
 
 - **La atención mueve información entre posiciones; el MLP la transforma dentro de una.** El resto del transformer es fontanería alrededor de esas dos operaciones.
 - **Un modelo puede ajustar los datos sin aprender la regla.** El acierto de entrenamiento es una mala guía: llega al 100 % mientras el de pares no vistos sigue en el azar.
-- **El grokking es una transición entre dos soluciones.** La solución que memoriza necesita pesos grandes. La que generaliza necesita menos. El weight decay decide cuál sobrevive, y la decisión tarda miles de pasos.
+- **El grokking es una transición entre dos soluciones.** La solución que memoriza necesita pesos grandes. La que generaliza necesita menos. El decaimiento de pesos decide cuál sobrevive, y la decisión tarda miles de pasos.
 - **Mira tres números a la vez.** Acierto de entrenamiento, acierto en pares no vistos y tamaño de los parámetros. Una sola curva esconde el mecanismo.
 
 El motor, el conjunto de datos, las gráficas y la ejecución en crudo viven en dos repositorios: [grokking-rs](https://github.com/jacano/grokking-rs) y [grokking-csharp](https://github.com/jacano/grokking-csharp). Los dos están sin dependencias, los dos rondan las 1.200 líneas y los dos arrancan de los mismos pesos. Cada figura de este artículo sale del CSV de la ejecución en Rust.

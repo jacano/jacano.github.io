@@ -85,16 +85,16 @@ The cache also gives the model its only rule about the future: position `t` can 
 
 At every position the model produces one score for each token in the vocabulary. For this task that is 56 scores: one per candidate for the next token. A high score means "I expect this one next".
 
-**The loss is one number that says how wrong the model was.** It looks only at the probability the model gave to the correct answer:
+**The loss is one number that says how wrong the model was.** It looks at one thing only: the chance the model gave to the answer that was correct.
 
-| Probability | In words | Loss |
-| ---: | :--- | ---: |
-| 1.00 | certain, and right | 0.0 |
-| 0.50 | a coin flip | 0.7 |
-| 0.10 | one chance in ten | 2.3 |
-| 0.01 | one chance in a hundred | 4.6 |
+| Chance on the right answer | Loss |
+| ---: | ---: |
+| 100% | 0.0 |
+| 50% | 0.7 |
+| 10% | 2.3 |
+| 1% | 4.6 |
 
-Read the table from the top to the bottom. When the model is sure and right, the loss is zero. When it is sure and wrong, the loss is large. The loss never goes below zero, so the only way to make it smaller is to give the correct answer a higher probability.
+A model that is sure and right scores 0.0. A model that leaves the right answer at one chance in a hundred scores 4.6, and it scores the same whether it was sure about a different answer or simply unsure. The loss never goes below zero, so the only way to make it smaller is to give the correct answer more chance.
 
 The rule has a name: **cross-entropy**. It is the standard way to score a model that returns one probability per option, and it is the number that the training loop works to reduce.
 
