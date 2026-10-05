@@ -172,6 +172,21 @@ La línea azul sube primero: el modelo guarda 843 respuestas separadas, y una ta
 
 Las tres curvas juntas muestran todo el mecanismo: acierto en entrenamiento, acierto en pares no vistos y tamaño de los parámetros.
 
+## El control
+
+Quita el decaimiento y nada de esto ocurre. El mismo programa, con `--wd 0`:
+
+| paso | decaimiento | acierto en entrenamiento | acierto en no vistos | tamaño |
+| ---: | :--- | ---: | ---: | ---: |
+| 750 | sí | 100 % | 1,2 % | 20,7 |
+| 750 | no | 100 % | 0,7 % | 48,4 |
+| 6.000 | sí | 100 % | 90,9 % | 15,9 |
+| 6.000 | no | 100 % | 2,2 % | 100,9 |
+| 12.000 | sí | 100 % | **96,2 %** | 15,2 |
+| 12.000 | no | 93,6 % | **1,6 %** | 135,5 |
+
+Sin el decaimiento el modelo memoriza igual: el acierto en entrenamiento está al 100 % en el paso 750, y los parámetros simplemente no dejan de crecer, hasta nueve veces el tamaño del modelo que aprendió la regla. El acierto en pares no vistos no pasa nunca del **3,46 %** frente al 1,9 % de adivinar, y acaba en el 1,6 %: **32 de los 1.966 pares**. El decaimiento no es un detalle de la receta que da la casualidad de funcionar. Es la fuerza que decide cuál de las dos respuestas sobrevive, y sin él la única respuesta que queda sobre la mesa es la tabla.
+
 ## Reprodúcelo
 
 Hace falta el SDK de .NET 10 o superior, y nada más. La primera compilación descarga la biblioteca nativa, que son unos cientos de megabytes.

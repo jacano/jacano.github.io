@@ -172,6 +172,21 @@ The blue line rises first. The model stores 843 separate answers, and a lookup t
 
 The three curves together show the whole mechanism: train accuracy, unseen accuracy and the size of the parameters.
 
+## The control
+
+Remove the decay and none of this happens. The same program, with `--wd 0`:
+
+| step | decay | train acc | unseen acc | size |
+| ---: | :--- | ---: | ---: | ---: |
+| 750 | with | 100% | 1.2% | 20.7 |
+| 750 | without | 100% | 0.7% | 48.4 |
+| 6,000 | with | 100% | 90.9% | 15.9 |
+| 6,000 | without | 100% | 2.2% | 100.9 |
+| 12,000 | with | 100% | **96.2%** | 15.2 |
+| 12,000 | without | 93.6% | **1.6%** | 135.5 |
+
+Without the decay the model still memorizes: the train accuracy is 100% at step 750, and the parameters simply keep growing, to nine times the size of the model that learned the rule. The accuracy on unseen pairs never passes **3.46%** against the 1.9% of guessing, and it ends at 1.6%: **32 of the 1,966 pairs**. The decay is not a detail of the recipe that happens to work. It is the force that decides which of the two answers survives, and without it the only answer on offer is the table.
+
 ## Reproduce it
 
 You need the .NET SDK 10 or newer, and nothing else. The first build downloads the native library, which is a few hundred megabytes.
