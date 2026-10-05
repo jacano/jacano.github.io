@@ -23,14 +23,14 @@ El módulo es 53. El modelo lee una suma y devuelve el resultado módulo 53, as�
 50 + 50 = 100  →  47   100 - 53 = 47
 ```
 
-Hay 2.809 pares en total. Entreno con el 30 % y reservo el resto, así que los pares reservados son la única prueba de que el modelo ha aprendido aritmética y no una tabla de consulta.
+Hay 2.809 pares en total. Entreno con el 30 % y reservo el resto, así que esos pares no vistos son la única prueba de que el modelo ha aprendido aritmética y no una tabla de consulta.
 
 | Propiedad | Valor |
 | --- | ---: |
 | Módulo | 53 |
 | Pares | 2.809 |
 | Pares de entrenamiento (30 %) | 843 |
-| Pares reservados (70 %) | 1.966 |
+| Pares no vistos (70 %) | 1.966 |
 | Vocabulario | 56 *símbolos* (*tokens*) |
 | Longitud del documento | 6 *símbolos* |
 | Posiciones de predicción | 5 |
@@ -54,9 +54,9 @@ Un documento es una sola secuencia, y el modelo predice cada *símbolo* siguient
 
 ![Acierto en entrenamiento y en pares no vistos frente al paso de entrenamiento. El acierto en entrenamiento llega al 98 % en el paso 1.000, mientras el de pares no vistos está en el 1,2 %. El acierto en pares no vistos sube del 13 % en el paso 3.000 al 74 % en el 3.750 y llega al 97 % en el 5.000.](/blog/grokking-cliff.svg)
 
-La línea azul es el acierto en los pares de entrenamiento. La línea roja, el de los pares reservados.
+La línea azul es el acierto en los pares de entrenamiento. La línea roja, el de los pares no vistos.
 
-El acierto en entrenamiento llega al **98 % en el paso 1.000** y ya no vuelve a bajar mucho de ahí. El de los pares reservados está en el 1,2 % en ese momento, y se queda entre el 1 % y el 28 % durante otros 2.500 pasos. Después se mueve: **74 % en el paso 3.750**, 82 % en el 4.000, 92 % en el 5.000 y 97,3 % al final.
+El acierto en entrenamiento llega al **98 % en el paso 1.000** y ya no vuelve a bajar mucho de ahí. El de los pares no vistos está en el 1,2 % en ese momento, y se queda entre el 1 % y el 28 % durante otros 2.500 pasos. Después se mueve: **74 % en el paso 3.750**, 82 % en el 4.000, 92 % en el 5.000 y 97,3 % al final.
 
 La parte plana de esa curva es la que merece la pena entender. El modelo no está atascado: está cambiando de opinión.
 
@@ -74,7 +74,7 @@ El 47 recibe un 90 %, y ninguna otra se le acerca.
 
 **La pérdida es un solo número que dice cuánto se equivocó el modelo, y mira una sola cosa: la probabilidad que le dio a la respuesta correcta.** Con un 100 % es 0,0; con un 50 %, 0,7; con un 10 %, 2,3; con un 1 %, 4,6. La regla se llama **entropía cruzada** y nunca baja de cero, así que la única forma de reducirla es darle más probabilidad a la respuesta correcta.
 
-La pérdida no mira en qué creía el modelo en su lugar. Una respuesta equivocada sostenida con un 40 % de confianza puntúa peor que una duda, y por eso el acierto en pares reservados puede quedar por debajo del azar: el modelo no se está cubriendo las espaldas, está equivocado con convencimiento.
+La pérdida no mira en qué creía el modelo en su lugar. Una respuesta equivocada sostenida con un 40 % de confianza puntúa peor que una duda, y por eso el acierto en pares no vistos puede quedar por debajo del azar: el modelo no se está cubriendo las espaldas, está equivocado con convencimiento.
 
 ## Qué parece provocar el salto
 
@@ -82,7 +82,7 @@ Dos soluciones encajan con los datos de entrenamiento, y solo una generaliza.
 
 La primera es una tabla: guardar cada uno de los 843 pares. Encaja rápido y no dice nada de un par que no esté en ella.
 
-La segunda es la aritmética. Solo encaja cuando el modelo encuentra una representación interna que la calcule, y entonces acierta los pares reservados igual de bien que los de entrenamiento.
+La segunda es la aritmética. Solo encaja cuando el modelo encuentra una representación interna que la calcule, y entonces acierta los pares no vistos igual de bien que los de entrenamiento.
 
 El optimizador no sabe nada de ninguna de las dos. Reduce una pérdida y nada más. En este entrenamiento, lo que inclina la balanza es el **decaimiento de pesos** (*weight decay*): en cada paso, el optimizador también tira un poco de cada parámetro hacia cero.
 
@@ -90,9 +90,9 @@ Una tabla necesita parámetros grandes, una entrada por respuesta guardada. La s
 
 ![Dos curvas frente al paso de entrenamiento, cada una en su eje. En el eje izquierdo el tamaño de los parámetros sube de 19,1 a 22,3 mientras el modelo memoriza, y después baja a 16,0. En el eje derecho el acierto en pares no vistos se queda cerca del 1 % durante tres mil pasos y después sube al 97 %.](/blog/grokking-norm.svg)
 
-La pérdida cuenta lo mismo. La de entrenamiento toca su suelo pronto y ahí se queda, mientras la de prueba se mantiene cerca de 3,9 durante miles de pasos y después cae a 2,0 a la vez que el acierto da el salto:
+La pérdida cuenta lo mismo. La de entrenamiento toca su suelo pronto y ahí se queda, mientras la de los pares no vistos se mantiene cerca de 3,9 durante miles de pasos y después cae a 2,0 a la vez que el acierto da el salto:
 
-![Entropía cruzada frente al paso de entrenamiento, en escala logarítmica. La pérdida de entrenamiento toca suelo en el paso 1.000, mientras la de prueba se queda cerca de 3,9 y después baja a 2,0 a la vez que el acierto en pares no vistos da el salto.](/blog/grokking-loss.svg)
+![Entropía cruzada frente al paso de entrenamiento, en escala logarítmica. La pérdida de entrenamiento toca suelo en el paso 1.000, mientras la de los pares no vistos se queda cerca de 3,9 y después baja a 2,0 a la vez que el acierto en pares no vistos da el salto.](/blog/grokking-loss.svg)
 
 Para saber qué acaba calculando el modelo, merece la pena leer el trabajo que siguió a este problema: [Progress measures for grokking via mechanistic interpretability](https://arxiv.org/abs/2301.05217) (Nanda et al., 2023) desmonta el mismo juguete y encuentra un puñado de componentes periódicas en lugar de una tabla.
 
@@ -110,7 +110,7 @@ Si el decaimiento es lo que selecciona la regla, quitarlo debería romper el ent
 | 12.000 | no | 100 % | **0,2 %** | 157,1 |
 | 60.000 | no | 100 % | **0,5 %** | 348,2 |
 
-Sin decaimiento el modelo memoriza los pares de entrenamiento y acierta el 0,2 % de los reservados. Cinco veces más pasos no cambian el resultado: en el paso 60.000 está en el 0,5 %, la cuarta parte del 1,9 % que se saca adivinando, y el tamaño de los parámetros ha pasado de 16 a 348 porque nada en el entrenamiento lo está cobrando.
+Sin decaimiento el modelo memoriza los pares de entrenamiento y acierta el 0,2 % de los no vistos. Cinco veces más pasos no cambian el resultado: en el paso 60.000 está en el 0,5 %, la cuarta parte del 1,9 % que se saca adivinando, y el tamaño de los parámetros ha pasado de 16 a 348 porque nada en el entrenamiento lo está cobrando.
 
 El salto no es un aprendiz lento que llega tarde. Sin decaimiento, nada en este entrenamiento prefiere la solución barata, y más pasos no cambian eso: solo hacen la tabla más grande.
 
@@ -145,8 +145,8 @@ Cada fila del CSV tiene seis columnas:
 | `step` | paso de entrenamiento |
 | `train_loss` | entropía cruzada media sobre 512 pares de entrenamiento |
 | `train_acc` | acierto exacto en esos pares |
-| `test_loss` | entropía cruzada media sobre los 1.966 pares reservados |
-| `test_acc` | acierto exacto en los pares reservados |
+| `test_loss` | entropía cruzada media sobre los 1.966 pares no vistos |
+| `test_acc` | acierto exacto en los pares no vistos |
 | `param_norm` | tamaño de todos los parámetros, como un solo número |
 
 El repositorio trae un `Makefile`, así que los mismos comandos funcionan en un portátil y en un servidor de integración:
@@ -161,7 +161,7 @@ make run ARGS="--p 13 --steps 3000"       # un módulo más pequeño aprende ant
 
 ## Lo que saco en claro
 
-- **El acierto en entrenamiento dice muy poco por sí solo.** Aquí llega al 100 % mientras el de los pares reservados está en el azar, y ahí sigue durante dos mil pasos.
+- **El acierto en entrenamiento dice muy poco por sí solo.** Aquí llega al 100 % mientras el de los pares no vistos está en el azar, y ahí sigue durante dos mil pasos.
 - **El entrenamiento se comporta como una transición entre dos respuestas.** Una guarda los pares y necesita parámetros grandes; la otra calcula la regla y necesita menos.
 - **El decaimiento de pesos es lo que inclina la balanza.** Con él llega el salto; a cero no llega nunca, con ningún número de pasos que haya probado.
 - **El tamaño de los parámetros se movió antes,** en las dos direcciones: subió mientras el modelo memorizaba y bajó cuando manda la regla.
