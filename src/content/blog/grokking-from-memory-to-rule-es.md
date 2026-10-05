@@ -1,10 +1,10 @@
 ---
-title: 'Atención y grokking: un transformador diminuto que aprende la regla'
+title: 'Grokking: el salto de la memoria a la regla'
 date: '2026-10-05'
 tag: 'Machine Learning'
-excerpt: 'Un transformador de 56.640 parámetros memoriza 843 sumas, falla casi todas las que no ha visto durante tres mil pasos y entonces aprende a sumar. El artículo lo construye en C# con TorchSharp, en unas trescientas líneas, y muestra el salto.'
+excerpt: 'Un modelo memoriza 843 sumas, falla casi todas las que no ha visto durante tres mil pasos y entonces aprende a sumar. Ese salto es el grokking: el artículo lo hace ocurrir, mide qué lo provoca y enseña qué piensa el modelo antes y después.'
 lang: 'es'
-pair: 'attention-and-grokking-tiny-transformer'
+pair: 'grokking-from-memory-to-rule'
 ---
 
 Un modelo aprende a sumar dos números. Ve 843 sumas y, en el paso 1.000, acierta el 98 % sin fallar ninguna.
@@ -89,7 +89,7 @@ El modelo no duda nunca. Elige una respuesta y la defiende, y por eso es posible
 
 Hay dos cosas que la explican: qué es el modelo y qué lo empuja. Empecemos por el modelo.
 
-## El transformador
+## El modelo
 
 El modelo es el de [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95), de Andrej Karpathy, con las mismas simplificaciones: reescala cada vector antes de usarlo para que los números se mantengan en un rango estable (RMSNorm) y convierte los negativos en cero (ReLU). Tiene una capa, 64 dimensiones y 8 cabezas, es decir, la *atención* se ejecuta ocho veces en paralelo sobre ocho trozos del vector.
 

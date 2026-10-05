@@ -1,0 +1,23 @@
+---
+// The article was renamed on the day it was published. Anyone who followed the old
+// link lands here and continues to the new one. A static host cannot answer with a
+// 301, so the page carries the redirect and a real link.
+const target = '/blog/grokking-from-memory-to-rule/';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={`https://jacano.github.io${target}`} />
+    <meta name="robots" content="noindex" />
+    <title>Moved: Grokking, the jump from memory to rule</title>
+  </head>
+  <body>
+    <p>
+      This article moved to
+      <a href={target}>Grokking: the jump from memory to rule</a>.
+    </p>
+  </body>
+</html>

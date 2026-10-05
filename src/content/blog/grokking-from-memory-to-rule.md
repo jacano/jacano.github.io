@@ -1,10 +1,10 @@
 ---
-title: 'Attention and grokking: a tiny transformer that learns the rule'
+title: 'Grokking: the jump from memory to rule'
 date: '2026-10-05'
 tag: 'Machine Learning'
-excerpt: 'A 56,640-parameter transformer memorizes 843 sums, fails almost every unseen one for three thousand steps, and then learns to add. The article builds it in C# with TorchSharp, in about three hundred lines, and shows the jump.'
+excerpt: 'A model memorizes 843 sums, fails almost every unseen one for three thousand steps, and then learns to add. That jump is grokking, and the article makes it happen, measures what causes it, and shows what the model thinks before and after.'
 lang: 'en'
-pair: 'attention-and-grokking-tiny-transformer'
+pair: 'grokking-from-memory-to-rule'
 ---
 
 A model learns to add two numbers. It sees 843 sums, and after 1,000 steps it answers 98% of them without a mistake.
@@ -89,7 +89,7 @@ The model is never undecided. It picks an answer and defends it, which is why an
 
 Two things explain that: what the model is, and what pushes it. Start with the model.
 
-## The transformer
+## The model
 
 The model is the one from [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95) by Andrej Karpathy, with the same simplifications. It rescales every vector before it uses it, so the numbers stay in a stable range (RMSNorm). It turns negative numbers into zero (ReLU). One layer, 64 dimensions, and 8 heads, which means attention runs eight times in parallel on eight slices of the vector.
 
