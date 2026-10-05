@@ -20,21 +20,20 @@ MESSAGE ?=
 .PHONY: help install dev build preview check test lint format validate clean publish redeploy status
 
 help:
-	@echo "make install    install the dependencies from the lock file"
-	@echo "make dev        run the site locally, with hot reload"
-	@echo "make build      build the static site into dist/"
-	@echo "make preview    build, then serve dist/ the way the host serves it"
-	@echo "make check      types and Astro diagnostics"
-	@echo "make test       the unit tests"
-	@echo "make lint       check the formatting"
-	@echo "make format     write the formatting"
-	@echo "make validate   check, test, lint and build: exactly what the workflow runs"
-	@echo "make clean      remove the caches and the build output"
-	@echo "make publish    validate, commit, push and wait for the deployment"
-	@echo "make redeploy   deploy the current commit again, without a new commit"
-	@echo "make status     the last deployments and how they ended"
-	@echo ""
-	@echo "make publish MESSAGE=\"what changed\""
+	@echo make install    install the dependencies from the lock file
+	@echo make dev        run the site locally, with hot reload
+	@echo make build      build the static site into dist/
+	@echo make preview    build, then serve dist/ the way the host serves it
+	@echo make check      types and Astro diagnostics
+	@echo make test       the unit tests
+	@echo make lint       check the formatting
+	@echo make format     write the formatting
+	@echo make validate   check, test, lint and build: exactly what the workflow runs
+	@echo make clean      remove the caches and the build output
+	@echo make publish    validate, commit, push and wait for the deployment
+	@echo make redeploy   deploy the current commit again, without a new commit
+	@echo make status     the last deployments and how they ended
+	@echo make publish MESSAGE=what changed        the subject of the commit
 
 install:
 	$(NPM) ci
