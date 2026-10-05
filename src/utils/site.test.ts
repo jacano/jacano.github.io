@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { base, readTime, slugOf } from './site';
+import { base, inLanguage, langLabel, langOf, langTag, readTime, slugOf, translations } from './site';
 
 describe('slugOf', () => {
   it('drops the extension and the folder of a collection id', () => {
@@ -29,5 +29,48 @@ describe('readTime', () => {
 describe('base', () => {
   it('is empty at the root of the domain', () => {
     expect(base).toBe('');
+  });
+});
+
+const post = (id: string, lang?: string, pair?: string) => ({ id, data: { lang, pair } });
+
+describe('langOf', () => {
+  it('treats a post without a language as English', () => {
+    expect(langOf(post('a.md'))).toBe('en');
+    expect(langOf(post('a.md', 'en'))).toBe('en');
+    expect(langOf(post('a.md', 'es'))).toBe('es');
+  });
+});
+
+describe('inLanguage', () => {
+  it('keeps one language and drops the rest', () => {
+    const posts = [post('a.md'), post('b.md', 'es'), post('c.md', 'es', 'c')];
+    expect(inLanguage(posts).map((p) => p.id)).toEqual(['a.md']);
+    expect(inLanguage(posts, 'es').map((p) => p.id)).toEqual(['b.md', 'c.md']);
+  });
+});
+
+describe('translations', () => {
+  it('returns only the post itself when it has no pair', () => {
+    const posts = [post('a.md'), post('b.md', 'es')];
+    expect(translations(posts, posts[0])).toHaveLength(1);
+  });
+
+  it('groups every language of the same article and nothing else', () => {
+    const posts = [post('a.md', 'en', 'a'), post('a-es.md', 'es', 'a'), post('b.md', 'en', 'b')];
+    expect(translations(posts, posts[0]).map((p) => p.id)).toEqual(['a.md', 'a-es.md']);
+    expect(translations(posts, posts[2]).map((p) => p.id)).toEqual(['b.md']);
+  });
+});
+
+describe('langLabel and langTag', () => {
+  it('names the two languages the site uses', () => {
+    expect(langLabel('en')).toBe('English');
+    expect(langLabel('es')).toBe('Español');
+  });
+
+  it('marks them with two letters', () => {
+    expect(langTag('en')).toBe('EN');
+    expect(langTag('es')).toBe('ES');
   });
 });

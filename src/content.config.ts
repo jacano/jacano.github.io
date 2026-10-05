@@ -9,6 +9,14 @@ const blog = defineCollection({
     date: z.string(),
     tag: z.string(),
     excerpt: z.string(),
+    /** Language of this file. English is the default and the one the lists show. */
+    lang: z.enum(['en', 'es']).default('en'),
+    /**
+     * Shared key of the same article in every language. Two files, one per
+     * language, carry the same value so the article page can offer a switch.
+     * An article with a single language leaves it out.
+     */
+    pair: z.string().optional(),
   }),
 });
 

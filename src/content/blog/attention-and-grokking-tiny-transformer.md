@@ -3,6 +3,8 @@ title: 'Attention and grokking: a tiny transformer that learns the rule'
 date: '2026-10-05'
 tag: 'Machine Learning'
 excerpt: 'A small transformer learns modular addition. It memorizes the training pairs in 600 steps, waits 4,000 steps more, and then answers pairs it never saw. The article builds the transformer and the Rust engine that shows the jump.'
+lang: 'en'
+pair: 'attention-and-grokking-tiny-transformer'
 ---
 
 Two results changed machine learning, and they are different in kind.
@@ -85,14 +87,16 @@ At every position the model produces one score for each token in the vocabulary.
 
 **The loss is one number that says how wrong the model was.** It looks only at the probability the model gave to the correct answer:
 
-| Probability of the right answer | Loss |
-| ---: | ---: |
-| 1.00 | 0.0 |
-| 0.50 | 0.7 |
-| 0.10 | 2.3 |
-| 0.01 | 4.6 |
+| Probability | In words | Loss |
+| ---: | :--- | ---: |
+| 1.00 | certain, and right | 0.0 |
+| 0.50 | a coin flip | 0.7 |
+| 0.10 | one chance in ten | 2.3 |
+| 0.01 | one chance in a hundred | 4.6 |
 
-Confident and right costs nothing. Confident and wrong costs a lot. The loss never goes below zero. The name of this rule is **cross-entropy**, and it is the standard way to score a model that returns one probability per option.
+Read the table from the top to the bottom. When the model is sure and right, the loss is zero. When it is sure and wrong, the loss is large. The loss never goes below zero, so the only way to make it smaller is to give the correct answer a higher probability.
+
+The rule has a name: **cross-entropy**. It is the standard way to score a model that returns one probability per option, and it is the number that the training loop works to reduce.
 
 The engine computes the loss at the five positions of the document and takes the average. That average is the number in the figures and in the `loss` columns of the CSV.
 

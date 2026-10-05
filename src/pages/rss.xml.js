@@ -1,9 +1,11 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
-import { slugOf } from '../utils/site';
+import { inLanguage, slugOf } from '../utils/site';
 
 export async function GET(context) {
-  const posts = await getCollection('blog');
+  // The feed carries the default language. A translation is reached from the
+  // article page, so it does not need an entry of its own here.
+  const posts = inLanguage(await getCollection('blog'));
   const sorted = [...posts].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
   return rss({
     title: 'Juan Antonio Cano Salado — Blog',

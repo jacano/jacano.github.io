@@ -1,12 +1,20 @@
 ---
 import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { base, slugOf, readTime } from '../../utils/site';
+import { base, inLanguage, langLabel, langTag, readTime, slugOf, translations } from '../../utils/site';
 const allPosts = await getCollection('blog');
-const posts = [...allPosts].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
+// The list shows one language. English is the default; a translation is reached
+// from the article page, and the card marks which languages it has.
+const english = inLanguage(allPosts);
+const posts = [...english].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
 const currentPosts = posts.filter((post) => !post.data.tag.startsWith('Archive ·'));
 const archivedPosts = posts.filter((post) => post.data.tag.startsWith('Archive ·'));
 const tags = [...new Set(currentPosts.map((post) => post.data.tag))];
+const langTagsOf = (post: CollectionEntry<'blog'>) =>
+  translations(allPosts, post).map((other) => langTag(other.data.lang));
+const langNamesOf = (post: CollectionEntry<'blog'>) =>
+  translations(allPosts, post).map((other) => langLabel(other.data.lang));
 ---
 
 <Layout
@@ -68,6 +76,11 @@ const tags = [...new Set(currentPosts.map((post) => post.data.tag))];
               <span class="mono small muted">
                 {p.data.date} · {readTime(p.body)}
               </span>
+              {langTagsOf(p).length > 1 && (
+                <span class="lang-chip" title={`Available in ${langNamesOf(p).join(' and ')}`}>
+                  {langTagsOf(p).join(' · ')}
+                </span>
+              )}
             </div>
             <h2>{p.data.title}</h2>
             <p class="muted">{p.data.excerpt}</p>
@@ -99,6 +112,7 @@ const tags = [...new Set(currentPosts.map((post) => post.data.tag))];
                   <span class="mono small muted">
                     {p.data.date} · {readTime(p.body)}
                   </span>
+                  {langTagsOf(p).length > 1 && <span class="lang-chip">{langTagsOf(p).join(' · ')}</span>}
                 </div>
                 <h2>{p.data.title}</h2>
                 <p class="muted">{p.data.excerpt}</p>
@@ -209,6 +223,16 @@ const tags = [...new Set(currentPosts.map((post) => post.data.tag))];
       align-items: center;
       flex-wrap: wrap;
       margin-bottom: 8px;
+    }
+    .lang-chip {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      color: var(--muted);
+      font-family: var(--font-mono), monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
     }
     .badge {
       padding: 4px 10px;
