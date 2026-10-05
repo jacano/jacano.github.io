@@ -11,7 +11,7 @@ In 2017, *Attention is all you need* replaced recurrence with attention. The tra
 
 In 2022, a smaller and stranger result: **grokking**. A model trains on a small algorithmic task. Its accuracy on the training set reaches 100% in a few hundred steps. Its accuracy on data it has never seen stays at chance. Nothing changes for thousands of steps. Then, suddenly, the unseen accuracy jumps to the rule level. The model memorized first, and it learned the rule later.
 
-This article puts both results in one program. The program is a transformer of 56,640 parameters, written in 600 lines of Rust with no dependencies. It trains on one arithmetic task, and it shows the jump.
+This article puts both results in one program. The program is a transformer of 56,640 parameters. The engine is about 1,100 lines of Rust with no dependencies, and it trains on one arithmetic task. Then it shows the jump.
 
 ## The task: modular addition
 
@@ -194,5 +194,5 @@ The prompt is `[START, 12, +, 35, =]`. The model reads it and returns one probab
 
 The engine, the dataset, the figures and the raw run are in
 [github.com/jacano/grokking-rs](https://github.com/jacano/grokking-rs). The code is
-600 lines of Rust with no dependencies, and every figure of this article comes from
-the CSV of that run.
+about 1,100 lines of Rust with no dependencies, and every figure of this article
+comes from the CSV of that run.
