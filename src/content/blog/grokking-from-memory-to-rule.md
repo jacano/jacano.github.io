@@ -149,15 +149,41 @@ Each row of the CSV has six columns:
 | `test_acc` | exact match on the unseen pairs |
 | `param_norm` | size of every parameter, as one number |
 
-The repository carries a `Makefile`, so the same commands run on a laptop and on a runner:
+The repository carries a `Makefile`, so the same commands are one line each. `make help` lists them:
+
+| command | what it does |
+| --- | --- |
+| `make run` | the full run |
+| `make control` | the same run with the decay at zero, which never learns the rule |
+| `make run ARGS="--p 13 --steps 3000"` | another modulus, or another number of steps |
+
+## Ask the model a sum
+
+Training does not keep the model, so the first step is to write it to disk:
 
 ```bash
-make run                                  # the run above
-make control                              # the same run with the decay at zero
-make save                                 # train, then keep the model
-make explain PAIR=12+35                   # draw the 53 answers it considers
-make run ARGS="--p 13 --steps 3000"       # a smaller modulus learns faster
+dotnet run -c Release -- --save
 ```
+
+That leaves `model.pt` in the repository folder. `--infer` loads it and asks for one sum:
+
+```bash
+dotnet run -c Release -- --infer 12+35
+```
+
+```
+inference 12+35 = 47  [ok]  top: 47 (90%), 6 (5%), 17 (3%)
+```
+
+The model reads `[START, 12, +, 35, =]` and returns one probability for every answer it could give. The line prints the three highest. `12 + 35` is one of the pairs held back from training, so the 90% on `47` is the rule at work and not a stored answer.
+
+To see all 53 answers instead of three, add `--explain`:
+
+```bash
+dotnet run -c Release -- --explain 12+35
+```
+
+That writes them to `runs/probabilities.csv` and draws them in `figures/grokking-probabilities.svg`, which is the bar chart from the section above. Both steps are also `make save` and `make infer PAIR=12+35`.
 
 ## What I take from this
 
