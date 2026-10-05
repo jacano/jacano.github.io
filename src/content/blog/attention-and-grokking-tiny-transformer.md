@@ -9,7 +9,7 @@ Two results changed machine learning, and they are different in kind.
 
 In 2017, Vaswani and colleagues published [Attention Is All You Need](https://arxiv.org/abs/1706.03762). The paper proposed the transformer: a network built only from attention, with no recurrence and no convolutions. That architecture became the base of every large model that followed, and the result is about **structure**. It is a way to build a network that reads a sequence and mixes information across its positions.
 
-In 2022, Power and colleagues reported a smaller and stranger result in [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). They trained networks on small algorithmic datasets, and they watched a model fit every example it was given while it kept guessing on the examples it had not seen. The guessing lasted long past the point of overfitting. Then the model changed: from one measurement to the next, it started to answer the unseen examples correctly, and it kept answering them. That change is grokking. The model memorized first and it learned the rule later.
+In 2022, Power and colleagues reported a smaller and stranger result in [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177). They trained networks on small algorithmic datasets, and they watched a model fit every example it was given while it kept guessing on the examples it had not seen. The guessing lasted long past the point of overfitting, where the training examples are already perfect and new examples still fail. Then the model changed: from one measurement to the next, it started to answer the unseen examples correctly, and it kept answering them. That change is grokking. The model memorized first and it learned the rule later.
 
 This article puts both results in one program. The program is a transformer of 56,640 parameters. The engine is about 1,100 lines of Rust with no dependencies, and it trains on one arithmetic task. Then it shows the jump.
 
@@ -57,7 +57,7 @@ The document is one sequence, exactly like a sentence in a language model. The m
 
 ## The transformer
 
-The model is the one from [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95) by Andrej Karpathy, with the same simplifications: RMSNorm instead of LayerNorm, no biases, and ReLU instead of GeLU. One layer, 64 dimensions, 8 heads.
+The model is the one from [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95) by Andrej Karpathy, with the same simplifications. It rescales every vector before it uses it, so the numbers stay in a stable range (RMSNorm). It turns negative numbers into zero (ReLU). One layer, 64 dimensions, and 8 heads, which means attention runs eight times in parallel on eight slices of the vector.
 
 For each position the model builds a vector. The layer does two things with it.
 
@@ -69,13 +69,34 @@ for t in 0..nkeys {
     let d = dot(q, k[t]);              // how much this key matches the query
     scores[t] = d / (head_dim as f64).sqrt();
 }
-let w = softmax(scores);               // weights over the past
+let w = softmax(scores);               // turns the scores into weights that add up to 1
 let out = w * v;                       // a weighted sum of the values
 ```
 
-The model builds a key and a value for every position it has already read, and it keeps them in a cache. Causal masking is free here: position `t` only ever sees positions `0..=t`, because the cache grows one token at a time.
+The model builds a key and a value for every position it has already read, and it keeps them in a cache. The model can only look backwards: position `t` sees positions `0` to `t`, because the cache grows one token at a time.
 
-**The MLP does the thinking at one position.** It projects the vector to four times its width, applies ReLU and projects it back. Attention moves information between positions. The MLP transforms information inside one position. Residual connections wrap both parts, so the signal has a straight path through the layer.
+**The MLP does the thinking at one position.** It projects the vector to four times its width, turns negative numbers into zero, and projects it back. Attention moves information between positions. The MLP transforms information inside one position. Both parts add their result back to their input, so the signal has a straight path through the layer.
+
+## How the model learns
+
+At every position the model produces one score for each token in the vocabulary. For this task that is 56 scores: one per candidate for the next token. A high score means "I expect this one next".
+
+**The loss is one number that says how wrong the model was.** It looks only at the probability the model gave to the correct answer:
+
+| Probability of the right answer | Loss |
+| ---: | ---: |
+| 1.00 | 0.0 |
+| 0.50 | 0.7 |
+| 0.10 | 2.3 |
+| 0.01 | 4.6 |
+
+Confident and right costs nothing. Confident and wrong costs a lot. The loss never goes below zero. The name of this rule is **cross-entropy**, and it is the standard way to score a model that returns one probability per option.
+
+The engine computes the loss at the five positions of the document and takes the average. That average is the number in the figures and in the `loss` columns of the CSV.
+
+**Learning means changing the parameters to make the loss smaller.** The 56,640 parameters are the numbers the model learns. For each parameter, the engine works out how much it moves the loss and in which direction. That number is the **gradient**. Then the engine moves every parameter a little against its gradient. One set of moves is one **training step**. The engine uses a standard rule called Adam to choose the size of each move.
+
+**Weight decay is a second and smaller force.** At every step the engine also pulls every parameter a little towards zero. Two things follow from that. First, no parameter can grow without limit. Second, and this is the part that matters here, the cheapest answer wins. A model can fit the training pairs by storing them one at a time, and that needs large parameters. A model that learns the rule needs less. Weight decay makes the second option cheaper as the steps go by, and that is what produces the jump in the next section.
 
 ## The engine
 
@@ -126,13 +147,13 @@ Two more numbers explain what the model does during that flat part.
 
 ![Cross-entropy loss against the training step, on a log scale. The train loss reaches its floor by step 600 while the test loss stays flat at 2.0 until step 4000, then falls to 0.2.](/blog/grokking-loss.svg)
 
-The train loss falls fast and reaches its floor. The test loss does not move for thousands of steps. A model that only memorized would keep that shape forever. Here the test loss starts to fall, and the fall is the rule arriving.
+The train loss falls fast and reaches its floor. The test loss does not move for thousands of steps. A model that only memorized would keep that shape forever. Here the test loss starts to fall, and the fall is the rule arriving. The vertical axis is on a log scale, so the fall from 2.0 to 0.2 is a factor of ten.
 
-![Two curves against the training step, each on its own axis. On the left axis the L2 norm of the parameters rises from 19.2 to 21.9 while the model memorizes, then falls to 15.3. On the right axis the accuracy on unseen pairs stays near 1% until step 4000 and then rises to 94%.](/blog/grokking-norm.svg)
+![Two curves against the training step, each on its own axis. On the left axis the size of the parameters rises from 19.2 to 21.9 while the model memorizes, then falls to 15.3. On the right axis the accuracy on unseen pairs stays near 1% until step 4000 and then rises to 94%.](/blog/grokking-norm.svg)
 
-This figure has **two axes**, one per curve. The blue line uses the left axis: the L2 norm of the parameters, from 19 to 22. The red line uses the right axis: the accuracy on pairs the model has never seen, from 0% to 100%.
+This figure has **two axes**, one per curve. The blue line uses the left axis: the size of the parameters, from 19 to 22. That is one number for the whole model, and it grows when any parameter grows. The red line uses the right axis: the accuracy on pairs the model has never seen, from 0% to 100%.
 
-The blue line rises first. The model stores 843 separate answers, and a lookup table needs large weights. Then the blue line falls: weight decay pays for the weights at every step, so the table becomes the expensive option. The red line follows. The small structured solution that implements addition needs less weight, and once it is cheaper than the table, the accuracy on unseen pairs jumps.
+The blue line rises first. The model stores 843 separate answers, and a lookup table needs large parameters. Then the blue line falls: weight decay pulls the parameters down at every step, so the table becomes the expensive option. The red line follows. The small structured answer that adds numbers modulo 53 needs less, and once it is cheaper than the table, the accuracy on unseen pairs jumps.
 
 The three curves together show the whole mechanism: train accuracy, unseen accuracy and the parameter norm.
 
@@ -157,7 +178,7 @@ Each row of the CSV has six columns, so you can follow the process from any tool
 | `train_acc` | exact match on those train pairs |
 | `test_loss` | mean cross-entropy over all 1,966 unseen pairs |
 | `test_acc` | exact match on the unseen pairs |
-| `param_norm` | L2 norm of every parameter |
+| `param_norm` | size of every parameter, as one number for the whole model |
 
 To watch the learning while it happens:
 
