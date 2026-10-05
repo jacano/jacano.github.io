@@ -2,7 +2,7 @@
 title: 'Attention and grokking: a tiny transformer that learns the rule'
 date: '2026-10-05'
 tag: 'Machine Learning'
-excerpt: 'A small transformer learns modular addition. It memorizes the training pairs in 500 steps, waits thousands of steps, and then answers pairs it never saw. The article builds the transformer and the 600-line Rust engine that shows the jump.'
+excerpt: 'A small transformer learns modular addition. It memorizes the training pairs in 600 steps, waits 4,000 steps more, and then answers pairs it never saw. The article builds the transformer and the Rust engine that shows the jump.'
 ---
 
 Two results changed machine learning, and they are different in kind.
@@ -18,8 +18,8 @@ This article puts both results in one program. The program is a transformer of 5
 The model reads a sum and must return the result modulo `p`.
 
 ```
-12 + 35 =      →      47        (p = 53, and 12 + 35 = 47 < 53)
-40 + 30 =      →      17        (70 mod 53 = 17)
+12 + 35 =    →    47        (p = 53)
+40 + 30 =    →    17        (70 mod 53)
 ```
 
 That rule is the whole task. A model can answer it in two ways:
@@ -43,20 +43,16 @@ The dataset contains every pair, so the task has a known answer for all of them.
 
 The vocabulary is small: the 53 numbers, plus `+`, `=` and a start token. Each number is **one token**, so the model sees the operands as whole units.
 
-The document is one sequence, exactly like a sentence in a language model:
+The document is one sequence, exactly like a sentence in a language model. The model predicts every next token, and only the last prediction is the task:
 
-```
-[START]   12   +   35   =   [47]
-   ↑      ↑    ↑   ↑    ↑    ↑
-   |      |    |   |    |    └── the model must predict this token, the answer
-   |      |    |   |    └─────── the input here is "="
-   |      |    |   └──────────── the second operand
-   |      |    └──────────────── the operator
-   |      └───────────────────── the first operand
-   └──────────────────────────── start of document
-```
-
-The model predicts every next token in the sequence, the way a language model does. Only the last prediction is the task. The other four positions predict the prompt itself.
+| Position | Token | Role |
+| ---: | :---: | --- |
+| 1 | `[START]` | start of the document |
+| 2 | `12` | first operand |
+| 3 | `+` | the operator |
+| 4 | `35` | second operand |
+| 5 | `=` | the input at the answer position |
+| 6 | `47` | **the target**: the model must predict this token |
 
 ## The transformer
 
@@ -118,11 +114,13 @@ Two more numbers explain what the model does during that flat part.
 
 The train loss falls fast and reaches its floor. The test loss does not move for thousands of steps. A model that only memorized would keep that shape forever. Here the test loss starts to fall, and the fall is the rule arriving.
 
-![The L2 norm of all parameters against the training step, with the unseen accuracy over the same axis. The norm rises from 19.2 to 21.9 while the model memorizes, then falls to 15.3 as the unseen accuracy rises from 1% to 94%.](/blog/grokking-norm.svg)
+![Two curves against the training step, each on its own axis. On the left axis the L2 norm of the parameters rises from 19.2 to 21.9 while the model memorizes, then falls to 15.3. On the right axis the accuracy on unseen pairs stays near 1% until step 4000 and then rises to 94%.](/blog/grokking-norm.svg)
 
-The parameter norm rises from **19.2 to 21.9** while the model memorizes, and then falls to **15.3**. The memorizing solution stores 843 separate answers, and a lookup table needs large weights. The small structured solution that implements addition needs less. Weight decay pays for the weights at every step, so the table becomes the expensive option. The jump is the moment the rule becomes cheaper than the table.
+This figure has **two axes**, one per curve. The blue line uses the left axis: the L2 norm of the parameters, from 19 to 22. The red line uses the right axis: the accuracy on pairs the model has never seen, from 0% to 100%.
 
-This is the mechanism that the grokking papers describe, and it is visible in three curves: train accuracy, test accuracy and the parameter norm.
+The blue line rises first. The model stores 843 separate answers, and a lookup table needs large weights. Then the blue line falls: weight decay pays for the weights at every step, so the table becomes the expensive option. The red line follows. The small structured solution that implements addition needs less weight, and once it is cheaper than the table, the accuracy on unseen pairs jumps.
+
+The three curves together show the whole mechanism: train accuracy, unseen accuracy and the parameter norm.
 
 ## Reproduce it
 

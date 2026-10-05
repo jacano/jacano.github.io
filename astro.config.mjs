@@ -35,7 +35,10 @@ export default defineConfig({
   markdown: {
     shikiConfig: {
       theme: 'github-dark',
-      wrap: true,
+      // Do not wrap code lines. A wrapped line breaks in the middle of a token,
+      // and a shell command that wraps reads as two commands on a phone. The
+      // block scrolls sideways instead.
+      wrap: false,
     },
     processor: satteri({
       hastPlugins: [figureSize({ publicDir: 'public' })],
