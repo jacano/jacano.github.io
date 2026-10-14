@@ -5,16 +5,15 @@ tag: 'AI Tooling'
 excerpt: 'A step-by-step install of the DeepSeek Harness desktop app with one Command Code key: where the key goes, what the one configuration file holds, and the traps I hit on the way.'
 ---
 
-I tried **DeepSeek Harness** (DSH) four ways: the web build on Node, the official DeepSeek API, OpenCode Go, and the desktop app on Command Code. This post is the one I kept, written as the install I wish I had read first.
+I tried **DeepSeek Harness** (DSH) a few ways: the official DeepSeek API, OpenCode Go, and the desktop app on Command Code. This post is the one I kept, written as the install I wish I had read first.
 
 ![The desktop app reads two files in its home folder: cordis.patch.yml at boot for the route, the six models and the default model, and .credentials.yaml on every request for the key. Both feed one HTTPS route to api.commandcode.ai/provider/v1.](/blog/dsh-desktop-command-code.svg)
 
-The short version: install the desktop app, paste one Command Code key, drop one file in `~/.dsh`, and restart. The desktop build carries its own runtime, so no Node, no terminal, and no environment variables.
+The short version: install the desktop app, paste one Command Code key, drop one file in `~/.dsh`, and restart.
 
 ## Why this combination
 
-- **One install.** The desktop build ships its own runtime. The web build needs Node 22 or newer and a terminal.
-- **One key in a store.** The key lives in `~/.dsh/.credentials.yaml`, not in the environment of every process on the machine.
+- **One key.** It lives in `~/.dsh/.credentials.yaml`, and DSH resolves it on every request.
 - **The models I want.** Command Code serves `deepseek/deepseek-v4.1-flash` and five more models from one key.
 - **The measurement.** DSH shows tokens per second in the UI, so a slow session is a number and not a feeling.
 
@@ -51,7 +50,7 @@ Two details decide whether this works:
 
 ## 3. Write the configuration file
 
-Every profile of DSH reads `~/.dsh/cordis.patch.yml`, and that home layer outranks a profile's own layer. So one file configures the desktop app, `dsh web` and the headless runs.
+Every profile of DSH reads `~/.dsh/cordis.patch.yml`, and that home layer outranks a profile's own layer, so the same file configures all of them.
 
 The whole file is in [github.com/jacano/dsh-config](https://github.com/jacano/dsh-config). The parts that matter for this install:
 
@@ -120,7 +119,7 @@ One consequence is worth knowing: `web_search` stays in the tool list of a sessi
 
 ## Wrap up
 
-One installer, one key in a store, one YAML file. The web and headless fronts read the same two files, so a change lands in all three.
+One installer, one key, one YAML file.
 
 - DeepSeek Harness: [github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)
 - My configuration: [github.com/jacano/dsh-config](https://github.com/jacano/dsh-config)
