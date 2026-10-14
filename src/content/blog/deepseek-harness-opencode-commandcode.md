@@ -1,152 +1,128 @@
 ---
-title: 'DeepSeek Harness with Command Code and OpenCode Go'
-date: '2026-09-19'
+title: 'Install DeepSeek Harness desktop with Command Code'
+date: '2026-10-15'
 tag: 'AI Tooling'
-excerpt: 'How I connected Command Code and OpenCode Go to DeepSeek Harness, and why the built-in tokens-per-second readout is useful when an agent makes many calls.'
+excerpt: 'A step-by-step install of the DeepSeek Harness desktop app with one Command Code key: where the key goes, what the one configuration file holds, and the traps I hit on the way.'
 ---
 
-I installed **DeepSeek Harness** (DSH) because its web UI shows **tokens per second** without extra setup. After using it for a while, I wrote down what mattered and how I connected my two providers.
+I tried **DeepSeek Harness** (DSH) four ways: the web build on Node, the official DeepSeek API, OpenCode Go, and the desktop app on Command Code. This post is the one I kept, written as the install I wish I had read first.
 
-Agent work consists of many calls in a row, so speed changes how the session feels. A model writing 15 tokens per second feels broken; one writing 80 feels fast. Most harnesses hide that number. DSH puts it in the UI.
+![The desktop app reads two files in its home folder, cordis.patch.yml at boot for the route and the models, and .credentials.yaml on every request for the key, and both feed one HTTPS route to api.commandcode.ai/provider/v1. An environment variable of the same name outranks the file, so the store is never read.](/blog/dsh-desktop-command-code.svg)
 
-DSH is a **harness**, not a model. It does not bring an account or a key. I connect my own subscriptions and keep the keys under my control.
+The short version: install the desktop app, paste one Command Code key, drop one file in `~/.dsh`, and restart. The desktop build carries its own runtime, so no Node, no terminal, and no environment variables.
 
-I first noticed the speed readout in [a post on X by @Ubendev](https://x.com/Ubendev/status/2100920587577446416), then installed DSH to try it.
+## Why this combination
 
-![DeepSeek Harness session statistics: LLM time, tool time, time to first token, and tokens per second](/blog/deepseek-harness-session-stats.png)
+- **One install.** The desktop build ships its own runtime. The web build needs Node 22 or newer and a terminal.
+- **One key in a store.** The key lives in `~/.dsh/.credentials.yaml`, not in the environment of every process on the machine.
+- **The models I want.** Command Code serves `deepseek/deepseek-v4.1-flash` and five more models from one key.
+- **The measurement.** DSH shows tokens per second in the UI, so a slow session is a number and not a feeling.
 
 ## What you need
 
-- **Node.js** 22 or newer. I run Node 24.
-- A terminal on macOS, Linux or Windows.
-- **One model provider.** Here the providers are a **Command Code** account and an **OpenCode Go** subscription. You do not need both. One is enough to start.
+- A Command Code account and its API key: [commandcode.ai](https://commandcode.ai).
+- Windows x64, macOS Apple Silicon, or macOS Intel.
+- Ten minutes.
 
-DSH calls the program that runs the agent loop a **harness**, and the brain behind it a **model**. The model plugin speaks the OpenAI-compatible wire, so other providers work too. A free endpoint or a local server, such as Ollama, is enough.
+## 1. Install the desktop app
 
-## Install DeepSeek Harness
+| Platform | Build |
+| --- | --- |
+| Windows x64 | [deepseek-harness-0.2.0-rc.2-win-x64.exe](https://download.deepseek.com/dsh-desk/bin/win-x64/deepseek-harness-0.2.0-rc.2-win-x64.exe) |
+| macOS Apple Silicon | [deepseek-harness-0.2.0-rc.2-mac-arm64.zip](https://download.deepseek.com/dsh-desk/bin/mac-arm64/deepseek-harness-0.2.0-rc.2-mac-arm64.zip) |
+| macOS Intel | [deepseek-harness-0.2.0-rc.2-mac-x64.zip](https://download.deepseek.com/dsh-desk/bin/mac-x64/deepseek-harness-0.2.0-rc.2-mac-x64.zip) |
 
-Try it without a permanent install:
+The app then checks its own update feed, so later builds arrive on their own.
 
-```bash
-npx @deepseek-ai/dsh web
-```
+## 2. Put the key in the credentials store
 
-For a permanent install:
-
-```bash
-npm install -g @deepseek-ai/dsh
-dsh web
-```
-
-The web UI listens on `127.0.0.1` and prints a link with a token.
-
-## How DSH finds a model
-
-DSH uses **plugins**. Each plugin owns a section of the settings file, and the section name is the plugin ID.
-
-The part that talks to models is the plugin `@deepseek-ai/dsh-llm-pi-ai`. Its settings section is `llm-pi-ai`. It speaks the **OpenAI-compatible** wire and the **Anthropic-compatible** wire.
-
-So every provider goes under one key:
+Open **Settings → Models → Command Code** and paste the key. DSH writes it to `~/.dsh/.credentials.yaml`:
 
 ```yaml
-llm-pi-ai:
-  providers:
-    <provider-id>:
-      ...
+version: 1
+refs:
+  COMMANDCODE_API_KEY: "your-command-code-key"
 ```
 
-The default model lives in its own section, `agent-default-model`.
+Three details decide whether this works:
 
-## Set the keys
+- The store is read **on every request**, so the key works at once. There is nothing to restart.
+- On macOS and Linux, run `chmod 600 ~/.dsh/.credentials.yaml`. DSH refuses a credentials document that other users can read.
+- **Do not export `COMMANDCODE_API_KEY`.** A variable with that name outranks the file, and then the store is never read. The order is: inherited environment, then the credentials file, then a project `.env`, then `~/.dsh/.env`.
 
-The settings file does not contain secrets. It names the environment variables that contain the keys:
+## 3. Write the configuration file
 
-```bash
-export OPENCODE_API_KEY="your-open-code-go-key"
-export COMMANDCODE_API_KEY="your-command-code-key"
-```
+Every profile of DSH reads `~/.dsh/cordis.patch.yml`, and that home layer outranks a profile's own layer. So one file configures the desktop app, `dsh web` and the headless runs.
 
-Define only the variables of the providers you add. Open a new terminal after this step.
-
-## Step 1: add Command Code
-
-Command Code has its own OpenAI-compatible endpoint: `https://api.commandcode.ai/provider/v1`. The model id is `deepseek/deepseek-v4.1-flash`. The route reads its key from `COMMANDCODE_API_KEY`.
-
-## Step 2: add OpenCode Go
-
-OpenCode Go is an OpenAI-compatible gateway at `https://opencode.ai/zen/go/v1`. It accepts the model `deepseek-v4.1-flash`. It needs one stable session header, `x-opencode-session`. The route reads its key from `OPENCODE_API_KEY`.
-
-## The final settings
-
-Here is the whole `~/.dsh/settings.yaml`:
+The whole file is in [github.com/jacano/dsh-config](https://github.com/jacano/dsh-config). The parts that matter for this install:
 
 ```yaml
-ui-onboarding:
-  welcomeNoticeVersion: 2026-08-13.1
-permission:
-  defaultPreset: danger-full-access
-ui-theme:
-  preference: dark
-agent-default-model:
-  provider: command-code
-  model: deepseek/deepseek-v4.1-flash
-llm-pi-ai:
-  providers:
-    command-code:
-      displayName: Command Code
-      api: openai-completions
-      baseURL: https://api.commandcode.ai/provider/v1
-      apiKeyEnv: COMMANDCODE_API_KEY
-      defaultContextWindow: 1000000
-      defaultMaxTokens: 32768
-      models:
-        - id: deepseek/deepseek-v4.1-flash
-          name: DeepSeek V4.1 Flash (Command Code)
-          contextWindow: 1000000
-          maxTokens: 32768
-    opencode-go:
-      displayName: OpenCode Go
-      api: openai-completions
-      baseURL: https://opencode.ai/zen/go/v1
-      apiKeyEnv: OPENCODE_API_KEY
-      headers:
-        x-opencode-session: ses_dsh_8f2a1c4e7b6d4a90
-      defaultContextWindow: 1048576
-      defaultMaxTokens: 32768
-      models:
-        - id: deepseek-v4.1-flash
-          name: DeepSeek V4.1 Flash
-          contextWindow: 1048576
-          maxTokens: 32768
+- id: agent-default-model
+  name: "@deepseek-ai/dsh-agent-default-model"
+  config:
+    provider: command-code
+    model: deepseek/deepseek-v4.1-flash
+- id: llm-pi-ai
+  name: "@deepseek-ai/dsh-llm-pi-ai"
+  config:
+    providers:
+      command-code:
+        displayName: Command Code (openai-completions)
+        api: openai-completions
+        baseURL: https://api.commandcode.ai/provider/v1
+        apiKeyEnv: COMMANDCODE_API_KEY
+        defaultContextWindow: 1000000
+        defaultInput: [text, image]
+        models:
+          - id: deepseek/deepseek-v4.1-flash
+            name: DeepSeek V4.1 Flash (Command Code, openai-completions)
+            contextWindow: 1000000
+            maxTokens: 32768
+            reasoningEfforts:
+              low: low
+              medium: medium
+              high: high
+              xhigh: xhigh
+              max: max
 ```
 
-Start `dsh web` again. The model menu shows **Command Code** and **OpenCode Go** as separate groups, and I can choose a model for each session. The `agent-default-model` block sets it for a new session. To make Command Code the default, change two lines:
+Restart the app after you write the file. DSH reads the patch layer at boot and never watches it.
 
-```yaml
-agent-default-model:
-  provider: command-code
-  model: deepseek/deepseek-v4.1-flash
-```
+## 4. Choose a model
 
-## The context window
+The menu shows one group, **Command Code**, with six models:
 
-The two routes show 1,000,000 for Command Code and 1,048,576 for OpenCode Go, because each API reports its own number:
+| Model | Id on the wire | Context |
+| --- | --- | ---: |
+| DeepSeek V4.1 Flash | `deepseek/deepseek-v4.1-flash` | 1,000,000 |
+| DeepSeek V4.1 Flash Fast | `deepseek/deepseek-v4.1-flash-fast` | 1,000,000 |
+| GLM-5.3 Flash | `z-ai/glm-5.3-flash` | 1,048,576 |
+| GLM-5.3 FlashX | `z-ai/glm-5.3-flashx` | 1,000,000 |
+| Muse Spark 1.3 Contributor | `meta/muse-spark-1.3-contributor` | 1,048,576 |
+| MiMo V2.6 Flash | `xiaomi/mimo-v2.6-flash` | 1,048,576 |
 
-- Command Code returns `context_length: 1000000`.
-- OpenCode Go does not publish it, so I use 1,048,576, the binary 1M that DeepSeek uses.
+`agent-default-model` picks the one a new session starts with. I use `deepseek/deepseek-v4.1-flash` and I set no effort level, so the model answers at its own default.
 
-The number is metadata for history compaction and display. The server enforces the actual limit.
+Each model offers an **Effort** submenu with five levels: `low`, `medium`, `high`, `xhigh` and `max`. Command Code answers HTTP 400 to `minimal` and `none`, and every model thinks by default, so the file declares no `off` level. The submenu comes from the `reasoningEfforts` block of each entry, which is also why the Settings → Models form leaves that field alone: it is a per-model capability.
 
-## Before DSH
+All six models read images. The route declares `defaultInput: [text, image]` once, and a text-only model added later must opt out with `input: [text]`.
 
-Before DSH I used two native desktop apps: [Command Code Desktop](https://github.com/CommandCodeAI/desktop) and [OpenCode Desktop](https://opencode.ai/download). Both talk to the same subscriptions and keep the same keys. Neither showed tokens per second. When a model felt slow, I blamed the network.
+## What I turned off
 
-DSH adds that measurement, so a slow session becomes a fact rather than a feeling.
+The official DeepSeek provider is off in that file, route by route: the API-key chat route, the account chat route, the search provider, and the request-field registry. No `deepseek-official` route appears in the menu, no card appears in Settings → Models, and no `DEEPSEEK_API_KEY` is stored. I keep the Key in one place, in one provider, and it is not DeepSeek's.
+
+One consequence is worth knowing: `web_search` stays in the tool list of a session, because an agent preset composes the web tools and a preset takes no patch, but every call fails with `WEB_PROVIDER_UNAVAILABLE`. I do not use it, so I left it that way.
+
+## Three traps
+
+- **A patch that names a plugin which does not sit on that row is skipped, and only a warning says so.** Bundles repurpose ids between releases: on the desktop `llm-deepseek` mounts `dsh-llm-deepseek-api-key`, while the npm install mounts `dsh-llm-deepseek`. Rows whose plugin moved carry no `name` and match by `id`.
+- **The Settings forms write below the home layer**, so a preference pinned in this file shadows the form. That is why the file sets no theme and no work-details mode: they belong to Settings.
+- **The file is read at boot.** Edit it, then restart the app.
 
 ## Wrap up
 
-DSH is local and plugin-based. It keeps my subscriptions, the settings are one YAML file, and a new provider is a small block:
+One installer, one key in a store, one YAML file. The web and headless fronts read the same two files, so a change lands in all three.
 
-- DeepSeek Harness: [github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness).
-- Command Code: [commandcode.ai](https://commandcode.ai).
-- OpenCode Go: [opencode.ai/docs/go](https://opencode.ai/docs/go/).
+- DeepSeek Harness: [github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)
+- My configuration: [github.com/jacano/dsh-config](https://github.com/jacano/dsh-config)
+- Command Code: [commandcode.ai](https://commandcode.ai)
