@@ -21,7 +21,6 @@ The short version: install the desktop app, paste one Command Code key, drop one
 
 - A Command Code account and its API key: [commandcode.ai](https://commandcode.ai). I run the **GOAT** plan.
 - Windows x64, macOS Apple Silicon, or macOS Intel.
-- Ten minutes.
 
 ## 1. Install the desktop app
 
