@@ -7,7 +7,7 @@ excerpt: 'A step-by-step install of the DeepSeek Harness desktop app with one Co
 
 I tried **DeepSeek Harness** (DSH) four ways: the web build on Node, the official DeepSeek API, OpenCode Go, and the desktop app on Command Code. This post is the one I kept, written as the install I wish I had read first.
 
-![The desktop app reads two files in its home folder, cordis.patch.yml at boot for the route and the models, and .credentials.yaml on every request for the key, and both feed one HTTPS route to api.commandcode.ai/provider/v1. An environment variable of the same name outranks the file, so the store is never read.](/blog/dsh-desktop-command-code.svg)
+![The desktop app reads two files in its home folder: cordis.patch.yml at boot for the route, the six models and the default model, and .credentials.yaml on every request for the key. Both feed one HTTPS route to api.commandcode.ai/provider/v1.](/blog/dsh-desktop-command-code.svg)
 
 The short version: install the desktop app, paste one Command Code key, drop one file in `~/.dsh`, and restart. The desktop build carries its own runtime, so no Node, no terminal, and no environment variables.
 
@@ -44,11 +44,10 @@ refs:
   COMMANDCODE_API_KEY: "your-command-code-key"
 ```
 
-Three details decide whether this works:
+Two details decide whether this works:
 
 - The store is read **on every request**, so the key works at once. There is nothing to restart.
 - On macOS and Linux, run `chmod 600 ~/.dsh/.credentials.yaml`. DSH refuses a credentials document that other users can read.
-- **Do not export `COMMANDCODE_API_KEY`.** A variable with that name outranks the file, and then the store is never read. The order is: inherited environment, then the credentials file, then a project `.env`, then `~/.dsh/.env`.
 
 ## 3. Write the configuration file
 
