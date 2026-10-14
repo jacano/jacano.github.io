@@ -7,14 +7,14 @@ excerpt: 'A step-by-step install of the DeepSeek Harness desktop app with one Co
 
 I tried **DeepSeek Harness** (DSH) a few ways: the official DeepSeek API, OpenCode Go, and the desktop app on Command Code. This post is the one I kept, written as the install I wish I had read first.
 
-![The desktop app reads two files in its home folder: cordis.patch.yml at boot for the route, the six models and the default model, and .credentials.yaml on every request for the key. Both feed one HTTPS route to api.commandcode.ai/provider/v1.](/blog/dsh-desktop-command-code.svg)
+![The desktop app reads two files in its home folder: cordis.patch.yml at boot for the route, the five models and the default model, and .credentials.yaml on every request for the key. Both feed one HTTPS route to api.commandcode.ai/provider/v1.](/blog/dsh-desktop-command-code.svg)
 
 The short version: install the desktop app, paste one Command Code key, drop one file in `~/.dsh`, and restart.
 
 ## Why this combination
 
 - **One key.** It lives in `~/.dsh/.credentials.yaml`, and DSH resolves it on every request.
-- **The models I want.** Command Code serves `deepseek/deepseek-v4.1-flash` and five more models from one key.
+- **The models I want.** Command Code serves `deepseek/deepseek-v4.1-flash` and four more models from one key.
 - **The measurement.** DSH shows tokens per second in the UI, so a slow session is a number and not a feeling.
 
 ## What you need
@@ -87,7 +87,7 @@ Restart the app after you write the file. DSH reads the patch layer at boot and 
 
 ## 4. Choose a model
 
-The menu shows one group, **Command Code**, with six models:
+The menu shows one group, **Command Code**, with five models:
 
 | Model | Id on the wire | Context |
 | --- | --- | ---: |
@@ -96,13 +96,12 @@ The menu shows one group, **Command Code**, with six models:
 | GLM-5.3 Flash | `z-ai/glm-5.3-flash` | 1,048,576 |
 | GLM-5.3 FlashX | `z-ai/glm-5.3-flashx` | 1,000,000 |
 | Muse Spark 1.3 Contributor | `meta/muse-spark-1.3-contributor` | 1,048,576 |
-| MiMo V2.6 Flash | `xiaomi/mimo-v2.6-flash` | 1,048,576 |
 
 `agent-default-model` picks the one a new session starts with. I use `deepseek/deepseek-v4.1-flash` and I set no effort level, so the model answers at its own default.
 
 Each model offers an **Effort** submenu with five levels: `low`, `medium`, `high`, `xhigh` and `max`. Command Code answers HTTP 400 to `minimal` and `none`, and every model thinks by default, so the file declares no `off` level. The submenu comes from the `reasoningEfforts` block of each entry, which is also why the Settings → Models form leaves that field alone: it is a per-model capability.
 
-All six models read images. The route declares `defaultInput: [text, image]` once, and a text-only model added later must opt out with `input: [text]`.
+All five models read images. The route declares `defaultInput: [text, image]` once, and a text-only model added later must opt out with `input: [text]`.
 
 ## What I turned off
 

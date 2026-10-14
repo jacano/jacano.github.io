@@ -1,6 +1,6 @@
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 420" role="img" aria-labelledby="title desc">
     <title id="title">One key, two files, one route</title>
-    <desc id="desc">The desktop app reads two files in its home folder. It reads cordis.patch.yml once at boot: that file holds the Command Code route, the six models and the default model. It reads .credentials.yaml on every request: that file holds COMMANDCODE_API_KEY. Both feed one HTTPS route to api.commandcode.ai/provider/v1.</desc>
+    <desc id="desc">The desktop app reads two files in its home folder. It reads cordis.patch.yml once at boot: that file holds the Command Code route, the five models and the default model. It reads .credentials.yaml on every request: that file holds COMMANDCODE_API_KEY. Both feed one HTTPS route to api.commandcode.ai/provider/v1.</desc>
     <defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".7"/></pattern></defs>
     <rect width="1100" height="420" fill="#020617"/>
     <rect width="1100" height="420" fill="url(#grid)"/>
@@ -15,7 +15,7 @@
 
     <rect x="390" y="104" width="380" height="86" rx="14" fill="#0f172a" fill-opacity=".75" stroke="#a78bfa" stroke-opacity=".45"/>
     <text x="414" y="136" fill="#a78bfa" font-family="ui-monospace,Menlo,monospace" font-size="14" font-weight="700">cordis.patch.yml</text>
-    <text x="414" y="160" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="13">the route, six models, the default</text>
+    <text x="414" y="160" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="13">the route, five models, the default</text>
     <text x="414" y="180" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">read at boot</text>
 
     <rect x="390" y="208" width="380" height="86" rx="14" fill="#0f172a" fill-opacity=".75" stroke="#34d399" stroke-opacity=".45"/>
