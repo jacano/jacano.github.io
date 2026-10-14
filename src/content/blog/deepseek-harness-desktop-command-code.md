@@ -19,7 +19,7 @@ The short version: install the desktop app, paste one Command Code key, drop one
 
 ## What you need
 
-- A Command Code account and its API key: [commandcode.ai](https://commandcode.ai).
+- A Command Code account and its API key: [commandcode.ai](https://commandcode.ai). I run the **GOAT** plan.
 - Windows x64, macOS Apple Silicon, or macOS Intel.
 - Ten minutes.
 
@@ -107,7 +107,7 @@ All six models read images. The route declares `defaultInput: [text, image]` onc
 
 ## What I turned off
 
-The official DeepSeek provider is off in that file, route by route: the API-key chat route, the account chat route, the search provider, and the request-field registry. No `deepseek-official` route appears in the menu, no card appears in Settings → Models, and no `DEEPSEEK_API_KEY` is stored. I keep the Key in one place, in one provider, and it is not DeepSeek's.
+The official DeepSeek provider is off in that file, route by route: the API-key chat route, the account chat route, the search provider, and the request-field registry. No `deepseek-official` route appears in the menu, no card appears in Settings → Models, and no `DEEPSEEK_API_KEY` is stored. I keep the key in one place, in one provider, and it is not DeepSeek's.
 
 One consequence is worth knowing: `web_search` stays in the tool list of a session, because an agent preset composes the web tools and a preset takes no patch, but every call fails with `WEB_PROVIDER_UNAVAILABLE`. I do not use it, so I left it that way.
 
@@ -123,4 +123,4 @@ One installer, one key, one YAML file.
 
 - DeepSeek Harness: [github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)
 - My configuration: [github.com/jacano/dsh-config](https://github.com/jacano/dsh-config)
-- Command Code: [commandcode.ai](https://commandcode.ai)
+- Command Code, the **GOAT** plan: [commandcode.ai/docs/plans/goat](https://commandcode.ai/docs/plans/goat)
