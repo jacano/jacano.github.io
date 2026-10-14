@@ -124,6 +124,6 @@ The tool is small on purpose: one Python file, `curl`, no dependency, and one di
 - Command Code GOAT plan: [commandcode.ai/docs/plans/goat](https://commandcode.ai/docs/plans/goat)
 - OpenCode Go: [opencode.ai/docs/go](https://opencode.ai/docs/go/)
 - Every Command Code plan, with the prices: [commandcode.ai/pricing](https://commandcode.ai/pricing)
-- The same two subscriptions in DeepSeek Harness: [DeepSeek Harness with Command Code and OpenCode Go](/blog/deepseek-harness-opencode-commandcode/)
+- The same two subscriptions in DeepSeek Harness: [Install DeepSeek Harness desktop with Command Code](/blog/deepseek-harness-desktop-command-code/)
 
 Run the benchmark on your own machine and compare your table with mine. Your distance to a gateway is not mine, so a number you measure yourself beats a table you read.
