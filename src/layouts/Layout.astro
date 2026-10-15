@@ -1,6 +1,10 @@
 ---
 import { Font } from 'astro:assets';
-import { base } from '../utils/site';
+import { base, experienceYears } from '../utils/site';
+import cv from '../data/cv.json';
+
+/** Derived from the CV timeline, so the meta description cannot claim more than it. */
+const years = experienceYears(cv.experience.map((e) => e.period));
 
 interface Props {
   title: string;
@@ -17,7 +21,7 @@ interface Props {
 }
 const {
   title,
-  description = 'Juan Antonio Cano Salado is Head of Engineering at Dedge Security. He has 15+ years of experience as a Software Engineer. The site shows his blog, CV and projects.',
+  description = `Juan Antonio Cano Salado is Head of Engineering at Dedge Security. He has ${years}+ years of experience as a Software Engineer. The site shows his blog, CV and projects.`,
   canonicalPath,
   ogImage,
   ogType = 'website',

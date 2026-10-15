@@ -54,3 +54,21 @@ export function translations<T extends LangPost>(posts: T[], post: T): T[] {
 export function inLanguage<T extends LangPost>(posts: T[], lang = 'en'): T[] {
   return posts.filter((post) => langOf(post) === lang);
 }
+
+/**
+ * Years of professional experience, taken from the first year of a CV timeline.
+ * The number is derived so it cannot drift from the list it describes.
+ */
+export function experienceYears(periods: readonly string[], now = new Date()): number {
+  const starts = periods
+    .map((period) => /(\d{4})/.exec(period)?.[1])
+    .filter((year): year is string => year !== undefined)
+    .map(Number);
+  if (starts.length === 0) return 0;
+  return now.getFullYear() - Math.min(...starts);
+}
+
+/** Fill the `{years}` placeholder of a CV sentence with the derived count. */
+export function withYears(text: string, years: number): string {
+  return text.replace('{years}', String(years));
+}

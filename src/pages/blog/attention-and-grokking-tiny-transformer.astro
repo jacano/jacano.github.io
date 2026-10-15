@@ -3,6 +3,8 @@
 // link lands here and continues to the new one. A static host cannot answer with a
 // 301, so the page carries the redirect and a real link.
 const target = '/blog/grokking-from-memory-to-rule/';
+// The origin comes from `site` in the Astro config, never from a literal in a page.
+const site = (Astro.site ?? new URL('https://jacano.github.io')).toString().replace(/\/$/, '');
 ---
 
 <!doctype html>
@@ -10,7 +12,7 @@ const target = '/blog/grokking-from-memory-to-rule/';
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="refresh" content={`0; url=${target}`} />
-    <link rel="canonical" href={`https://jacano.github.io${target}`} />
+    <link rel="canonical" href={`${site}${target}`} />
     <meta name="robots" content="noindex" />
     <title>Moved: Grokking, the jump from memory to rule</title>
   </head>

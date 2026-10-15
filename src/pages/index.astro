@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import cv from '../data/cv.json';
-import { base, slugOf } from '../utils/site';
+import { base, experienceYears, slugOf, withYears } from '../utils/site';
 const allPosts = await getCollection('blog');
 const posts = allPosts
   .filter((post) => !post.data.tag.startsWith('Archive ·'))
@@ -15,6 +15,8 @@ const langColors: Record<string, string> = {
   'Inno Setup': '#6366f1',
   Python: '#3572A5',
 };
+/** Years of experience, derived from the timeline so the two always agree. */
+const years = experienceYears(cv.experience.map((e) => e.period));
 const ms = cv.microsoftContributions;
 type MsPr = { number: number; title: string; url: string; state: string; date: string; note?: string };
 type MsGroup = { title?: string; repo: string; description: string; note?: string; prs: MsPr[] };
@@ -22,6 +24,7 @@ const msGroups = ms.groups as MsGroup[];
 const msOther = ms.other as { label: string; url: string; note: string }[];
 const msOrgs = [...new Set(msGroups.map((group) => group.repo.split('/')[0]))];
 const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merged');
+const msMerged = msGroups.flatMap((group) => group.prs).filter((pr) => pr.state === 'merged').length;
 ---
 
 <Layout title="Juan Antonio Cano Salado — Head of Engineering @ Dedge Security">
@@ -38,7 +41,7 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
         <p class="subtitle">
           {cv.title} · {cv.location}
         </p>
-        <p class="desc">{cv.summary}</p>
+        <p class="desc">{withYears(cv.summary, years)}</p>
         <div class="cta">
           <a href={`${base}/cv`} class="btn btn-dark">
             View full CV →
@@ -89,7 +92,7 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
         <div class="card stats-card">
           <div class="stats">
             <div>
-              <strong>15+</strong>
+              <strong>{years}+</strong>
               <span>years of experience</span>
             </div>
             <div>
@@ -193,10 +196,13 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
             <h3>{p.name}</h3>
             <p class="muted">{p.description}</p>
             <div class="proj-meta mono">
-              <span>
-                ★ {p.stars}
-                {p.forks ? ` · ⑂ ${p.forks}` : ''}
-              </span>
+              {(p.stars > 0 || p.forks) && (
+                <span>
+                  {p.stars > 0 ? `★ ${p.stars}` : ''}
+                  {p.stars > 0 && p.forks ? ' · ' : ''}
+                  {p.forks ? `⑂ ${p.forks}` : ''}
+                </span>
+              )}
               {p.downloads && <span>{p.downloads}</span>}
               {p.updated && <span>upd. {p.updated}</span>}
             </div>
@@ -208,10 +214,10 @@ const allMerged = (group: MsGroup) => group.prs.every((pr) => pr.state === 'merg
           <strong>Dedge Security</strong> · Head of Engineering
         </span>
         <span class="trust">
-          <strong>Microsoft</strong> · {ms.inMicrosoft} PRs, verified
+          <strong>Microsoft</strong> · {ms.inMicrosoft} PRs, {msMerged} merged
         </span>
         <span class="trust">
-          <strong>Trax Retail</strong> · Senior Engineer
+          <strong>Trax Retail</strong> · Engineering Manager
         </span>
         <span class="trust">
           <strong>.NET</strong> · OSS, interop

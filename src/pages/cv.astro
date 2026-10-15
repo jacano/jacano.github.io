@@ -1,7 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import cv from '../data/cv.json';
-import { base } from '../utils/site';
+import { base, experienceYears, withYears } from '../utils/site';
+
+/** Years of experience, derived from the timeline below so the two always agree. */
+const years = experienceYears(cv.experience.map((e) => e.period));
 
 /** Shorten a link for paper: "https://www.github.com/jacano" becomes "github.com/jacano". */
 const shortUrl = (url: string) => {
@@ -21,12 +24,12 @@ const contacts = [
   { label: 'LinkedIn', url: cv.linkedin },
   { label: 'Stack Overflow', url: cv.stackoverflow },
   { label: 'NuGet', url: cv.nuget },
-  { label: 'PyPI', url: cv.pypi },
+  { label: 'PyPI · edistribucion-client', url: cv.pypi },
   { label: 'LeetCode', url: cv.leetcode },
 ];
 ---
 
-<Layout title={`CV — ${cv.name}`} description={`Resume of ${cv.name}, ${cv.title}. 15+ years of experience.`}>
+<Layout title={`CV — ${cv.name}`} description={`Resume of ${cv.name}, ${cv.title}. ${years}+ years of experience.`}>
   <article class="container cv-wrap">
     <header class="cv-header">
       <div class="cv-id">
@@ -71,7 +74,7 @@ const contacts = [
       <main class="cv-main">
         <section class="block block-summary">
           <h2>Summary</h2>
-          <p class="muted">{cv.summary}</p>
+          <p class="muted">{withYears(cv.summary, years)}</p>
           <p class="muted about">{cv.about}</p>
         </section>
 
@@ -160,7 +163,7 @@ const contacts = [
               </li>
             ))}
           </ul>
-          <h4>Certifications</h4>
+          <h4>{cv.certifications.length === 1 ? 'Certification' : 'Certifications'}</h4>
           <ul class="plain small muted">
             {cv.certifications.map((c) => (
               <li>{c}</li>

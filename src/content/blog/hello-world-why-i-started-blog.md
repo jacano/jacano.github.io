@@ -5,7 +5,7 @@ tag: 'Personal'
 excerpt: 'Why I started writing down lessons from software development, Web3 security, native interop, architecture, and technical leadership.'
 ---
 
-I have been building software for 15 years. I kept explaining the same lessons to new teammates, so I decided to write them down here.
+I have been building software for over a decade. I kept explaining the same lessons to new teammates, so I decided to write them down here.
 
 I write about:
 

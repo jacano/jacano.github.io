@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { base, inLanguage, langLabel, langOf, langTag, readTime, slugOf, translations } from './site';
+import {
+  base,
+  experienceYears,
+  inLanguage,
+  langLabel,
+  langOf,
+  langTag,
+  readTime,
+  slugOf,
+  translations,
+  withYears,
+} from './site';
 
 describe('slugOf', () => {
   it('drops the extension and the folder of a collection id', () => {
@@ -72,5 +83,32 @@ describe('langLabel and langTag', () => {
   it('marks them with two letters', () => {
     expect(langTag('en')).toBe('EN');
     expect(langTag('es')).toBe('ES');
+  });
+});
+
+describe('experienceYears', () => {
+  const now = new Date('2026-10-15T00:00:00Z');
+
+  it('counts from the earliest start year of the timeline', () => {
+    expect(experienceYears(['2025 — Present', '2021 — 2023', '2012 — 2013'], now)).toBe(14);
+  });
+
+  it('reads a period that holds only one year', () => {
+    expect(experienceYears(['2019'], now)).toBe(7);
+  });
+
+  it('returns zero when there is no year to read', () => {
+    expect(experienceYears([], now)).toBe(0);
+    expect(experienceYears(['Present'], now)).toBe(0);
+  });
+});
+
+describe('withYears', () => {
+  it('replaces the placeholder with the count', () => {
+    expect(withYears('with {years}+ years of experience', 14)).toBe('with 14+ years of experience');
+  });
+
+  it('leaves a sentence without the placeholder alone', () => {
+    expect(withYears('no count here', 14)).toBe('no count here');
   });
 });
