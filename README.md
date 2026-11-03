@@ -18,7 +18,7 @@ Edit `src/data/cv.json` to update experience, skills, projects and biography. Th
 Install dependencies. Then run the site.
 
 ```bash
-npm install
+npm ci
 npm run dev           # http://localhost:4321/
 npm run check         # astro check (types and Astro diagnostics)
 npm test              # vitest: the helpers and the figure reader
@@ -28,13 +28,18 @@ npm run preview
 npm run sync:stats    # refresh the numbers of the CV from the APIs
 ```
 
-Needs Node `>=24` and npm `>=11` (see `.nvmrc`).
+The Makefile wraps the same commands: `make install`, `make dev`, `make validate`. Needs Node `>=24` and npm `>=11` (see `.nvmrc`).
 
 Fonts are downloaded at build time and served from this site, so a visitor makes no request to a third party. The figures of an article get their width and height from the file itself, which the build reads.
 
-## Deploy
+## Checks and deploy
 
-A push to `main` triggers `.github/workflows/deploy.yml`. The workflow builds the site and uploads `dist` to GitHub Pages.
+Two workflows, two jobs:
+
+- `.github/workflows/ci.yml` runs `make validate` on every pull request and on a push to `main`. It never publishes.
+- `.github/workflows/deploy.yml` publishes, and it runs only when you ask for it: `make deploy`. A push is a commit, not a release.
+
+`make publish MESSAGE="what changed"` validates, commits and pushes. `make deploy` triggers the Pages workflow and returns; `make watch` follows the run and `make status` lists the last ones. Verify the Pages source with `gh api repos/jacano/jacano.github.io/pages` (`build_type` is `workflow`).
 
 ## Add a post
 

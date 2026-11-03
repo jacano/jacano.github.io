@@ -12,8 +12,8 @@ Read this before you change code.
 ## Stack
 
 - **Node** `>=24`, **npm** `>=11` (see `.nvmrc` and `package.json` `engines`). Workflow uses `actions/setup-node@v5` with `node-version: 24`.
-- **Astro** `^7.3.1`, **@astrojs/rss** `^4.0.19`. Every package is a `devDependency`: the site has no runtime.
-- **Install scripts are gated.** npm 11.16 warns and npm 12 blocks a lifecycle script unless `package.json` `allowScripts` names it. The list holds `esbuild@0.28.2`. When Dependabot moves that package, the key no longer matches and the script silently stops running: update the key in the same pull request.
+- **Astro** `^7.3.1` (the lock file resolves 7.4.5), **@astrojs/rss** `^4.0.19`. Every package is a `devDependency`: the site has no runtime.
+- **Install scripts.** npm 11.16 warns and npm 12 blocks a lifecycle script unless `package.json` `allowScripts` names it. Astro 7.4 dropped `esbuild`, so the tree has no gated script and the field is gone. When a dependency brings one back, add it with its exact version; when Dependabot moves that package, update the key in the same pull request or the script silently stops running.
 - **Config:** `astro.config.mjs` has `site: 'https://jacano.github.io'` and `base: '/'`. Do not change the base. Read the origin from `Astro.site` or `context.site`, never from a literal in a page.
 - **Fonts:** the `fonts` option of `astro.config.mjs` downloads Inter and JetBrains Mono at build time and serves them from this origin, so a visitor makes no third party request. `Layout.astro` renders `<Font cssVariable="--font-inter" preload />` and `<Font cssVariable="--font-mono" />` in the head, which is what writes the `@font-face` rules. A page that uses `var(--font-inter)` without that component gets the fallback font and no warning.
 - **Build:** `output: static`. `dist`, `node_modules`, `.astro` are gitignored. Do not commit `dist`.
@@ -86,6 +86,7 @@ docs: fix the agent guide
 ## Deployment
 
 - Workflow is `.github/workflows/deploy.yml` (`Deploy to GitHub Pages`). It runs on demand (`workflow_dispatch`), never on a push, and it is a thin wrapper: `make install`, `make validate`, and then the two Pages actions that exist only in Actions (`upload-pages-artifact`, `deploy-pages`).
+- `.github/workflows/ci.yml` (`Validate`) runs the same two targets on every pull request and on a push to `main`, and it publishes nothing. It is the check a Dependabot pull request gets; before it existed a bump merged with no run at all.
 - `build_type` is `workflow` (not `legacy`). Verify with `gh api repos/jacano/jacano.github.io/pages`.
 
 ## How to work
