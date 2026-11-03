@@ -9,6 +9,8 @@ I have spent ten years making C# call into C and C++. Three of those bindings ar
 
 These are the notes I keep coming back to.
 
+![A typical binding copies the payload twice, once into an unmanaged staging buffer and once into the structure of the native API, so it moves twice the bytes; a binding that uses Span, Memory and fixed pointers copies once. Three cards below list the door (P/Invoke, C++/CLI or DNNE with NativeAOT), who frees the memory (the native side allocates, C# disposes) and the package per runtime (win-x64, linux-x64, osx-arm64, tested in CI).](/blog/csharp-interop-copies.svg)
+
 ## The native API picks the method
 
 I start with the native library, not with the wrapper, because the shape of its API usually makes the choice obvious.

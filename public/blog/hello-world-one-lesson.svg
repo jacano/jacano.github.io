@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 460" role="img" aria-labelledby="title desc">
+  <title id="title">The same lesson, written once</title>
+  <desc id="desc">Before the blog, the answer lived in a conversation with each new teammate, so the same explanation was given again and again and nothing was written down. After it, one article holds the answer: it is written once, edited when it changes and linked from the repository, so a teammate reads it when they need it.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".7"/></pattern>
+    <marker id="arrow-emerald" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 10 4 0 8Z" fill="#34d399"/></marker>
+  </defs>
+  <rect width="1100" height="460" fill="#020617"/>
+  <rect width="1100" height="460" fill="url(#grid)"/>
+  <text x="40" y="44" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="21" font-weight="700">The same lesson, written once</text>
+  <text x="40" y="70" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="13">Why the blog exists &#183; the answer stopped living in a conversation</text>
+
+  <rect x="36" y="94" width="1028" height="130" rx="14" fill="#1a1610" stroke="#fbbf24" stroke-opacity=".35"/>
+  <text x="56" y="120" fill="#fcd34d" font-family="system-ui,sans-serif" font-size="11" font-weight="700">BEFORE &#183; THE SAME LESSON, ONE CONVERSATION AT A TIME</text>
+
+  <g font-family="system-ui,sans-serif">
+    <rect x="56" y="134" width="200" height="64" rx="12" fill="#0f172a" stroke="#fbbf24" stroke-opacity=".45"/>
+    <text x="76" y="160" fill="#f8fafc" font-size="13" font-weight="600">a new teammate</text>
+    <text x="76" y="182" fill="#94a3b8" font-size="11">asks the same question</text>
+
+    <rect x="286" y="134" width="200" height="64" rx="12" fill="#0f172a" stroke="#fbbf24" stroke-opacity=".45"/>
+    <text x="306" y="160" fill="#f8fafc" font-size="13" font-weight="600">another one</text>
+    <text x="306" y="182" fill="#94a3b8" font-size="11">gets the same explanation</text>
+
+    <rect x="516" y="134" width="200" height="64" rx="12" fill="#0f172a" stroke="#fbbf24" stroke-opacity=".45"/>
+    <text x="536" y="160" fill="#f8fafc" font-size="13" font-weight="600">and the next</text>
+    <text x="536" y="182" fill="#94a3b8" font-size="11">and nothing is written</text>
+  </g>
+
+  <text x="776" y="158" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">The answer lives in the manager.</text>
+  <text x="776" y="180" fill="#64748b" font-family="system-ui,sans-serif" font-size="12">It leaves with the manager.</text>
+
+  <rect x="36" y="240" width="1028" height="150" rx="14" fill="#0d1b19" stroke="#34d399" stroke-opacity=".35"/>
+  <text x="56" y="266" fill="#86efac" font-family="system-ui,sans-serif" font-size="11" font-weight="700">AFTER &#183; THE LESSON IS A URL</text>
+
+  <rect x="56" y="282" width="220" height="90" rx="12" fill="#0f172a" stroke="#38bdf8" stroke-opacity=".5"/>
+  <text x="76" y="312" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="16" font-weight="700">One article</text>
+  <text x="76" y="336" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="11">written once, edited later</text>
+
+  <line x1="276" y1="327" x2="356" y2="327" stroke="#34d399" stroke-width="2" marker-end="url(#arrow-emerald)"/>
+  <text x="316" y="315" text-anchor="middle" fill="#86efac" font-family="system-ui,sans-serif" font-size="11" font-weight="700">a link</text>
+
+  <rect x="356" y="282" width="300" height="90" rx="12" fill="#0f172a" stroke="#34d399" stroke-opacity=".5"/>
+  <text x="376" y="312" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="16" font-weight="700">A teammate reads it</text>
+  <text x="376" y="336" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="11">when they need it, not when I explain it</text>
+
+  <text x="700" y="310" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">The answer lives in the repository.</text>
+  <text x="700" y="332" fill="#64748b" font-family="system-ui,sans-serif" font-size="12">It changes with the code, and it stays.</text>
+
+  <text x="40" y="430" fill="#64748b" font-family="system-ui,sans-serif" font-size="10.5">Topics: Web3 security &#183; .NET and native interop &#183; architecture and technical leadership. First post: 10 April 2025.</text>
+</svg>

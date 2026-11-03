@@ -9,6 +9,8 @@ In 2026, most of the losses in Web3 came from the systems around the smart contr
 
 Twelve minutes is not enough to read an alert, investigate it and react. The detection has to happen before the incident reaches production.
 
+![An audit marks one moment near the code, and after it the live system keeps moving its signers, timelocks, oracles and permissions. Web3 posture management covers the whole path instead: it discovers the assets from the code to the chain, looks for risk on its own, watches production and plugs into CI/CD. In H1 2026 more than 75 % of losses came from operations and configuration, and the average time from exploit to irreversible loss was 12 minutes.](/blog/w3spm-audit-vs-camera.svg)
+
 ## An audit is a photo. You need a camera.
 
 An audit, a formal verification or a key-management review tells you something about the system at the moment of the check.

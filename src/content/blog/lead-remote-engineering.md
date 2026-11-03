@@ -7,6 +7,8 @@ excerpt: 'Notes from leading a distributed engineering team: the rituals that he
 
 I lead engineering at Dedge Security, where a distributed team builds a Web3 platform. We work remotely, so the usual office habits do not help much. These are the practices I use instead, and the ones I would keep if I started again.
 
+![Four habits that replace the office, and feed each other every week: a weekly demo that shows the work, an architecture diagram drawn by the team and kept in the repository next to the code, an on-call rota with blameless postmortems that ask what failed rather than who failed, and the time a critical fix takes to reach production, tracked as a trend and protected.](/blog/remote-rituals-loop.svg)
+
 ## Rituals that pay for themselves
 
 Remote work does not need more meetings. It needs a few habits that let people see the work and make decisions.
