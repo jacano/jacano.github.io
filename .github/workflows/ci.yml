@@ -1,0 +1,35 @@
+name: Validate
+
+# The checks that a pull request has to pass. The deployment stays deliberate and
+# lives in deploy.yml, so this workflow never publishes anything: it runs the
+# pipeline of the Makefile and reports.
+#
+# It matters most for Dependabot: before this file, a bump arrived with no check
+# at all, and a broken lock file could merge unseen.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# One run per branch: a new push cancels the older check of the same branch.
+concurrency:
+  group: 'validate-${{ github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      # The same two targets the deploy workflow runs. Add a check to the
+      # Makefile, never to this file alone.
+      - run: make install
+      - run: make validate

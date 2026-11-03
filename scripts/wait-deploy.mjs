@@ -2,7 +2,7 @@
 //
 // The site is published by a workflow, so "done" is a run that reaches a
 // conclusion. This is the local half of that: it asks gh, waits, and prints how
-// the run ended. `make redeploy` and `make publish` call it.
+// the run ended. `make watch` runs it, and nothing else has to wait.
 
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -68,7 +68,7 @@ export async function waitForDeployment({ repo, commit, timeoutMinutes = 30, qui
   return null;
 }
 
-// Run on its own, as `make redeploy` does.
+// Run on its own, as `make watch` does.
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const index = process.argv.indexOf('--repo');
   const commitIndex = process.argv.indexOf('--commit');

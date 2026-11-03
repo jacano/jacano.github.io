@@ -1,10 +1,11 @@
-// Commit, push and wait for the Pages deployment.
+// Commit and push. The site is not live until a deployment runs.
 //
-// This is the step that ends in a live site, and it runs from your machine, not
-// only from the workflow. `make publish MESSAGE="what changed"` calls it.
+// `make publish MESSAGE="what changed"` calls this. It validates, commits and
+// pushes, and it stops there: `make deploy` is the deliberate step that
+// publishes, and `make watch` follows that run.
 //
-// It uses git and gh the same way a person would, and it stops at the first
-// failure, so a rejected push or a red deployment exits non-zero.
+// It uses git the same way a person would, and it stops at the first failure,
+// so a rejected push exits non-zero.
 
 import { execFileSync } from 'node:child_process';
 
@@ -32,7 +33,9 @@ function succeeds(command, args) {
   }
 }
 
-const { repo, branch, message } = parseArgs(process.argv.slice(2));
+// `--repo` stays in the argument list because the Makefile passes it, but this
+// step pushes to `origin`, so the name is not read here.
+const { branch, message } = parseArgs(process.argv.slice(2));
 
 if (!message) {
   console.error('A commit message is required: make publish MESSAGE="what changed"');
