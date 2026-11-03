@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { base, langLabel, langOf, readTime, slugOf, translations } from '../../utils/site';
+import { base, inLanguage, langLabel, langOf, readTime, slugOf, translations } from '../../utils/site';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -14,7 +14,10 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const allPosts = await getCollection('blog');
-const sorted = [...allPosts].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
+const language = langOf(post);
+// The pager walks the articles of one language: "Older" from an English post
+// must not land on the translation of the same post.
+const sorted = [...inLanguage(allPosts, language)].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
 const idx = sorted.findIndex((p) => p.id === post.id);
 const prev = sorted[idx + 1];
 const next = sorted[idx - 1];
@@ -23,7 +26,11 @@ const postSlug = slugOf(post);
 // article exists in a single language.
 const siblings = translations(allPosts, post);
 const hasSwitch = siblings.length > 1;
-const language = langOf(post);
+/** The switch, the `hreflang` cluster and the alternate social locale read this. */
+const alternates = siblings.map((other) => ({
+  lang: langOf(other),
+  path: `/blog/${slugOf(other)}/`,
+}));
 ---
 
 <Layout
@@ -34,10 +41,12 @@ const language = langOf(post);
   publishedTime={post.data.date}
   tags={[post.data.tag]}
   lang={language}
+  articleTitle={post.data.title}
+  alternates={alternates}
 >
   <article class="container post-wrap">
     <div class="meta">
-      <a href={`${base}/blog`} class="link">
+      <a href={`${base}/blog/`} class="link">
         ← Back to blog
       </a>
       <div class="tags">
@@ -49,10 +58,10 @@ const language = langOf(post);
               const current = other.id === post.id;
               return (
                 <a
-                  href={`${base}/blog/${slugOf(other)}`}
+                  href={`${base}/blog/${slugOf(other)}/`}
                   class:list={['lang-link', { current }]}
                   hreflang={code}
-                  aria-current={current ? 'true' : undefined}
+                  aria-current={current ? 'page' : undefined}
                 >
                   {langLabel(code)}
                 </a>
@@ -72,7 +81,7 @@ const language = langOf(post);
     {(prev || next) && (
       <nav class="pager">
         {prev ? (
-          <a href={`${base}/blog/${slugOf(prev)}`} class="card pager-link">
+          <a href={`${base}/blog/${slugOf(prev)}/`} class="card pager-link">
             <span class="mono small muted">← Older</span>
             <strong>{prev.data.title}</strong>
           </a>
@@ -80,7 +89,7 @@ const language = langOf(post);
           <span />
         )}
         {next ? (
-          <a href={`${base}/blog/${slugOf(next)}`} class="card pager-link right">
+          <a href={`${base}/blog/${slugOf(next)}/`} class="card pager-link right">
             <span class="mono small muted">Newer →</span>
             <strong>{next.data.title}</strong>
           </a>

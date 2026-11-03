@@ -1,10 +1,16 @@
 ---
 import { Font } from 'astro:assets';
-import { base, experienceYears } from '../utils/site';
+import { base, experienceYears, localeOf } from '../utils/site';
 import cv from '../data/cv.json';
 
 /** Derived from the CV timeline, so the meta description cannot claim more than it. */
 const years = experienceYears(cv.experience.map((e) => e.period));
+
+/** The role and the company come from `cv.json`, so the two cannot disagree. */
+const [role, company = ''] = cv.title.split('@').map((part) => part.trim());
+/** The CV entry of the current employer holds the URL of the company. */
+const employerUrl = cv.experience.find((entry) => entry.company === company)?.link;
+const position = company ? `${role} at ${company}` : role;
 
 interface Props {
   title: string;
@@ -18,10 +24,20 @@ interface Props {
   noindex?: boolean;
   /** Language of the page. English is the default. */
   lang?: string;
+  /**
+   * The article title without the suffix of the site, for structured data.
+   * `title` is what a tab shows; a search engine wants only the headline.
+   */
+  articleTitle?: string;
+  /**
+   * Every language version of this page, this one included. It writes the
+   * `<link rel="alternate" hreflang>` cluster and the alternate social locale.
+   */
+  alternates?: { lang: string; path: string }[];
 }
 const {
   title,
-  description = `Juan Antonio Cano Salado is Head of Engineering at Dedge Security. He has ${years}+ years of experience as a Software Engineer. The site shows his blog, CV and projects.`,
+  description = `Juan Antonio Cano Salado is ${position}. He has ${years}+ years of experience as a Software Engineer. The site shows his blog, CV and projects.`,
   canonicalPath,
   ogImage,
   ogType = 'website',
@@ -29,6 +45,8 @@ const {
   tags = [],
   noindex = false,
   lang = 'en',
+  articleTitle,
+  alternates = [],
 } = Astro.props;
 /** The origin of the site comes from `site` in the Astro config, never from a literal. */
 const site = (Astro.site ?? new URL('https://jacano.github.io')).toString().replace(/\/$/, '');
@@ -44,11 +62,11 @@ const person = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Juan Antonio Cano Salado',
-  jobTitle: 'Head of Engineering',
+  jobTitle: role,
   worksFor: {
     '@type': 'Organization',
-    name: 'Dedge Security',
-    url: 'https://dedgesecurity.com',
+    name: company,
+    ...(employerUrl ? { url: employerUrl } : {}),
   },
   url: site,
   image: socialImage,
@@ -57,10 +75,9 @@ const person = {
     'https://www.linkedin.com/in/juanantoniocano/',
     'https://stackoverflow.com/users/104185/juan-antonio-cano',
     'https://www.nuget.org/profiles/jacanosalado',
-    'https://pypi.org/project/edistribucion-client/',
     'https://leetcode.com/u/jacanosalado/',
   ],
-  email: 'mailto:jacanosalado@gmail.com',
+  email: 'jacanosalado@gmail.com',
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Seville',
@@ -73,10 +90,10 @@ const blogPosting =
     ? {
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
-        headline: title,
+        headline: articleTitle ?? title,
         description: description,
         datePublished: publishedTime,
-        dateModified: publishedTime,
+        inLanguage: lang,
         author: { '@type': 'Person', name: 'Juan Antonio Cano Salado', url: site },
         publisher: { '@type': 'Person', name: 'Juan Antonio Cano Salado' },
         mainEntityOfPage: canonicalURL,
@@ -84,6 +101,9 @@ const blogPosting =
         keywords: tags.join(', '),
       }
     : null;
+/** The English file is the default for a reader who matches no language. */
+const defaultAlternate = alternates.find((alternate) => alternate.lang === 'en') ?? alternates[0];
+const absolute = (path: string) => new URL(path, `${site}/`).toString();
 ---
 
 <!doctype html>
@@ -104,7 +124,19 @@ const blogPosting =
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={title} />
     <meta property="og:site_name" content="Juan Antonio Cano Salado" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={localeOf(lang)} />
+    {alternates
+      .filter((alternate) => alternate.lang !== lang)
+      .map((alternate) => (
+        <meta property="og:locale:alternate" content={localeOf(alternate.lang)} />
+      ))}
+    {/* A language cluster is only worth writing when the page exists in more
+        than one language: a single self reference is noise. */}
+    {alternates.length > 1 &&
+      alternates.map((alternate) => <link rel="alternate" hreflang={alternate.lang} href={absolute(alternate.path)} />)}
+    {alternates.length > 1 && defaultAlternate && (
+      <link rel="alternate" hreflang="x-default" href={absolute(defaultAlternate.path)} />
+    )}
     {publishedTime && <meta property="article:published_time" content={publishedTime} />}
     {tags.map((tag) => (
       <meta property="article:tag" content={tag} />
@@ -145,14 +177,14 @@ const blogPosting =
             Home
           </a>
           <a
-            href={`${base}/cv`}
+            href={`${base}/cv/`}
             aria-current={isActive('/cv') ? 'page' : undefined}
             class={isActive('/cv') ? 'active' : undefined}
           >
             CV
           </a>
           <a
-            href={`${base}/blog`}
+            href={`${base}/blog/`}
             aria-current={isActive('/blog') ? 'page' : undefined}
             class={isActive('/blog') ? 'active' : undefined}
           >
@@ -184,8 +216,8 @@ const blogPosting =
       </div>
       <div class="mobile-menu" id="mobileMenu">
         <a href={`${base}/`}>Home</a>
-        <a href={`${base}/cv`}>CV</a>
-        <a href={`${base}/blog`}>Blog</a>
+        <a href={`${base}/cv/`}>CV</a>
+        <a href={`${base}/blog/`}>Blog</a>
         <a href="https://github.com/jacano" target="_blank" rel="noreferrer">
           GitHub
         </a>
@@ -222,6 +254,15 @@ const blogPosting =
           menu.classList.remove('open');
           btn?.setAttribute('aria-expanded', 'false');
         });
+      });
+      /** Escape closes the menu and returns the focus to the button, the way a
+       *  reader with a keyboard expects a disclosure to behave. */
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape' || !menu?.classList.contains('open')) return;
+        menu.classList.remove('open');
+        btn?.setAttribute('aria-expanded', 'false');
+        btn?.setAttribute('aria-label', 'Open menu');
+        btn?.focus();
       });
 
       /** Keep the year of the footer true without a rebuild. The value in the
@@ -261,6 +302,8 @@ const blogPosting =
     </script>
     <style is:global>
       :root {
+        /* A dark document, so the controls and the scrollbars follow it. */
+        color-scheme: dark;
         --bg: #0a0a0b;
         --bg2: #111113;
         --card: #1a1a1e;

@@ -11,6 +11,9 @@ export async function GET(context) {
     title: 'Juan Antonio Cano Salado — Blog',
     description: 'Articles on Web3 security, C# and .NET, architecture, technical leadership and hands-on data tools.',
     site: context.site ?? 'https://jacano.github.io',
+    // The feed carries one language, so it says which one. A reader that
+    // aggregates several feeds uses this to group them.
+    customData: '<language>en</language>',
     items: sorted.map((post) => ({
       title: post.data.title,
       description: post.data.excerpt,

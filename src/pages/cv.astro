@@ -71,7 +71,9 @@ const contacts = [
     </header>
 
     <div class="cv-grid">
-      <main class="cv-main">
+      {/* A div, not a main: the layout already renders the main landmark, and a
+          second one would give the page two. */}
+      <div class="cv-main">
         <section class="block block-summary">
           <h2>Summary</h2>
           <p class="muted">{withYears(cv.summary, years)}</p>
@@ -122,7 +124,7 @@ const contacts = [
             ))}
           </div>
         </section>
-      </main>
+      </div>
 
       <aside class="cv-side">
         <div class="card side-card">

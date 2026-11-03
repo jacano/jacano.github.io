@@ -41,6 +41,14 @@ export function langTag(code: string): string {
 }
 
 /**
+ * The Open Graph locale of a language. A page in Spanish says `es_ES`, so a
+ * social site does not label it as English.
+ */
+export function localeOf(code: string): string {
+  return code === 'es' ? 'es_ES' : 'en_US';
+}
+
+/**
  * Every file of the same article, the current one included. Posts without a
  * `pair` are their own article and return only themselves.
  */

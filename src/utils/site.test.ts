@@ -6,6 +6,7 @@ import {
   langLabel,
   langOf,
   langTag,
+  localeOf,
   readTime,
   slugOf,
   translations,
@@ -83,6 +84,17 @@ describe('langLabel and langTag', () => {
   it('marks them with two letters', () => {
     expect(langTag('en')).toBe('EN');
     expect(langTag('es')).toBe('ES');
+  });
+});
+
+describe('localeOf', () => {
+  it('labels a document in Spanish as Spanish for a social site', () => {
+    expect(localeOf('es')).toBe('es_ES');
+  });
+
+  it('falls back to English, the default language', () => {
+    expect(localeOf('en')).toBe('en_US');
+    expect(localeOf('fr')).toBe('en_US');
   });
 });
 
