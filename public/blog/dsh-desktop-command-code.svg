@@ -1,6 +1,6 @@
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 420" role="img" aria-labelledby="title desc">
     <title id="title">One key, two files, one route</title>
-    <desc id="desc">The desktop app reads two files in its home folder. It reads cordis.patch.yml once at boot: that file holds the Command Code route, the five models and the default model. It reads .credentials.yaml on every request: that file holds COMMANDCODE_API_KEY. Both feed one HTTPS route to api.commandcode.ai/provider/v1.</desc>
+    <desc id="desc">The desktop app reads two files in its home folder. It holds cordis.patch.yml open while the app runs: that file holds the two Command Code routes, the four models and the default model, and a saved edit recomposes the running app. It reads .credentials.yaml on every request: that file holds COMMANDCODE_API_KEY. Both feed one HTTPS route to api.commandcode.ai/provider/v1.</desc>
     <defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".7"/></pattern></defs>
     <rect width="1100" height="420" fill="#020617"/>
     <rect width="1100" height="420" fill="url(#grid)"/>
@@ -15,8 +15,8 @@
 
     <rect x="390" y="104" width="380" height="86" rx="14" fill="#0f172a" fill-opacity=".75" stroke="#a78bfa" stroke-opacity=".45"/>
     <text x="414" y="136" fill="#a78bfa" font-family="ui-monospace,Menlo,monospace" font-size="14" font-weight="700">cordis.patch.yml</text>
-    <text x="414" y="160" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="13">the route, five models, the default</text>
-    <text x="414" y="180" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">read at boot</text>
+    <text x="414" y="160" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="13">two routes, four models, the default</text>
+    <text x="414" y="180" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">watched, no restart</text>
 
     <rect x="390" y="208" width="380" height="86" rx="14" fill="#0f172a" fill-opacity=".75" stroke="#34d399" stroke-opacity=".45"/>
     <text x="414" y="240" fill="#34d399" font-family="ui-monospace,Menlo,monospace" font-size="14" font-weight="700">.credentials.yaml</text>
@@ -27,7 +27,7 @@
     <text x="874" y="182" fill="#fbbf24" font-family="system-ui,sans-serif" font-size="17" font-weight="700">Command Code</text>
     <text x="874" y="208" fill="#e2e8f0" font-family="ui-monospace,Menlo,monospace" font-size="11.5">api.commandcode.ai</text>
     <text x="874" y="226" fill="#e2e8f0" font-family="ui-monospace,Menlo,monospace" font-size="11.5">/provider/v1</text>
-    <text x="874" y="246" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">openai-completions</text>
+    <text x="874" y="246" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">completions + messages</text>
 
     <path d="M290 168 H390" fill="none" stroke="#a78bfa" stroke-width="1.6"/>
     <path d="M382 163 L390 168 L382 173" fill="none" stroke="#a78bfa" stroke-width="1.6"/>
@@ -38,5 +38,5 @@
     <text x="778" y="188" fill="#64748b" font-family="system-ui,sans-serif" font-size="11" font-weight="700">HTTPS</text>
 
     <text x="40" y="352" fill="#64748b" font-family="ui-monospace,Menlo,monospace" font-size="11.5">~/.dsh/cordis.patch.yml &#183; ~/.dsh/.credentials.yaml</text>
-    <text x="40" y="388" fill="#475569" font-family="system-ui,sans-serif" font-size="12">DeepSeek Harness 0.2.0-rc.2, Command Code openai-completions, October 2026.</text>
+    <text x="40" y="388" fill="#475569" font-family="system-ui,sans-serif" font-size="12">DeepSeek Harness 0.2.0-rc.2, Command Code, two routes, November 2026.</text>
   </svg>

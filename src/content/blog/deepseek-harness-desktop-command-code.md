@@ -1,20 +1,20 @@
 ---
 title: 'Install DeepSeek Harness desktop with Command Code'
-date: '2026-10-15'
+date: '2026-11-10'
 tag: 'AI Tooling'
 excerpt: 'A step-by-step install of the DeepSeek Harness desktop app with one Command Code key: where the key goes, what the one configuration file holds, and the traps I hit on the way.'
 ---
 
 I tried **DeepSeek Harness** (DSH) a few ways: the official DeepSeek API, OpenCode Go, and the desktop app on Command Code. This post is the one I kept, written as the install I wish I had read first.
 
-![The desktop app reads two files in its home folder: cordis.patch.yml at boot for the route, the five models and the default model, and .credentials.yaml on every request for the key. Both feed one HTTPS route to api.commandcode.ai/provider/v1.](/blog/dsh-desktop-command-code.svg)
+![The desktop app reads two files in its home folder: cordis.patch.yml holds the Command Code routes, the four models and the default model and is watched while the app runs, and .credentials.yaml holds the key and is read on every request. Both feed one HTTPS route to api.commandcode.ai.](/blog/dsh-desktop-command-code.svg)
 
-The short version: install the desktop app, paste one Command Code key, drop one file in `~/.dsh`, and restart.
+The short version: install the desktop app, paste one Command Code key, and drop one file in `~/.dsh`.
 
 ## Why this combination
 
 - **One key.** It lives in `~/.dsh/.credentials.yaml`, and DSH resolves it on every request.
-- **The models I want.** Command Code serves `deepseek/deepseek-v4.1-flash` and four more models from one key.
+- **The models I want.** Command Code serves the four models in the menu from one key.
 - **The measurement.** DSH shows tokens per second in the UI, so a slow session is a number and not a feeling.
 
 ## What you need
@@ -51,61 +51,62 @@ Two details decide whether this works:
 
 Every profile of DSH reads `~/.dsh/cordis.patch.yml`, and that home layer outranks a profile's own layer, so the same file configures all of them.
 
-The whole file is in [github.com/jacano/dsh-config](https://github.com/jacano/dsh-config). The parts that matter for this install:
+The whole file is in [github.com/jacano/dsh-config](https://github.com/jacano/dsh-config), and it carries no comments: it is configuration, and the README explains each row. The parts that matter for this install:
 
 ```yaml
-- id: agent-default-model
-  name: "@deepseek-ai/dsh-agent-default-model"
-  config:
-    provider: command-code
-    model: deepseek/deepseek-v4.1-flash
+- { id: agent-default-model, name: "@deepseek-ai/dsh-agent-default-model", config: { provider: command-code, model: deepseek/deepseek-v4.1-flash-fast } }
 - id: llm-pi-ai
   name: "@deepseek-ai/dsh-llm-pi-ai"
   config:
     providers:
       command-code:
-        displayName: Command Code (openai-completions)
+        displayName: Command Code
         api: openai-completions
         baseURL: https://api.commandcode.ai/provider/v1
         apiKeyEnv: COMMANDCODE_API_KEY
-        defaultContextWindow: 1000000
-        defaultInput: [text, image]
         models:
-          - id: deepseek/deepseek-v4.1-flash
-            name: DeepSeek V4.1 Flash (Command Code, openai-completions)
-            contextWindow: 1000000
-            maxTokens: 32768
-            reasoningEfforts:
-              low: low
-              medium: medium
-              high: high
-              xhigh: xhigh
-              max: max
+          - { id: deepseek/deepseek-v4.1-flash-fast, name: DeepSeek V4.1 Flash Fast (latest), contextWindow: 1000000, maxTokens: 32768 }
+          - { id: minimax/minimax-m3.1-flash, name: MiniMax M3.1 Flash, contextWindow: 1000000, maxTokens: 32768 }
+          - { id: gpt-6-luna, name: GPT-6 Luna, contextWindow: 1050000, maxTokens: 32768 }
+      command-code-anthropic:
+        displayName: Command Code (Claude)
+        api: anthropic-messages
+        baseURL: https://api.commandcode.ai/provider
+        apiKeyEnv: COMMANDCODE_API_KEY
+        models:
+          - { id: claude-haiku-5-5, name: Claude Haiku 5.5, contextWindow: 1000000, maxTokens: 32768 }
 ```
 
-Restart the app after you write the file. DSH reads the patch layer at boot and never watches it.
+Each row also declares its `reasoningEfforts` ladder; I left that out of the excerpt to keep it short. The file is **watched**, not read once. Save a valid edit and the running app recomposes in place, so a new model or a new route appears without a restart. An edit that cannot apply is rejected and the last good composition keeps running, so a typo cannot leave you without a menu.
 
 ## 4. Choose a model
 
-The menu shows one group, **Command Code**, with five models:
+The menu shows two groups, **Command Code** and **Command Code (Claude)**:
 
-| Model | Id on the wire | Context |
-| --- | --- | ---: |
-| DeepSeek V4.1 Flash | `deepseek/deepseek-v4.1-flash` | 1,000,000 |
-| DeepSeek V4.1 Flash Fast | `deepseek/deepseek-v4.1-flash-fast` | 1,000,000 |
-| GLM-5.3 Flash | `z-ai/glm-5.3-flash` | 1,048,576 |
-| GLM-5.3 FlashX | `z-ai/glm-5.3-flashx` | 1,000,000 |
-| Muse Spark 1.3 Contributor | `meta/muse-spark-1.3-contributor` | 1,048,576 |
+| Model | Group | Id on the wire | Context |
+| --- | --- | --- | ---: |
+| DeepSeek V4.1 Flash Fast | Command Code | `deepseek/deepseek-v4.1-flash-fast` | 1,000,000 |
+| MiniMax M3.1 Flash | Command Code | `minimax/minimax-m3.1-flash` | 1,000,000 |
+| GPT-6 Luna | Command Code | `gpt-6-luna` | 1,050,000 |
+| Claude Haiku 5.5 | Command Code (Claude) | `claude-haiku-5-5` | 1,000,000 |
 
-`agent-default-model` picks the one a new session starts with. I use `deepseek/deepseek-v4.1-flash` and I set no effort level, so the model answers at its own default.
+`agent-default-model` picks the one a new session starts with. I use `deepseek/deepseek-v4.1-flash-fast` and I set no effort level, so the model answers at its own default.
+
+Claude does not speak Chat Completions on this provider: every `claude-*` id advertises only `/messages`. That is why Haiku rides a second route, with `api: anthropic-messages` and the API root as the base URL. The route also sets `compat: { forceAdaptiveThinking: true }`, because Claude 5.5 rejects `thinking.type.enabled` and wants adaptive thinking plus an effort level.
 
 Each model offers an **Effort** submenu with five levels: `low`, `medium`, `high`, `xhigh` and `max`. Command Code answers HTTP 400 to `minimal` and `none`, and every model thinks by default, so the file declares no `off` level. The submenu comes from the `reasoningEfforts` block of each entry, which is also why the Settings → Models form leaves that field alone: it is a per-model capability.
 
-All five models read images. The route declares `defaultInput: [text, image]` once, and a text-only model added later must opt out with `input: [text]`.
+All four models read images. Each route declares `defaultInput: [text, image]` once, and a text-only model added later must opt out with `input: [text]`.
+
+## Why these four
+
+The repository has a second half that decides the menu. It runs the candidates through three phases: capability and price from the catalog, then speed, latency and cache on the wire, then how the provider serves the model — how fast it reads a long prefix, whether it caches in a loop, whether it holds under four parallel calls, and whether its tool calls are valid.
+
+The results and the reasons for every rejection are in [github.com/jacano/dsh-config/bench](https://github.com/jacano/dsh-config/tree/main/bench). The four rows here are medians of three measurement rounds, not one favourable run.
 
 ## What I turned off
 
-The official DeepSeek provider is off in that file, route by route: the API-key chat route, the account chat route, the search provider, and the request-field registry. No `deepseek-official` route appears in the menu, no card appears in Settings → Models, and no `DEEPSEEK_API_KEY` is stored. I keep the key in one place, in one provider, and it is not DeepSeek's.
+The official DeepSeek provider is off in that file, route by route: the API-key chat route, the account chat route, the search provider, and the request-field registry. No DeepSeek route appears in the menu, no card appears in Settings → Models, and no `DEEPSEEK_API_KEY` is stored. I keep the key in one place, in one provider, and it is not DeepSeek's.
 
 One consequence is worth knowing: `web_search` stays in the tool list of a session, because an agent preset composes the web tools and a preset takes no patch, but every call fails with `WEB_PROVIDER_UNAVAILABLE`. I do not use it, so I left it that way.
 
@@ -113,7 +114,7 @@ One consequence is worth knowing: `web_search` stays in the tool list of a sessi
 
 - **A patch that names a plugin which does not sit on that row is skipped, and only a warning says so.** Bundles repurpose ids between releases: on the desktop `llm-deepseek` mounts `dsh-llm-deepseek-api-key`, while the npm install mounts `dsh-llm-deepseek`. Rows whose plugin moved carry no `name` and match by `id`.
 - **The Settings forms write below the home layer**, so a preference pinned in this file shadows the form. That is why the file sets no theme and no work-details mode: they belong to Settings.
-- **The file is read at boot.** Edit it, then restart the app.
+- **A patch replaces the whole `config` of the row it targets.** It is not a merge. A row that needs two settings must declare both, or the one you left out disappears.
 
 ## Wrap up
 
