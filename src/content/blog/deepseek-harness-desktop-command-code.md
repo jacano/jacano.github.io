@@ -112,9 +112,9 @@ One consequence is worth knowing: `web_search` stays in the tool list of a sessi
 
 ## Three traps
 
-- **A patch that names a plugin which does not sit on that row is skipped, and only a warning says so.** Bundles repurpose ids between releases: on the desktop `llm-deepseek` mounts `dsh-llm-deepseek-api-key`, while the npm install mounts `dsh-llm-deepseek`. Rows whose plugin moved carry no `name` and match by `id`.
-- **The Settings forms write below the home layer**, so a preference pinned in this file shadows the form. That is why the file sets no theme and no work-details mode: they belong to Settings.
-- **A patch replaces the whole `config` of the row it targets.** It is not a merge. A row that needs two settings must declare both, or the one you left out disappears.
+- **If you copy a row, drop its `name`.** A `name` that does not match the plugin on that id is skipped, and only a warning says so. Bundles rename those ids between releases, so a row that moved still works by `id` alone.
+- **A patch replaces a whole `config`.** It is not a merge. If the row needs three keys, declare three; the one you leave out disappears.
+- **The file wins over Settings.** Settings forms write below the home layer, so anything pinned here shadows them. That is why this file sets no theme and no work-details mode.
 
 ## Wrap up
 
