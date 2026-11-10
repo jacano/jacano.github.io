@@ -7,9 +7,9 @@ excerpt: 'Why a smart-contract audit is not enough when signers, permissions and
 
 In 2026, most of the losses in Web3 came from the systems around the smart contracts rather than from the contracts themselves. The State of Digital Asset Security for H1 2026 attributes more than 75% of losses to operational and configuration gaps, and puts the average time from exploit to irreversible loss at 12 minutes.
 
-Twelve minutes is not enough to read an alert, investigate it and react. The detection has to happen before the incident reaches production.
+Twelve minutes is not enough to read an alert, investigate it and react. If a loss completes that fast, checking production is already too late: the check has to run before the transaction is signed, in the pipeline and in the policy the signers follow.
 
-![An audit marks one moment near the code, and after it the live system keeps moving its signers, timelocks, oracles and permissions. Web3 posture management covers the whole path instead: it discovers the assets from the code to the chain, looks for risk on its own, watches production and plugs into CI/CD. In H1 2026 more than 75 % of losses came from operations and configuration, and the average time from exploit to irreversible loss was 12 minutes.](/blog/w3spm-audit-vs-camera.svg)
+![An audit marks one moment near the code, and after it the live system keeps moving its signers, timelocks, oracles and permissions. Posture management follows the live state instead: it discovers the assets from the code to the chain, watches production and plugs into CI/CD.](/blog/w3spm-audit-vs-camera.svg)
 
 ## An audit is a photo. You need a camera.
 
@@ -21,12 +21,12 @@ After that, the system keeps moving. Signers change, timelocks move, oracles rot
 
 Web3 Security Posture Management (W3SPM) is that watch. It keeps a current picture of the assets and the policy, instead of a picture from last quarter, and it turns the policy into guardrails:
 
-- it discovers the assets, from the code to the chain,
-- it looks for risk on its own,
-- it watches production, and it plugs into CI/CD.
+- it discovers the assets, from the code to the chain;
+- it watches the live state rather than a snapshot;
+- it plugs into CI/CD, so a policy change lands with the code.
 
 ## Why this matters to institutions
 
 A bank moving into Web3 inherits a problem its current tooling does not cover: the state that matters lives on a chain it does not control, and it changes without a change request.
 
-I work on this at Dedge Security, which sells a Web3-native ASPM platform. That is my interest in the subject, and it is worth saying plainly rather than leaving it for the reader to guess.
+I work on this at Dedge Security, which sells a Web3-native ASPM platform, so read the argument with that in mind.

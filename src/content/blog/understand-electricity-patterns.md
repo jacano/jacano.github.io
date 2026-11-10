@@ -33,7 +33,7 @@ Once you see the split, the choice becomes easier:
 - a lot in **P1**: look for a low peak price, or a flat price,
 - the three periods close: a flat price is simpler.
 
-There are many comparators, and [luzfija.es](https://github.com/almax-es/luzfija.es) is one of them. Copy the split into a comparator, and compare your numbers.
+One comparator is [luzfija.es](https://github.com/almax-es/luzfija.es), and its code is public. Copy the split into it and compare your numbers.
 
 ## Adjust the contracted power
 
@@ -44,7 +44,7 @@ There are many comparators, and [luzfija.es](https://github.com/almax-es/luzfija
 
 The 2.0TD tariff has two power periods. P1 covers the peak and flat hours, P2 the off-peak hours. The tool gives the **maximum demanded power** for each period, and it lists the months where you passed the contract.
 
-**kWh** is how much you used. **kW** is how strong you pulled at one moment. Pick the contract with the maximum demanded power, and the tariff with the split by period.
+**kWh** is how much you used. **kW** is the average power you pulled over a metering interval. Set the contracted power for each period just above that period's maximum demanded power, and pick the tariff from the split.
 
 ## Real data, not estimates
 

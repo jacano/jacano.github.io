@@ -9,22 +9,18 @@ In 2019 I published [WasmSample](https://github.com/jacano/WasmSample), a small 
 
 ## Why WASM
 
-WebAssembly lets code run in the browser at near-native speed. For me, that meant using C# in a place where I would normally reach for JavaScript.
+WebAssembly runs compiled code in the page, which let me keep the browser-side logic in C# instead of rewriting it in JavaScript.
 
-The project also closed a circle for me. In 2017, I added WASM support for the IL opcodes `neg`, `not`, `switch`, `throw`, and `nop` to [dotnet/corert](https://github.com/dotnet/corert). Two years later, I could share a sample that used that work.
+The project also closed a circle. In 2017 I added WASM support for five IL opcodes (`neg`, `not`, `switch`, `throw` and `nop`) to [dotnet/corert](https://github.com/dotnet/corert). This sample runs on a different toolchain, Mono, but the idea is the same: .NET compiled to the browser.
 
 ## What is inside
 
-The sample is small on purpose:
-
-- A Shell project and a WASM project.
-- A `build.sh` script and a `scripts` folder.
-- The Mono runtime, compiled to WASM, running in the page.
+- A **Shell** project: the HTML page and the JavaScript that loads the runtime.
+- A **WASM** project: the C# code, built with Mono.WebAssembly.Sdk.
+- A `build.sh` script and a `scripts` folder: the build.
 
 ## Run it
 
-Clone the repository, run the build script, and open the result in a browser. The [README](https://github.com/jacano/WasmSample) contains the steps.
-
-The code is at [github.com/jacano/WasmSample](https://github.com/jacano/WasmSample), and it is open for pull requests.
+The sample targets the 2019 Mono toolchain, so a current SDK may refuse to build it. Serve the output over HTTP instead of opening the file, because browsers do not load WebAssembly from `file://`. The [README](https://github.com/jacano/WasmSample) has the steps as they were at the time.
 
 *First shared May 4, 2019 at x.com/jacano35. Republished 2026 on jacano.github.io.*
