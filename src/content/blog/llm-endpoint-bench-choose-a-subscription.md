@@ -5,7 +5,7 @@ tag: 'AI Tooling'
 excerpt: 'I measured two $10 agent subscriptions from Seville, using the same model and four test phases, to decide which route to keep.'
 ---
 
-I pay for two AI subscriptions for agent work: **Command Code** and **OpenCode Go**. Both cost **$10 a month**, so price does not separate them. I do not need both for my personal setup, so one will remain my main route and I will pause the other.
+I pay for two AI subscriptions for agent work: **Command Code** and **OpenCode Go**. Both cost **$10 a month**. Their usage allowances differ — $70 of credits on Command Code against about $60 on OpenCode Go, as the plan pages listed them on 23 September 2026 — so the price per unit of usage favours Command Code slightly, and I did not weigh it. I do not need both, so one will remain my main route and I will pause the other.
 
 I needed a way to choose between them. Price was no help because both plans cost the same, and my impression was unreliable. When a session felt slow, I blamed the network without a number to test that assumption.
 
@@ -26,14 +26,14 @@ Both routes are OpenAI-compatible gateways over the same model, `deepseek-v4.1-f
 - It needs no extra header.
 - The plan gives $70 of credits, a 7x multiplier.
 
-**OpenCode Go** — the low cost plan of the OpenCode team, at [opencode.ai/docs/go](https://opencode.ai/docs/go/). $10 a month, and $5 for the first one.
+**OpenCode Go** — the low cost plan of the OpenCode team, at [opencode.ai/docs/go](https://opencode.ai/docs/go/). $10 a month.
 
 - It speaks on `https://opencode.ai/zen/go/v1`.
 - The model id is `deepseek-v4.1-flash`.
 - It needs one extra header, `x-opencode-session`.
 - The plan gives about $60 of usage for the $10.
 
-Same price, same model, same kind of plan. Both serve the model well, and a person cannot tell them apart by reading an answer. The difference lives in the wait before the answer and in the speed of the writing.
+Same price, same model, same kind of plan. Both serve the model well; I did not compare answer quality. What this benchmark separates is the wait before the answer and the speed of the writing.
 
 ## Why these numbers matter for agent work
 
@@ -47,7 +47,7 @@ Three numbers decide how that day feels.
 
 There is a fourth point, and it comes from the article before this one. **Tokens per second turns a feeling into a fact.** "The model feels slow today" is not actionable. "This route writes at 260 tokens per second and the other at 446" is a number I can act on.
 
-For agentic coding, the best route is the one with the smallest fixed delay and the highest sustained write speed. It is not the route with the best answer to a single clever prompt. Both routes here answer equally well, and the slow one would make the agent feel broken.
+For agentic coding, the best route is the one with the smallest fixed delay and the highest sustained write speed. I did not compare answers, so I cannot rank these two on quality. On my machine, the slower route was the one that made the session feel broken.
 
 ## What the benchmark measures
 
@@ -93,11 +93,11 @@ Two patterns stand out.
 
 **The waits move. The speeds do not.** The first byte of the server moved between 9.1 and 20.6 times across the four rounds, and the first token of a short answer moved between 1.7 and 2.4 times. The write speed barely moved: 1.6, 1.7, 1.6, 1.5. So a wait measured once is worth less than a speed measured four times.
 
-**The fixed cost is the gateway.** In the last round, one request to the server on a ready connection needed **27 ms on Command Code and 297 ms on OpenCode Go**. A new TLS connection added **41 ms against 273 ms**. That cost is there before the model writes a single token, and it lands on every call of a session. The model itself is closer: **754 ms against 1822 ms** to the first token of a short answer, and **446 tokens per second against 292** on the visible content of a long answer.
+**The gateway is a small part of the wait.** In the last round, one request to the server on a ready connection needed **27 ms on Command Code and 297 ms on OpenCode Go**, and a new TLS connection added **41 ms against 273 ms**. That gap lands on every call. It is not, however, most of the delay: the first token of a short answer took **754 ms against 1822 ms**, a gap of about one second. Of that, roughly 270 ms is the server round trip. The rest I did not isolate — it could be queueing, model serving or prefill, and I did not measure which.
 
 ## The decision
 
-Command Code was faster on every measurement, in all four rounds. The gap is not one dramatic number. It is a smaller delay on every call, and a higher write speed on every answer. In an agent loop, that is the difference between a session that flows and a session that waits.
+On this machine, Command Code was faster on every measurement, in all four rounds. The gap is not one dramatic number. It is a smaller delay on every call, and a higher write speed on every answer. In an agent loop, that is the difference between a session that flows and a session that waits.
 
 The card below is the decision in one view: two plans at the same price, one model, and what the four rounds found.
 
@@ -112,7 +112,7 @@ This is my decision for my machine. Another person may prefer the other route fo
 - One host, one network path, four rounds of one day. The absolute values do not transfer to another machine.
 - I measured from Seville, in the south of Spain. The distance from my connection to a gateway is part of every delay in the tables. A reader in another region can see a different gap, in either direction. Take the sizes as mine, and check the direction on your own machine.
 - The queue of a provider moves hour by hour. The size of a difference is not a constant, and only the direction held across my four rounds.
-- Not measured: retries, tool calls, streaming with tools, very long context, image input, and price per million tokens.
+- Not measured: answer quality, retries, tool calls, streaming with tools, very long context, image input, and price per million tokens.
 - A measurement goes stale. I run a round again when a provider changes something.
 
 ## Wrap up

@@ -9,7 +9,7 @@ pair: 'grokking-from-memory-to-rule'
 
 Un transformador de 56.640 parámetros aprende a sumar módulo 53. En el paso 1.000 acierta el 98 % de los pares con los que se entrena y el 1,2 % de los que no ha visto nunca. Adivinando acertaría el 1,9 %. Ha memorizado 843 sumas y no ha aprendido nada.
 
-Y ahí sigue durante dos mil pasos más. El acierto en entrenamiento ya está en su techo, así que cualquier resumen del entrenamiento parece terminado. Entonces, entre el paso 3.500 y el 3.750, el acierto en los pares que no ha visto pasa del 28 % al 74 %, y en el paso 5.000 es del 92 %. Termina en el 97,3 %: 1.912 de los 1.966 pares que nunca vio.
+Y ahí sigue durante dos mil pasos más. El acierto en entrenamiento ya está casi en su máximo, así que cualquier resumen del entrenamiento parece terminado. Entonces, entre el paso 3.500 y el 3.750, el acierto en los pares que no ha visto pasa del 28 % al 74 %, y en el paso 5.000 es del 92 %. Termina en el 97,3 %: 1.912 de los 1.966 pares que nunca vio.
 
 Ese salto tardío es el *grokking*. El nombre viene de [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177) (Power et al., 2022), que lo describió en redes pequeñas entrenadas con conjuntos de datos algorítmicos pequeños. La arquitectura es el *transformador* (*transformer*) de [Attention Is All You Need](https://arxiv.org/abs/1706.03762) (Vaswani et al., 2017). El experimento entero son 329 líneas de C# y 26 segundos en un núcleo.
 
@@ -56,7 +56,7 @@ Un documento es una sola secuencia, y el modelo predice cada *símbolo* siguient
 
 La línea azul es el acierto en los pares de entrenamiento. La línea roja, el de los pares no vistos.
 
-El acierto en entrenamiento llega al **98 % en el paso 1.000** y ya no vuelve a bajar mucho de ahí. El de los pares no vistos está en el 1,2 % en ese momento, y se queda entre el 1 % y el 28 % durante otros 2.500 pasos. Después se mueve: **74 % en el paso 3.750**, 82 % en el 4.000, 92 % en el 5.000 y 97,3 % al final.
+El acierto en entrenamiento llega al **98 % en el paso 1.000** y se queda entre el 94 % y el 100 % a partir de ahí. El de los pares no vistos está en el 1,2 % en ese momento, y se queda entre el 1 % y el 28 % durante otros 2.500 pasos. Después se mueve: **74 % en el paso 3.750**, 82 % en el 4.000, 92 % en el 5.000 y 97,3 % al final.
 
 La parte plana de esa curva es la que merece la pena entender. El modelo no está atascado: está cambiando de opinión.
 
@@ -72,9 +72,9 @@ En el paso 12.000, la misma suma:
 
 El 47 recibe un 90 %, y ninguna otra se le acerca.
 
-**La pérdida es un solo número que dice cuánto se equivocó el modelo, y mira una sola cosa: la probabilidad que le dio a la respuesta correcta.** Con un 100 % es 0,0; con un 50 %, 0,7; con un 10 %, 2,3; con un 1 %, 4,6. La regla se llama **entropía cruzada** y nunca baja de cero, así que la única forma de reducirla es darle más probabilidad a la respuesta correcta.
+**La pérdida es un solo número que dice cuánto se equivocó el modelo.** Depende de la probabilidad que le dio a la respuesta correcta: con un 100 % es 0,0; con un 50 %, 0,7; con un 10 %, 2,3; con un 1 %, 4,6. La regla se llama **entropía cruzada** y nunca baja de cero.
 
-La pérdida no mira en qué creía el modelo en su lugar. Una respuesta equivocada sostenida con un 40 % de confianza puntúa peor que una duda, y por eso el acierto en pares no vistos puede quedar por debajo del azar: el modelo no se está cubriendo las espaldas, está equivocado con convencimiento.
+Esa probabilidad sale de un _softmax_ sobre las 53 respuestas, así que no es la opinión privada del modelo sobre la correcta: subir la puntuación de cualquier respuesta equivocada le quita probabilidad a la correcta y sube la pérdida. Por eso un modelo equivocado con convencimiento puntúa peor que uno que duda, y por eso el acierto en pares no vistos puede quedar por debajo del azar: el modelo no se está cubriendo las espaldas, está equivocado con convencimiento.
 
 ## Qué parece provocar el salto
 
@@ -130,7 +130,7 @@ cd grokking-torchsharp
 make run
 ```
 
-`make` a secas compila y comprueba el estilo. No viene con Windows, y para ese caso cada objetivo tiene su forma en `dotnet`: `dotnet run -c Release` donde pone `make run`.
+`make` a secas compila y comprueba el estilo; no entrena. `make` no viene con Windows, y para ese caso cada objetivo tiene su forma en `dotnet`: `dotnet run -c Release` donde pone `make run`. El número de pasos de abajo es un ejemplo de las opciones, no el entrenamiento completo.
 
 El entrenamiento tarda unos treinta segundos y escribe tres cosas:
 
@@ -149,7 +149,7 @@ Cada fila del CSV tiene seis columnas:
 | `train_acc` | acierto exacto en esos pares |
 | `test_loss` | entropía cruzada media sobre los 1.966 pares no vistos |
 | `test_acc` | acierto exacto en los pares no vistos |
-| `param_norm` | tamaño de todos los parámetros, como un solo número |
+| `param_norm` | norma L2 de los 56.640 parámetros: la raíz de la suma de sus cuadrados |
 
 El repositorio trae un `Makefile` con un objetivo por acción. `make help` los lista, y los dos que importan aquí son:
 
@@ -190,7 +190,7 @@ Eso las escribe en `runs/probabilities.csv` y las dibuja en `figures/grokking-pr
 
 - **El acierto en entrenamiento dice muy poco por sí solo.** Aquí llega al 100 % mientras el de los pares no vistos está en el azar, y ahí sigue durante dos mil pasos.
 - **El entrenamiento se comporta como una transición entre dos respuestas.** Una guarda los pares y necesita parámetros grandes; la otra calcula la regla y necesita menos.
-- **El decaimiento de pesos es lo que inclina la balanza.** Con él llega el salto; a cero no llega nunca, con ningún número de pasos que haya probado.
+- **En este entrenamiento, el decaimiento de pesos es lo que inclina la balanza.** Con él llega el salto; a cero no llega nunca, en los 60.000 pasos que probé, con una semilla y un módulo.
 - **El tamaño de los parámetros se movió antes,** en las dos direcciones: subió mientras el modelo memorizaba y bajó cuando manda la regla.
 
 No soy investigador de aprendizaje automático. Esto es un experimento pequeño que he podido reproducir de principio a fin, entender y disfrutar viéndolo moverse. El código, los datos y los registros están en

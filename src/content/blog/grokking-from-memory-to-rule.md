@@ -9,7 +9,7 @@ pair: 'grokking-from-memory-to-rule'
 
 A transformer with 56,640 parameters learns modular addition. After 1,000 steps it answers 98% of its training pairs correctly and 1.2% of the pairs it has never seen. Guessing would give it 1.9%. It has memorized 843 sums and learned nothing.
 
-It stays there for another two thousand steps. Training accuracy is already at its ceiling, so every summary of the run looks finished. Then, between step 3,500 and step 3,750, the accuracy on unseen pairs goes from 28% to 74%, and by step 5,000 it is 92%. The run ends at 97.3%, which is 1,912 of the 1,966 pairs it never saw.
+It stays there for another two thousand steps. Training accuracy is already near its maximum, so every summary of the run looks finished. Then, between step 3,500 and step 3,750, the accuracy on unseen pairs goes from 28% to 74%, and by step 5,000 it is 92%. The run ends at 97.3%, which is 1,912 of the 1,966 pairs it never saw.
 
 That delayed jump is **grokking**. The name comes from [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177) (Power et al., 2022), which reported it in small networks trained on small algorithmic datasets. The architecture is the transformer from [Attention Is All You Need](https://arxiv.org/abs/1706.03762) (Vaswani et al., 2017). The whole experiment is 329 lines of C# and takes 26 seconds on one core.
 
@@ -56,7 +56,7 @@ A document is a single sequence, and the model predicts every next token in it. 
 
 The blue line is accuracy on the training pairs. The red line is accuracy on the unseen pairs.
 
-Training accuracy reaches **98% at step 1,000** and never falls far below it again. Unseen accuracy is 1.2% at that point, and it stays between 1% and 28% for another 2,500 steps. Then it moves: **74% at step 3,750**, 82% at 4,000, 92% at 5,000, and 97.3% at the end.
+Training accuracy reaches **98% at step 1,000** and stays between 94% and 100% after that. Unseen accuracy is 1.2% at that point, and it stays between 1% and 28% for another 2,500 steps. Then it moves: **74% at step 3,750**, 82% at 4,000, 92% at 5,000, and 97.3% at the end.
 
 The flat part of that curve is the part worth understanding. The model is not stuck. It is changing its mind.
 
@@ -72,9 +72,9 @@ At step 12,000, the same sum:
 
 47 gets 90%, and nothing else is close.
 
-**The loss is one number that says how wrong the model was, and it looks at one thing: the probability the model gave to the correct answer.** At 100% it is 0.0; at 50%, 0.7; at 10%, 2.3; at 1%, 4.6. The rule is called **cross-entropy**, and it never goes below zero, so the only way to reduce it is to give the correct answer more probability.
+**The loss is one number that says how wrong the model was.** It depends on the probability the model gave to the correct answer: at 100% the loss is 0.0, at 50% it is 0.7, at 10% it is 2.3, at 1% it is 4.6. The rule is called **cross-entropy**, and it never goes below zero.
 
-The loss pays no attention to what the model believed instead. A wrong answer held with 40% confidence scores worse than a hesitant guess would, which is why accuracy on unseen pairs can sit below chance: the model is not hedging, it is confidently wrong.
+That probability is a softmax over all 53 answers, so it is not the model's private opinion of the right answer: raising the score of any wrong answer takes probability away from the right one and raises the loss. That is why a confidently wrong model scores worse than a hesitant one, and why accuracy on unseen pairs can sit below chance: the model is not hedging, it is confidently wrong.
 
 ## What seems to cause the jump
 
@@ -130,7 +130,7 @@ cd grokking-torchsharp
 make run
 ```
 
-`make` on its own compiles and checks the style. It does not ship with Windows, and every target has a `dotnet` form for that case: `dotnet run -c Release` where the target says `make run`.
+`make` on its own compiles and runs the style check; it does not train. `make` does not ship with Windows, and every target has a `dotnet` form for that case: `dotnet run -c Release` where the target says `make run`. The step count below is an example of the flags, not the full run.
 
 The run takes about half a minute and writes three things:
 
@@ -149,7 +149,7 @@ Each row of the CSV has six columns:
 | `train_acc` | exact match on those pairs |
 | `test_loss` | mean cross-entropy over all 1,966 unseen pairs |
 | `test_acc` | exact match on the unseen pairs |
-| `param_norm` | size of every parameter, as one number |
+| `param_norm` | L2 norm of all 56,640 parameters: the square root of the sum of their squares |
 
 The repository has a `Makefile` with one target per action. `make help` lists them, and the two worth knowing here are:
 
@@ -190,7 +190,7 @@ That writes them to `runs/probabilities.csv` and draws them in `figures/grokking
 
 - **Training accuracy says very little on its own.** It reaches 100% here while the accuracy on unseen pairs sits at chance, and it stays there for two thousand steps.
 - **The run behaves like a transition between two answers.** One stores the pairs and needs large parameters; the other computes the rule and needs less.
-- **Weight decay is what tips it.** With decay the jump arrives; at zero it never does, at any number of steps I tried.
+- **In this run, weight decay is what tips it.** With decay the jump arrives; at zero it never does, in the 60,000 steps I tried, on one seed and one modulus.
 - **The size of the parameters moved first,** in both directions: up while the model memorized, down as the rule took over.
 
 I am not a machine learning researcher. This is a small experiment I could reproduce from end to end, understand, and enjoy watching move. The code, the data and the logs are in
