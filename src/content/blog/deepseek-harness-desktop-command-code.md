@@ -108,7 +108,7 @@ The results and the reasons for every rejection are in [github.com/jacano/dsh-co
 
 The official DeepSeek provider is off in that file, route by route: the API-key chat route, the account chat route, the search provider, and the request-field registry. No DeepSeek route appears in the menu, no card appears in Settings → Models, and no `DEEPSEEK_API_KEY` is stored. I keep the key in one place, in one provider, and it is not DeepSeek's.
 
-One consequence is worth knowing: `web_search` stays in the tool list of a session, because an agent preset composes the web tools and a preset takes no patch, but every call fails with `WEB_PROVIDER_UNAVAILABLE`. I do not use it, so I left it that way.
+One consequence is worth knowing: `web_search` stays in the tool list of a session, because an agent preset composes the web tools and a preset takes no patch. The tool points at `searchProvider: deepseek-official`, and that provider is off, so every call fails with `configured web provider "deepseek-official" is not registered`. I do not use it, so I left it that way.
 
 ## Three traps
 
