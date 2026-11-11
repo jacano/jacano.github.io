@@ -46,7 +46,9 @@ The flat part of the curve is the part worth watching. The model is not stuck: i
 
 Two solutions fit the training data. One is a table of the 843 sums: fast, and useless for a sum that is not in it. The other is the rule, which answers everything.
 
-Training only tries to make the answers less wrong; it has no preference between the two. In this run the balance tips with **weight decay**, a small charge for the size of the 56,320 numbers at every step. The table needs big numbers and the rule needs small ones, so the table gets more expensive as the run goes on, and the training drifts to the rule.
+Training only tries to make the answers less wrong; it has no preference between the two. It uses **Adam**, the standard optimizer, which at each step nudges every number in the direction that helps. **Weight decay** adds a second nudge, towards zero, and that is the one that decides: it charges for size, the table needs big numbers and the rule needs small ones, so the table gets more expensive as the run goes on and the training drifts to the rule.
+
+Where the second nudge goes matters. Inside the update it works. As a separate shrink applied after the update, the AdamW variant, it does nothing here: the run ends at 30.9% of the unseen sums, the same as with no decay at all.
 
 ![Two curves against the training step, each on its own axis. On the left axis the size of the parameters falls from 18.9 to 8.8 in 250 steps, climbs to 11.0 while the model memorizes, then settles at 9.3. On the right axis the accuracy on unseen pairs rises from 1.8% to 100%.](/blog/grokking-norm.svg)
 

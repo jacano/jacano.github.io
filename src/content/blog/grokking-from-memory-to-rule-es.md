@@ -46,7 +46,9 @@ La parte plana de la curva es la que merece la pena mirar. El modelo no está at
 
 Dos soluciones encajan con los datos de entrenamiento. Una es una tabla con las 843 sumas: rápida, e inútil para una suma que no esté en ella. La otra es la regla, que acierta todas.
 
-El entrenamiento solo intenta que las respuestas sean menos malas; no prefiere ninguna de las dos. En este caso la balanza se inclina con el **decaimiento de pesos** (*weight decay*), un pequeño cobro por el tamaño de los 56.320 números en cada paso. La tabla necesita números grandes y la regla los necesita pequeños, así que la tabla se va encareciendo y el entrenamiento se desliza hacia la regla.
+El entrenamiento solo intenta que las respuestas sean menos malas; no prefiere ninguna de las dos. Usa **Adam**, el optimizador habitual, que en cada paso mueve cada número un poco en la dirección que ayuda. El **decaimiento de pesos** (*weight decay*) añade un segundo empujón, hacia cero, y es el que decide: cobra por el tamaño, la tabla necesita números grandes y la regla los necesita pequeños, así que la tabla se va encareciendo y el entrenamiento se desliza hacia la regla.
+
+Dónde va ese segundo empujón importa. Dentro de la actualización funciona. Como un encogimiento aparte después de la actualización, la variante AdamW, aquí no hace nada: el entrenamiento termina en el 30,9 % de las sumas no vistas, lo mismo que sin decaimiento.
 
 ![Dos curvas frente al paso de entrenamiento, cada una en su eje. En el eje izquierdo el tamaño de los parámetros baja de 18,9 a 8,8 en 250 pasos, sube a 11,0 mientras el modelo memoriza y se asienta en 9,3. En el eje derecho el acierto en sumas no vistas sube del 1,8 % al 100 %.](/blog/grokking-norm.svg)
 
