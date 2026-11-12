@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { base, inLanguage, langLabel, langOf, readTime, slugOf, translations } from '../../utils/site';
+import { base, readTime, slugOf } from '../../utils/site';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -14,23 +14,11 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const allPosts = await getCollection('blog');
-const language = langOf(post);
-// The pager walks the articles of one language: "Older" from an English post
-// must not land on the translation of the same post.
-const sorted = [...inLanguage(allPosts, language)].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
+const sorted = [...allPosts].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
 const idx = sorted.findIndex((p) => p.id === post.id);
 const prev = sorted[idx + 1];
 const next = sorted[idx - 1];
 const postSlug = slugOf(post);
-// Every file of this article, this one included. It stays a list of one when the
-// article exists in a single language.
-const siblings = translations(allPosts, post);
-const hasSwitch = siblings.length > 1;
-/** The switch, the `hreflang` cluster and the alternate social locale read this. */
-const alternates = siblings.map((other) => ({
-  lang: langOf(other),
-  path: `/blog/${slugOf(other)}/`,
-}));
 ---
 
 <Layout
@@ -40,9 +28,7 @@ const alternates = siblings.map((other) => ({
   ogType="article"
   publishedTime={post.data.date}
   tags={[post.data.tag]}
-  lang={language}
   articleTitle={post.data.title}
-  alternates={alternates}
 >
   <article class="container post-wrap">
     <div class="meta">
@@ -51,24 +37,6 @@ const alternates = siblings.map((other) => ({
       </a>
       <div class="tags">
         <span class="badge">{post.data.tag}</span>
-        {hasSwitch && (
-          <span class="lang-switch" role="group" aria-label="Language">
-            {siblings.map((other) => {
-              const code = langOf(other);
-              const current = other.id === post.id;
-              return (
-                <a
-                  href={`${base}/blog/${slugOf(other)}/`}
-                  class:list={['lang-link', { current }]}
-                  hreflang={code}
-                  aria-current={current ? 'page' : undefined}
-                >
-                  {langLabel(code)}
-                </a>
-              );
-            })}
-          </span>
-        )}
         <span class="mono muted">
           {post.data.date} · {readTime(post.body)}
         </span>
@@ -485,28 +453,6 @@ const alternates = siblings.map((other) => ({
       letter-spacing: 0.06em;
       text-transform: uppercase;
       border: 1px solid rgba(99, 102, 241, 0.3);
-    }
-    /* The language switch sits next to the tag. Two small links, and the one
-       the reader is on is filled. #4f46e5 keeps white text above 7:1. */
-    .lang-switch {
-      display: inline-flex;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      overflow: hidden;
-      background: var(--bg2);
-    }
-    .lang-link {
-      padding: 4px 12px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--muted);
-    }
-    .lang-link:hover {
-      color: var(--text);
-    }
-    .lang-link.current {
-      background: #4f46e5;
-      color: #fff;
     }
     .mono {
       font-family: var(--font-mono), monospace;

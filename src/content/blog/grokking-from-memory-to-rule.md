@@ -3,8 +3,6 @@ title: 'Grokking: the jump from memory to rule'
 date: '2026-10-05'
 tag: 'Machine Learning'
 excerpt: 'A small neural network memorizes 843 sums and then learns to add.'
-lang: 'en'
-pair: 'grokking-from-memory-to-rule'
 ---
 
 A small neural network learns to add numbers below 53. Inside it there are 56,320 numbers, and training only changes those.

@@ -1,6 +1,6 @@
 ---
 import { Font } from 'astro:assets';
-import { base, experienceYears, localeOf } from '../utils/site';
+import { base, experienceYears, locale } from '../utils/site';
 import cv from '../data/cv.json';
 
 /** Derived from the CV timeline, so the meta description cannot claim more than it. */
@@ -22,18 +22,11 @@ interface Props {
   publishedTime?: string;
   tags?: string[];
   noindex?: boolean;
-  /** Language of the page. English is the default. */
-  lang?: string;
   /**
    * The article title without the suffix of the site, for structured data.
    * `title` is what a tab shows; a search engine wants only the headline.
    */
   articleTitle?: string;
-  /**
-   * Every language version of this page, this one included. It writes the
-   * `<link rel="alternate" hreflang>` cluster and the alternate social locale.
-   */
-  alternates?: { lang: string; path: string }[];
 }
 const {
   title,
@@ -44,9 +37,7 @@ const {
   publishedTime,
   tags = [],
   noindex = false,
-  lang = 'en',
   articleTitle,
-  alternates = [],
 } = Astro.props;
 /** The origin of the site comes from `site` in the Astro config, never from a literal. */
 const site = (Astro.site ?? new URL('https://jacano.github.io')).toString().replace(/\/$/, '');
@@ -93,7 +84,7 @@ const blogPosting =
         headline: articleTitle ?? title,
         description: description,
         datePublished: publishedTime,
-        inLanguage: lang,
+        inLanguage: 'en',
         author: { '@type': 'Person', name: 'Juan Antonio Cano Salado', url: site },
         publisher: { '@type': 'Person', name: 'Juan Antonio Cano Salado' },
         mainEntityOfPage: canonicalURL,
@@ -101,13 +92,10 @@ const blogPosting =
         keywords: tags.join(', '),
       }
     : null;
-/** The English file is the default for a reader who matches no language. */
-const defaultAlternate = alternates.find((alternate) => alternate.lang === 'en') ?? alternates[0];
-const absolute = (path: string) => new URL(path, `${site}/`).toString();
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -124,19 +112,7 @@ const absolute = (path: string) => new URL(path, `${site}/`).toString();
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={title} />
     <meta property="og:site_name" content="Juan Antonio Cano Salado" />
-    <meta property="og:locale" content={localeOf(lang)} />
-    {alternates
-      .filter((alternate) => alternate.lang !== lang)
-      .map((alternate) => (
-        <meta property="og:locale:alternate" content={localeOf(alternate.lang)} />
-      ))}
-    {/* A language cluster is only worth writing when the page exists in more
-        than one language: a single self reference is noise. */}
-    {alternates.length > 1 &&
-      alternates.map((alternate) => <link rel="alternate" hreflang={alternate.lang} href={absolute(alternate.path)} />)}
-    {alternates.length > 1 && defaultAlternate && (
-      <link rel="alternate" hreflang="x-default" href={absolute(defaultAlternate.path)} />
-    )}
+    <meta property="og:locale" content={locale} />
     {publishedTime && <meta property="article:published_time" content={publishedTime} />}
     {tags.map((tag) => (
       <meta property="article:tag" content={tag} />

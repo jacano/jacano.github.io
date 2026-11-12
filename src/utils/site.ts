@@ -19,49 +19,8 @@ export function readTime(body: string | undefined): string {
   return Math.max(1, Math.round(words / 200)) + ' min';
 }
 
-/** The part of a post the language helpers read. */
-export interface LangPost {
-  id: string;
-  data: { lang?: string; pair?: string };
-}
-
-/** The language of a post. English is the default. */
-export function langOf(post: LangPost): string {
-  return post.data.lang ?? 'en';
-}
-
-/** The name of a language, as a reader sees it in the switch. */
-export function langLabel(code: string): string {
-  return code === 'es' ? 'Español' : 'English';
-}
-
-/** The short mark of a language, for a compact list. */
-export function langTag(code: string): string {
-  return code.toUpperCase();
-}
-
-/**
- * The Open Graph locale of a language. A page in Spanish says `es_ES`, so a
- * social site does not label it as English.
- */
-export function localeOf(code: string): string {
-  return code === 'es' ? 'es_ES' : 'en_US';
-}
-
-/**
- * Every file of the same article, the current one included. Posts without a
- * `pair` are their own article and return only themselves.
- */
-export function translations<T extends LangPost>(posts: T[], post: T): T[] {
-  const key = post.data.pair;
-  if (!key) return [post];
-  return posts.filter((other) => other.data.pair === key);
-}
-
-/** The posts a reader sees first: one language, English by default. */
-export function inLanguage<T extends LangPost>(posts: T[], lang = 'en'): T[] {
-  return posts.filter((post) => langOf(post) === lang);
-}
+/** The Open Graph locale of the site. English only. */
+export const locale = 'en_US';
 
 /**
  * Years of professional experience, taken from the first year of a CV timeline.

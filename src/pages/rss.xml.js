@@ -1,18 +1,14 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
-import { inLanguage, slugOf } from '../utils/site';
+import { slugOf } from '../utils/site';
 
 export async function GET(context) {
-  // The feed carries the default language. A translation is reached from the
-  // article page, so it does not need an entry of its own here.
-  const posts = inLanguage(await getCollection('blog'));
+  const posts = await getCollection('blog');
   const sorted = [...posts].sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
   return rss({
     title: 'Juan Antonio Cano Salado — Blog',
     description: 'Articles on Web3 security, C# and .NET, architecture, technical leadership and hands-on data tools.',
     site: context.site ?? 'https://jacano.github.io',
-    // The feed carries one language, so it says which one. A reader that
-    // aggregates several feeds uses this to group them.
     customData: '<language>en</language>',
     items: sorted.map((post) => ({
       title: post.data.title,
