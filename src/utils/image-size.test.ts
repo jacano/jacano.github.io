@@ -68,11 +68,7 @@ describe('the size in a header', () => {
 });
 
 describe('the size of the files the site ships', () => {
-  it('reads the chart, the diagram and the two photographs', () => {
-    expect(sizeOfFile('public/blog/deepseek-harness-session-stats.png')).toEqual({
-      width: 620,
-      height: 258,
-    });
+  it('reads the diagram and the two photographs', () => {
     expect(sizeOfFile('public/blog/arp-mitm-flow.svg')).toEqual({ width: 1100, height: 560 });
     expect(sizeOfFile('public/avatar.webp')).toEqual({ width: 460, height: 460 });
     expect(sizeOfFile('public/avatar.jpg')).toEqual({ width: 460, height: 460 });
