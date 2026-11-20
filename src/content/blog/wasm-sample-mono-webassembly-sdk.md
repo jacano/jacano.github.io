@@ -5,7 +5,11 @@ tag: 'Archive · WASM'
 excerpt: 'A small 2019 sample showing .NET running in a browser through WebAssembly and Mono.WebAssembly.Sdk.'
 ---
 
-In 2019 I published [WasmSample](https://github.com/jacano/WasmSample), a small demonstration of .NET running in a browser as WebAssembly. No plugin required. The original post is at [x.com/jacano35/status/1124476690640572416](https://x.com/jacano35/status/1124476690640572416).
+> **Archive note:** This article was first shared on **May 4, 2019** at [x.com/jacano35](https://x.com/jacano35/status/1124476690640572416). It is republished here in 2026. Original author: **Juan Antonio Cano**. Code at [github.com/jacano/WasmSample](https://github.com/jacano/WasmSample).
+
+In 2019 I published [WasmSample](https://github.com/jacano/WasmSample), a small demonstration of .NET running in a browser as WebAssembly. No plugin required.
+
+![A C# project builds with the Mono.WebAssembly.Sdk toolchain into a WebAssembly module and a mono.js loader, and the browser page loads both over HTTP because a browser refuses WebAssembly from a local file. The five IL opcodes in the note, neg, not, switch, throw and nop, are the 2017 work in dotnet/corert, a different toolchain from this 2019 sample.](/blog/wasm-sample-flow.svg)
 
 ## Why WASM
 
@@ -22,5 +26,3 @@ The project also closed a circle. In 2017 I added WASM support for five IL opcod
 ## Run it
 
 The sample targets the 2019 Mono toolchain, so a current SDK may refuse to build it. Serve the output over HTTP instead of opening the file, because browsers do not load WebAssembly from `file://`. The [README](https://github.com/jacano/WasmSample) has the steps as they were at the time.
-
-*First shared May 4, 2019 at x.com/jacano35. Republished 2026 on jacano.github.io.*

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 500" role="img" aria-labelledby="title desc">
+  <title id="title">How WasmSample puts a C# page in the browser as WebAssembly</title>
+  <desc id="desc">A C# project builds with the Mono.WebAssembly.Sdk toolchain into a WebAssembly module and a mono.js loader. The browser page loads both over HTTP, because a browser refuses to load WebAssembly from a local file. The bottom-left card lists the five IL opcodes (neg, not, switch, throw, nop) added to dotnet/corert in 2017, a different toolchain from this 2019 sample.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".7"/></pattern>
+    <marker id="arrow-cyan" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 10 4 0 8Z" fill="#22d3ee"/></marker>
+  </defs>
+  <rect width="1100" height="500" fill="#020617"/>
+  <rect width="1100" height="500" fill="url(#grid)"/>
+  <text x="40" y="44" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="21" font-weight="700">WasmSample: one C# page in the browser as WebAssembly</text>
+  <text x="40" y="70" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="13">2019 &#183; Mono.WebAssembly.Sdk &#183; no plugin &#183; the runtime loads over HTTP</text>
+
+  <text x="268" y="96" text-anchor="middle" fill="#67e8f9" font-family="system-ui,sans-serif" font-size="11" font-weight="600">build</text>
+  <text x="552" y="96" text-anchor="middle" fill="#67e8f9" font-family="system-ui,sans-serif" font-size="11" font-weight="600">emit</text>
+  <text x="808" y="96" text-anchor="middle" fill="#67e8f9" font-family="system-ui,sans-serif" font-size="11" font-weight="600">load</text>
+
+  <line x1="242" y1="152" x2="290" y2="152" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#arrow-cyan)"/>
+  <line x1="528" y1="152" x2="576" y2="152" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#arrow-cyan)"/>
+  <line x1="784" y1="152" x2="832" y2="152" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#arrow-cyan)"/>
+
+  <rect x="40" y="104" width="200" height="96" rx="12" fill="#0b2430" stroke="#38bdf8" stroke-opacity=".6"/>
+  <text x="140" y="138" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="16" font-weight="700">C# project</text>
+  <text x="140" y="162" text-anchor="middle" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="11">one class + one page</text>
+  <text x="140" y="184" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="11">the sample sources</text>
+
+  <rect x="296" y="104" width="230" height="96" rx="12" fill="#0f172a" stroke="#a78bfa" stroke-opacity=".55"/>
+  <text x="411" y="138" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="16" font-weight="700">Mono toolchain</text>
+  <text x="411" y="162" text-anchor="middle" fill="#cbd5e1" font-family="ui-monospace,monospace" font-size="11">Mono.WebAssembly.Sdk</text>
+  <text x="411" y="184" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="11">build.sh and the scripts folder</text>
+
+  <rect x="582" y="104" width="200" height="96" rx="12" fill="#0f172a" stroke="#22d3ee" stroke-opacity=".55"/>
+  <text x="682" y="138" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="16" font-weight="700">WebAssembly</text>
+  <text x="682" y="162" text-anchor="middle" fill="#cbd5e1" font-family="ui-monospace,monospace" font-size="11">.wasm + mono.js</text>
+  <text x="682" y="184" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="11">the two files the page loads</text>
+
+  <rect x="838" y="104" width="222" height="96" rx="12" fill="#0d1b19" stroke="#34d399" stroke-opacity=".6"/>
+  <text x="949" y="138" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="16" font-weight="700">Browser page</text>
+  <text x="949" y="162" text-anchor="middle" fill="#86efac" font-family="system-ui,sans-serif" font-size="11">no plugin, runs in the tab</text>
+  <text x="949" y="184" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="11">the runtime starts in the page</text>
+
+  <rect x="40" y="232" width="330" height="200" rx="12" fill="#2b230f" stroke="#fbbf24" stroke-opacity=".45"/>
+  <text x="60" y="262" fill="#fcd34d" font-family="system-ui,sans-serif" font-size="11" font-weight="700">2017 &#183; DOTNET/CORERT, A DIFFERENT TOOLCHAIN</text>
+  <text x="60" y="292" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="12">Five IL opcodes for the WASM target:</text>
+  <text x="60" y="318" fill="#f8fafc" font-family="ui-monospace,monospace" font-size="13">neg &#183; not &#183; switch &#183; throw &#183; nop</text>
+  <text x="60" y="350" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="11">That work landed in dotnet/corert in 2017.</text>
+  <text x="60" y="372" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="11">This 2019 sample runs on Mono instead,</text>
+  <text x="60" y="394" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="11">but the idea is the same: .NET to the browser.</text>
+
+  <rect x="390" y="232" width="320" height="200" rx="12" fill="#0f172a" fill-opacity=".75" stroke="#475569"/>
+  <text x="410" y="262" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="11" font-weight="700">THE BUILD</text>
+  <text x="410" y="292" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="12">build.sh runs the scripts folder</text>
+  <text x="410" y="316" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="11">build.sh &#183; scripts/</text>
+  <text x="410" y="346" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="11">The Shell project holds the HTML page</text>
+  <text x="410" y="368" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="11">and the JavaScript that loads the runtime.</text>
+
+  <rect x="730" y="232" width="330" height="200" rx="12" fill="#2b1724" stroke="#fb7185" stroke-opacity=".45"/>
+  <text x="750" y="262" fill="#fda4af" font-family="system-ui,sans-serif" font-size="11" font-weight="700">SERVE IT OVER HTTP, NEVER FROM FILE://</text>
+  <text x="750" y="292" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="12">A browser refuses to load WebAssembly</text>
+  <text x="750" y="314" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="12">from a local file. Serve the output folder</text>
+  <text x="750" y="336" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="12">with any static host, and the page runs.</text>
+  <text x="750" y="368" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="11">A current SDK may refuse to build it,</text>
+  <text x="750" y="390" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="11">because the sample targets the 2019 Mono toolchain.</text>
+
+  <text x="40" y="474" fill="#64748b" font-family="system-ui,sans-serif" font-size="10.5">Diagram is conceptual, not to scale &#183; WasmSample &#183; May 4, 2019</text>
+</svg>

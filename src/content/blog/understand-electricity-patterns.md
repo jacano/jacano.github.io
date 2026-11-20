@@ -21,7 +21,7 @@ Since 2021, the standard home tariff has been [2.0TD](https://www.boe.es/buscar/
 - **P2 (flat):** in between.
 - **P3 (off-peak):** the cheapest. Weekdays 00:00-08:00, plus all weekend and national holidays.
 
-![A week of the 2.0TD tariff. From Monday to Friday, P1 peak runs from 10:00 to 14:00 and from 18:00 to 22:00, P2 flat covers 08:00 to 10:00, 14:00 to 18:00 and 22:00 to 24:00, and P3 off-peak covers 00:00 to 08:00. Saturday and Sunday are off-peak all day, and a national holiday follows Sunday.](/blog/energy-2td-week.svg)
+![A week of the 2.0TD tariff. From Monday to Friday, P1 peak runs from 10:00 to 14:00 and from 18:00 to 22:00; P2 flat covers 08:00 to 10:00, 14:00 to 18:00 and 22:00 to 24:00; P3 off-peak covers 00:00 to 08:00. Saturday and Sunday are off-peak all day, and a national holiday follows Sunday.](/blog/energy-2td-week.svg)
 
 Retailers sell the same energy at a different price for each period, so your bill is a mix of the three. The tool does the mix for you: it adds your hours into P1, P2 and P3.
 
@@ -42,7 +42,7 @@ One comparator is [luzfija.es](https://github.com/almax-es/luzfija.es), and its 
 - Too high: you pay for a power that you never use.
 - Too low: the ICP trips and the supply goes off.
 
-The 2.0TD tariff has two power periods. P1 covers the peak and flat hours, P2 the off-peak hours. The tool gives the **maximum demanded power** for each period, and it lists the months where you passed the contract.
+The 2.0TD tariff has two power periods. P1 covers the peak and flat hours, P2 the off-peak hours. The tool gives the **maximum demanded power** for each period, and it lists the months where you exceeded the contracted power.
 
 **kWh** is how much you used. **kW** is the average power you pulled over a metering interval. Set the contracted power for each period just above that period's maximum demanded power, and pick the tariff from the split.
 
@@ -60,7 +60,7 @@ edistribucion login --save   # one time
 edistribucion                # the report
 ```
 
-The report includes real and estimated totals, the P1/P2/P3 split, usage by year, month, hour, and day of the week, the highest-use hours, demanded power, and a reading map.
+The report includes real and estimated totals, the P1/P2/P3 split, usage by year, month, hour and day of the week, the highest-use hours, demanded power and a reading map.
 
 The code and the guide are here:
 

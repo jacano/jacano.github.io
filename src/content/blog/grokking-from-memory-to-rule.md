@@ -7,9 +7,9 @@ excerpt: 'A small neural network memorizes 843 sums and then learns to add.'
 
 A small neural network learns to add numbers below 53. Inside it there are 56,320 numbers, and training only changes those.
 
-After 1,000 steps it answers 93% of the sums it trained on, and 32% of the sums it has never seen. Guessing would give 1.9%, because there are 53 possible answers. So the network has learned its training sums by heart, and nothing about the rest.
+After 1,000 steps it answers 93% of the sums it trained on, and 32% of the sums it has never seen. Guessing would give 1.9%, because there are 53 possible answers. So the network has learned its training sums by heart and nothing about the rest.
 
-Then the rest arrives. Between step 1,000 and step 3,000 the unseen number goes from 32% to 94%, at step 5,000 it is 99%, and from step 7,500 it is 100%: 1,966 sums it never saw, all of them right.
+Then the rest arrives. Between step 1,000 and step 3,000 the accuracy on the unseen sums goes from 32% to 94%; at step 5,000 it is 99%; and from step 7,500 it is 100%: 1,966 sums it never saw, all of them right.
 
 That late jump is **grokking**. The name comes from [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177) (Power et al., 2022), which saw it in small networks trained on small algorithmic tasks. The network is a transformer with one layer, the same family as the models behind chat programs. The experiment is two C# files and takes about 90 seconds on one core.
 
@@ -39,23 +39,23 @@ The interesting part is what happens between step 1,000 and step 3,000. The netw
 
 Two different solutions can explain the 843 training sums. The first is a table: store the answer to each of them. It is quick, and it says nothing about a sum that is not in the table. The second is addition itself, which answers every sum.
 
-Both are possible, and the training has no preference between them. **Adam**, the usual optimizer, only pushes the answers to be less wrong at each step. What decides here is **weight decay**: at every step the training also pulls the numbers a little towards zero. A table needs big numbers, one for each stored answer, while addition needs smaller ones. So the table becomes more expensive as the run goes on, and the cheaper solution wins.
+Both are possible, and the training has no preference between them. **Adam**, the usual optimizer, only pushes each answer to be a little less wrong at each step. What decides here is **weight decay**: at every step the training also pulls the numbers a little towards zero. A table needs big numbers, one for each stored answer, while addition needs smaller ones. So the table becomes more expensive as the run goes on, and the cheaper solution wins.
 
 This figure shows it:
 
-![Size of the numbers and accuracy against the training step, each on its own axis. The size falls from 18.9 to 8.8 in 250 steps, climbs to 11.0 while the model memorizes, then settles at 9.3. The accuracy on unseen sums rises from 1.8% to 100%.](/blog/grokking-norm.svg)
+![Size of the numbers and accuracy against the training step, each on its own axis. The size falls from 18.9 to 8.8 in 250 steps, climbs to 11.0 while the network memorizes, then settles at 9.3. The accuracy on unseen sums rises from 1.8% to 100%.](/blog/grokking-norm.svg)
 
 The size falls from 18.9 to 8.8 in the first 250 steps, climbs to 11.0 while the network memorizes, and settles at 9.3 when addition takes over.
 
 ## Where the decay goes
 
-The same decay gives different results depending on where it is applied. Here it is applied as part of the same update that each step makes. The other common way is to shrink the numbers after the step, and that is what the **AdamW** optimizer does. With AdamW this run never learns addition: it ends at 30.9% of the unseen sums, the same accuracy as the run with no decay at all, and their size ends at about 56 instead of 9.3.
+The same decay gives different results depending on where it is applied. Here it is applied as part of the same update that each step makes. The other common way is to shrink the numbers after the step, and that is what the **AdamW** optimizer does. With AdamW this run never learns addition: it ends at 30.9% on the unseen sums, the same accuracy as the run with no decay at all, and the size of the numbers ends at about 56 instead of 9.3.
 
 So weight decay means two different things, and one of them does nothing here.
 
 ## The control
 
-With the decay at zero the network memorizes the 843 sums and stops there. The unseen number moves between 30.6% and 30.9% from step 2,000 to step 20,000, and their size grows to 61 because nothing charges for them. With the decay, the same run ends at 100%, with a size of 9.3.
+With the decay at zero the network memorizes the 843 sums and stops there. The accuracy on the unseen sums moves between 30.6% and 30.9% from step 2,000 to step 20,000, and the size of the numbers grows to 61 because nothing charges for them. With the decay, the same run ends at 100%, with a size of 9.3.
 
 ## The model
 
@@ -83,12 +83,14 @@ make infer PAIR=12+35
 inference 12+35 = 47  [ok]  top: 47 (89%), 21 (2%), 52 (2%)
 ```
 
+![The chance the network gives to each of the 53 possible answers for 12 + 35: answer 47 takes 89%, and every other answer stays close to 0%, so the network solves a sum it never trained on.](/blog/grokking-probabilities.svg)
+
 `12 + 35` is one of the sums held back from training, so the 89% on `47` is addition at work, not a stored answer.
 
 ## What I take from this
 
 Accuracy on the training sums says little on its own. In this run, weight decay decides between a table and the rule.
 
-I am not a machine learning researcher. This is a small experiment I could reproduce from end to end, understand, and enjoy watching move. The code, the data and the logs are in
+I am not a machine learning researcher. This is a small experiment I could reproduce from end to end, understand and enjoy watching move. The code, the data and the logs are in
 [github.com/jacano/grokking-torchsharp](https://github.com/jacano/grokking-torchsharp),
 so that anyone who wants to see it happen can run it in a minute and a half.

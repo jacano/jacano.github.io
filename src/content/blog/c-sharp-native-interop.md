@@ -2,7 +2,7 @@
 title: 'C# native interop: 10 years of lessons with Box2DCS and Crunch'
 date: '2025-08-02'
 tag: 'C# / C++'
-excerpt: 'What I learned maintaining C# bindings for C and C++: choosing between P/Invoke and C++/CLI, avoiding unnecessary copies, owning native memory, and packaging for the runtimes you support.'
+excerpt: 'What I learned maintaining C# bindings for C and C++: choosing between P/Invoke and C++/CLI, avoiding unnecessary copies, owning native memory and packaging for the runtimes you support.'
 ---
 
 I have spent ten years making C# call into C and C++. Three of those bindings are open source: Box2DCS, ManagedCrunch and ManagedXZLZMA. The hard part was never exposing the first function; it was keeping the boundary reliable as the code, the runtimes and the platforms changed.

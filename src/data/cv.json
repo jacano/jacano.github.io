@@ -77,9 +77,9 @@
       "role": "Senior Software Engineer, R&D team",
       "period": "2013 — 2019",
       "location": "Seville, Spain",
-      "description": "I designed, built and delivered software for clients, alone or in small teams. The work was mobile apps in Xamarin and .NET.",
+      "description": "I designed, built and delivered software for clients, alone or in small teams. The work was mobile app development in Xamarin and .NET.",
       "highlights": [
-        "I built open source samples, for example CameraTF.",
+        "I built open-source samples, for example CameraTF.",
         "I applied agile methods to the process.",
         "I gathered the requirements with the clients and gave technical advice."
       ]
@@ -108,7 +108,7 @@
     "Other": ["Technical leadership", "Mentoring", "Product Development", "AI-assisted development", "Agile"]
   },
   "certifications": [
-    "ISO/IEC 27001 - Dedge Security (2025)"
+    "ISO/IEC 27001 — Dedge Security (2025)"
   ],
   "languages": [
     { "lang": "Spanish", "level": "Native" },
@@ -126,7 +126,7 @@
     },
     {
       "name": "CameraTF",
-      "description": "It is a Xamarin.Android sample for realtime object detection with TensorFlow Lite. It uses SSD MobileNet and native YUV to RGB.",
+      "description": "It is a Xamarin.Android sample for real-time object detection with TensorFlow Lite. It uses SSD MobileNet and native YUV to RGB.",
       "url": "https://github.com/jacano/CameraTF",
       "lang": "C#",
       "stars": 11,
@@ -192,7 +192,7 @@
       {
         "title": "CLR",
         "repo": "dotnet/corert",
-        "description": "CoreRT is the experimental .NET Native compiler. It compiles .NET code to native code for better performance and smaller apps. It was part of CLR and merged into dotnet/runtime later.",
+        "description": "CoreRT was the experimental .NET Native compiler. It compiled .NET code to native code for better performance and smaller apps. It was part of CLR and merged into dotnet/runtime later.",
         "note": "The work was WASM target and IL opcodes. Tags were arch-wasm and cla-already-signed.",
         "prs": [
           { "number": 4725, "title": "Implement neg (float/integer) and not IL instructions. Fixes #4524 and #4525", "url": "https://github.com/dotnet/corert/pull/4725", "state": "merged", "date": "2017-10-15" },
@@ -203,7 +203,7 @@
       },
       {
         "repo": "microsoft/TailwindTraders-Mobile",
-        "description": "Tailwind Traders is a reference application for Xamarin.Forms 4 from Microsoft. It is a fictitious DIY retail brand. It includes AR features with TensorFlowLite for product recognition.",
+        "description": "Tailwind Traders is a reference application for Xamarin.Forms 4 from Microsoft. It is a fictitious DIY retail brand. It includes AR features with TensorFlow Lite for product recognition.",
         "prs": [
           { "number": 12, "title": "Feature/206 emgutf add", "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/12", "state": "merged", "date": "2018-12-17", "note": "EmguTF libs, TensorFlowLite mobilenetv2" },
           { "number": 13, "title": "Build fix", "url": "https://github.com/microsoft/TailwindTraders-Mobile/pull/13", "state": "merged", "date": "2018-12-17", "note": "Android build fix" },
@@ -214,7 +214,7 @@
       },
       {
         "repo": "microsoft/ailab",
-        "description": "Snip Insights is an open source cross-platform AI tool for screen capture. It uses Microsoft Azure Cognitive Services APIs to convert images to translated text, detect and tag image content, and suggest images.",
+        "description": "Snip Insights is an open-source cross-platform AI tool for screen capture. It uses Microsoft Azure Cognitive Services APIs to convert images to translated text, detect and tag image content, and suggest images.",
         "prs": [
           { "number": 15, "title": "Snip Insight cross platform version", "url": "https://github.com/microsoft/ailab/pull/15", "state": "merged", "date": "2018-10-01", "note": "Ubuntu and OSX support, installers at jacano/ailab releases" },
           { "number": 14, "title": "Duplicate of #15", "url": "https://github.com/microsoft/ailab/pull/14", "state": "closed", "date": "2018-09-17", "note": "duplicate, not merged" }
@@ -222,7 +222,7 @@
       },
       {
         "repo": "dotnet-architecture/eShopOnContainers",
-        "description": "eShopOnContainers is a cross-platform .NET sample microservices and container-based application. It runs on Linux, Windows and macOS. It is a reference application for building cloud-native microservices architecture using .NET, Docker containers and Azure Kubernetes Services.",
+        "description": "eShopOnContainers is a cross-platform .NET sample microservices application that runs in containers. It runs on Linux, Windows and macOS. It is a reference application for building a cloud-native microservices architecture using .NET, Docker containers and Azure Kubernetes Service.",
         "prs": [
           { "number": 648, "title": "Urls for Identity, Gateway Shopping and Marketing added to setting view", "url": "https://github.com/dotnet-architecture/eShopOnContainers/pull/648", "state": "merged", "date": "2018-07-03" },
           { "number": 651, "title": "Fix for issue #621", "url": "https://github.com/dotnet-architecture/eShopOnContainers/pull/651", "state": "closed", "date": "2018-06-28", "note": "Task.Delay fix for deadlocks, not merged" }

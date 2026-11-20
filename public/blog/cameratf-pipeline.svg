@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 560" role="img" aria-labelledby="title desc">
+  <title id="title">The CameraTF pipeline, from a camera frame to a hardhat detection</title>
+  <desc id="desc">The camera2 preview delivers NV21 frames at about 30 fps. Native code converts NV21 to RGB, SkiaSharp scales the frame to 300 by 300 and rotates it, and the TensorFlow Lite interpreter with SSD MobileNet returns four tensors: bounding boxes, class index, confidence and object count. On a Pixel XL the whole path runs at about 7 fps; the other two test devices were not measured.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".7"/></pattern>
+    <marker id="arrow-cyan" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 10 4 0 8Z" fill="#22d3ee"/></marker>
+  </defs>
+  <rect width="1100" height="560" fill="#020617"/>
+  <rect width="1100" height="560" fill="url(#grid)"/>
+  <text x="40" y="44" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="21" font-weight="700">CameraTF: one frame from the camera to a hardhat</text>
+  <text x="40" y="70" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="13">Preview: about 30 fps &#183; full pipeline on a Pixel XL: about 7 fps &#183; the native conversion keeps it real time</text>
+
+  <text x="232" y="96" text-anchor="middle" fill="#67e8f9" font-family="system-ui,sans-serif" font-size="11" font-weight="600">frame</text>
+  <text x="452" y="96" text-anchor="middle" fill="#67e8f9" font-family="system-ui,sans-serif" font-size="11" font-weight="600">RGB</text>
+  <text x="662" y="96" text-anchor="middle" fill="#67e8f9" font-family="system-ui,sans-serif" font-size="11" font-weight="600">tensor</text>
+  <text x="882" y="96" text-anchor="middle" fill="#67e8f9" font-family="system-ui,sans-serif" font-size="11" font-weight="600">result</text>
+
+  <line x1="222" y1="159" x2="246" y2="159" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#arrow-cyan)"/>
+  <line x1="442" y1="159" x2="466" y2="159" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#arrow-cyan)"/>
+  <line x1="652" y1="159" x2="676" y2="159" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#arrow-cyan)"/>
+  <line x1="872" y1="159" x2="896" y2="159" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#arrow-cyan)"/>
+
+  <rect x="40" y="104" width="180" height="110" rx="12" fill="#0b2430" stroke="#38bdf8" stroke-opacity=".6"/>
+  <text x="130" y="138" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="15" font-weight="700">Camera2 preview</text>
+  <text x="130" y="162" text-anchor="middle" fill="#cbd5e1" font-family="ui-monospace,monospace" font-size="11">NV21 &#183; &#8776;30 fps</text>
+  <text x="130" y="184" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="10">one frame at a time</text>
+
+  <rect x="250" y="104" width="190" height="110" rx="12" fill="#0d1b19" stroke="#34d399" stroke-opacity=".65"/>
+  <text x="345" y="136" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="15" font-weight="700">NV21 to RGB</text>
+  <text x="345" y="160" text-anchor="middle" fill="#86efac" font-family="ui-monospace,monospace" font-size="11">yuv2rgb.cc</text>
+  <text x="345" y="182" text-anchor="middle" fill="#86efac" font-family="system-ui,sans-serif" font-size="10">native code: the key step</text>
+  <text x="345" y="200" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="10">makes real time possible</text>
+
+  <rect x="470" y="104" width="180" height="110" rx="12" fill="#0f172a" stroke="#a78bfa" stroke-opacity=".55"/>
+  <text x="560" y="138" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="15" font-weight="700">Scale + rotate</text>
+  <text x="560" y="162" text-anchor="middle" fill="#cbd5e1" font-family="ui-monospace,monospace" font-size="11">300 &#215; 300</text>
+  <text x="560" y="184" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="10">SkiaSharp, at native speed</text>
+
+  <rect x="680" y="104" width="190" height="110" rx="12" fill="#0f172a" stroke="#fbbf24" stroke-opacity=".55"/>
+  <text x="775" y="136" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="15" font-weight="700">TFLite interpreter</text>
+  <text x="775" y="160" text-anchor="middle" fill="#fcd34d" font-family="system-ui,sans-serif" font-size="11">SSD MobileNet</text>
+  <text x="775" y="182" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="10">one inference per frame</text>
+
+  <rect x="900" y="104" width="160" height="110" rx="12" fill="#2b1724" stroke="#fb7185" stroke-opacity=".55"/>
+  <text x="980" y="136" text-anchor="middle" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="15" font-weight="700">Detection</text>
+  <text x="980" y="160" text-anchor="middle" fill="#fda4af" font-family="system-ui,sans-serif" font-size="11">a white hardhat</text>
+  <text x="980" y="182" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="10">boxes + confidence</text>
+
+  <rect x="40" y="250" width="1020" height="86" rx="12" fill="#0f172a" fill-opacity=".75" stroke="#475569"/>
+  <text x="60" y="278" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="11" font-weight="700">THE INTERPRETER RETURNS FOUR OUTPUT TENSORS</text>
+  <rect x="60" y="292" width="170" height="28" rx="6" fill="#111c2e" stroke="#38bdf8" stroke-opacity=".4"/>
+  <text x="145" y="311" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="11">bounding boxes</text>
+  <rect x="244" y="292" width="170" height="28" rx="6" fill="#111c2e" stroke="#38bdf8" stroke-opacity=".4"/>
+  <text x="329" y="311" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="11">class index</text>
+  <rect x="428" y="292" width="170" height="28" rx="6" fill="#111c2e" stroke="#38bdf8" stroke-opacity=".4"/>
+  <text x="513" y="311" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="11">confidence</text>
+  <rect x="612" y="292" width="170" height="28" rx="6" fill="#111c2e" stroke="#38bdf8" stroke-opacity=".4"/>
+  <text x="697" y="311" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="11">object count</text>
+  <text x="800" y="311" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="11">four, one for each list the demo reads</text>
+
+  <rect x="40" y="356" width="520" height="140" rx="12" fill="#0d1b19" stroke="#34d399" stroke-opacity=".35"/>
+  <text x="60" y="384" fill="#86efac" font-family="system-ui,sans-serif" font-size="11" font-weight="700">WHY THE PIPELINE IS SLOWER THAN THE PREVIEW</text>
+  <text x="60" y="412" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="12">The preview alone already runs at about 30 fps.</text>
+  <text x="60" y="436" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="12">The full path, from the RGB frame to the four tensors,</text>
+  <text x="60" y="460" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="12">runs at about 7 fps on a Pixel XL.</text>
+  <text x="60" y="482" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="11">The Nokia 6.1 and the LG G4 were tested, but not measured.</text>
+
+  <rect x="600" y="356" width="460" height="140" rx="12" fill="#0f172a" fill-opacity=".75" stroke="#475569"/>
+  <text x="620" y="384" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="11" font-weight="700">THE MODEL</text>
+  <text x="620" y="412" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="12">SSD MobileNet, transferred to the hardhat data</text>
+  <text x="620" y="436" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="12">on Google Cloud TPUs &#183; input 300 &#215; 300</text>
+  <text x="620" y="460" fill="#cbd5e1" font-family="system-ui,sans-serif" font-size="12">Three objects were selected; the demo uses one.</text>
+
+  <text x="40" y="534" fill="#64748b" font-family="system-ui,sans-serif" font-size="10.5">Diagram is conceptual, not to scale &#183; CameraTF &#183; July 4, 2019</text>
+</svg>
