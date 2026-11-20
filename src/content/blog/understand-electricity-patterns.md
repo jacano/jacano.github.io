@@ -15,7 +15,7 @@ I wrote a tool that reads the full history and produces one report for each CUPS
 
 ## The three periods
 
-Since 2021, the standard home tariff is [2.0TD](https://www.boe.es/buscar/act.php?id=BOE-A-2020-1066). Its grid fee changes by hour:
+Since 2021, the standard home tariff has been [2.0TD](https://www.boe.es/buscar/act.php?id=BOE-A-2020-1066), whose grid fee changes by hour:
 
 - **P1 (peak):** the most expensive. Monday to Friday, 10:00-14:00 and 18:00-22:00.
 - **P2 (flat):** in between.
@@ -29,8 +29,8 @@ Retailers sell the same energy at a different price for each period, so your bil
 
 Once you see the split, the choice becomes easier:
 
-- mostly **P3**: look for a low off-peak price.
-- a lot in **P1**: look for a low peak price, or a flat price.
+- mostly **P3**: look for a low off-peak price,
+- a lot in **P1**: look for a low peak price, or a flat price,
 - the three periods close: a flat price is simpler.
 
 One comparator is [luzfija.es](https://github.com/almax-es/luzfija.es), and its code is public. Copy the split into it and compare your numbers.
@@ -48,7 +48,7 @@ The 2.0TD tariff has two power periods. P1 covers the peak and flat hours, P2 th
 
 ## Real data, not estimates
 
-The portal marks some hours as **estimated** because the distributor does not have a real reading for them yet. The number can be close, but it is not a measure.
+The portal marks some hours as **estimated** because the distributor has not received a real reading yet. The number can be close, but it is not a measure.
 
 The tool marks every day as real, estimated or pending, and it finds the **longest period in a row with real data only**. Use that period in a comparator, and the result comes from real measures.
 
@@ -60,7 +60,7 @@ edistribucion login --save   # one time
 edistribucion                # the report
 ```
 
-The report includes real and estimated totals and the P1/P2/P3 split. It shows usage by year, month, hour and day of the week. It also shows the highest-use hours, the demanded power and a reading map.
+The report includes real and estimated totals, the P1/P2/P3 split, usage by year, month, hour and day of the week, the highest-use hours, demanded power and a reading map.
 
 The code and the guide are here:
 
@@ -76,4 +76,4 @@ It uses HTTP only, with no browser and no third-party package. It is unofficial:
 
 ## Before you change anything
 
-The tool is free and open source, and it is unofficial. Use it only with your own account. Check the results before you change a tariff or a contracted power. The report is only as good as the readings behind it, and some of them are estimates.
+The tool is free and open source, and it is unofficial. Use it only with your own account, and check the results before you change a tariff or a contracted power: the report is only as good as the readings behind it, and some of them are estimates.

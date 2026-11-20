@@ -5,7 +5,7 @@ tag: 'Networking'
 excerpt: 'A lab guide to capturing traffic from an authorized device on a Windows LAN with Npcap, Wireshark, Scapy and an ARP relay.'
 ---
 
-> **Run this only on your own network, or on a network where the owner gave you written permission.** ARP spoofing interrupts the traffic of another device. On a network that is not yours, it is a crime. This is a guide for your own lab.
+> **Run this only on your own network, or on a network where you have written permission.** ARP spoofing interrupts the traffic of another device. On a network that is not yours, it is a crime. This is a guide for your own lab.
 
 Cameras, plugs and doorbells all talk to the internet. A switch normally keeps that traffic away from your computer, so you cannot inspect it directly.
 
@@ -51,7 +51,7 @@ On Windows, you need three tools:
 - **Wireshark** brings `tshark` and `dumpcap`, the tools that read a capture.
 - **Python and Scapy** send the false answers and move the packets.
 
-You need administrator rights. Use a separate lab network and devices that you own or that you have permission to test.
+You need administrator rights. Use a separate lab network and devices you own or are authorized to test.
 
 ## Install it
 
@@ -79,7 +79,7 @@ python -c "from scapy.all import conf; conf.use_pcap=True; from scapy.arch.windo
 
 ## Why not the Windows router
 
-The obvious approach is to enable IP forwarding in Windows and let the operating system relay the packets. In my setup, with one interface, it did not relay the traffic. The companion script instead forwards Ethernet frames itself. Behavior can vary with Windows configuration, adapters and routing. So treat this as a report of that setup, not a general rule about Windows forwarding.
+The obvious approach is to enable IP forwarding in Windows and let the operating system relay the packets. In my setup, with one interface, it did not relay the traffic. The companion script instead forwards Ethernet frames itself. Behavior can vary with Windows configuration, adapters and routing, so treat this as a report of that setup, not a general rule about Windows forwarding.
 
 The script therefore relays the frames itself, at the Ethernet layer below IP. It swaps the destination MAC and sends the frame out again. The IP layer never moves, so the checksums stay valid and the connections stay alive.
 
@@ -89,15 +89,15 @@ The full script is in the companion repository:
 
 <https://github.com/jacano/arp-mitm-windows>
 
-The diagram below shows the packet path. The victim and router each hold a false ARP entry that points to the analyzer. The analyzer relays Ethernet frames in both directions and captures a copy. It changes the destination MAC address for the next hop. The original IP endpoints stay the victim and the router.
+The diagram below shows the packet path. The victim and router each hold a false ARP entry that points to the analyzer. The analyzer relays Ethernet frames in both directions and captures a copy. It changes the destination MAC address for the next hop; the original IP endpoints remain the victim and router.
 
 ![Diagram of authorized IPv4 ARP interception in a lab: victim and router send Ethernet frames through the analyzer, which relays them and captures a copy; ARP cache entries are restored on exit.](/blog/arp-mitm-flow.svg)
 
-> **Important:** this path interrupts traffic while the tool is running. Use a separate lab network and devices that you own or that you have permission to test. Stop the script cleanly and verify that the victim and router have their correct ARP entries again.
+> **Important:** this path interrupts traffic while the tool is running. Use a separate lab network and devices you own or are authorized to test. Stop the script cleanly and verify that the victim and router have their correct ARP entries again.
 
 It performs three tasks:
 
-- **Poison**: every 1.5 seconds it tells the victim that the router is at its MAC. It tells the router that the victim is at its MAC. It also answers the ARP requests of each side.
+- **Poison**: every 1.5 seconds it tells the victim that the router is at its MAC, and tells the router that the victim is at its MAC. It also answers the ARP requests of each side.
 - **Relay**: for each frame that arrives for it, it rewrites the destination MAC and sends the frame on.
 - **Capture**: it writes the victim's traffic to a `.pcap` file, and it prints DNS names and TLS server names as they appear.
 
@@ -123,12 +123,12 @@ A good capture shows one clean stream. In my test, sequence numbers advanced wit
 
 ## What I learned
 
-- A switch hides the traffic, so you must move the packet rather than sniff harder.
+- A switch hides the traffic, so the packet has to be **moved** rather than sniffed harder.
 - ARP trusts any answer. One false answer can redirect the traffic.
 - Npcap is the missing part on Windows. The Wireshark MSI does not install it.
 - The Windows IP router did not relay on a single interface, so the script relays at **layer 2**.
-- The script rewrites only the MAC and leaves the IP untouched, so the checksums stay valid.
-- Ctrl+C restores the ARP entries. If you kill the process instead, the false entries stay in both caches until they expire.
+- Rewriting only the MAC leaves the IP untouched, so the checksums stay valid.
+- Ctrl+C restores the ARP entries. If the process is killed instead, the false entries stay in both caches until they expire.
 
 ## Limits
 

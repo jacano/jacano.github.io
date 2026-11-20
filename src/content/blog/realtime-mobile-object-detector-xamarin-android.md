@@ -15,7 +15,7 @@ TailwindTraders is a fictional DIY retailer. The app sells tools for work and ga
 
 One part of the app was an AR experience. It read the phone's rear camera, detected a product and showed its details with a purchase suggestion.
 
-On Android we used the Xamarin binding of [android.hardware.camera2](https://developer.android.com/reference/android/hardware/camera2/package-summary) for the preview. We also used a custom version of [EmguTF](https://github.com/emgucv/emgutf) to detect the objects.
+On Android we used the Xamarin binding of [android.hardware.camera2](https://developer.android.com/reference/android/hardware/camera2/package-summary) for the preview, and a custom version of [EmguTF](https://github.com/emgucv/emgutf) to detect the objects.
 
 We selected three objects for detection, but the demo used one: a white hardhat.
 
@@ -27,17 +27,17 @@ The app runs an offline model. On a phone, speed matters more than accuracy, so 
 
 EmguTF is a C# binding for TensorFlow Lite, the C++ library for mobile and IoT. It reads a serialized model from FlatBuffer and runs the inference with the [Interpreter](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/lite/interpreter.h) class. The app references its .NET Standard wrapper, `Emgu.TF.Lite`, with a local build change.
 
-For the model we used SSD MobileNet and did transfer learning over [ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03.tar.gz). We trained it on Google Cloud TPUs with this [pipeline config](https://github.com/tensorflow/models/blob/master/research/object_detection/samples/configs/ssd_mobilenet_v1_0.75_depth_quantized_300x300_pets_sync.config). [This post](https://medium.com/tensorflow/training-and-serving-a-realtime-mobile-object-detector-in-30-minutes-with-cloud-tpus-b78971cf1193) describes the whole process.
+For the model we used SSD MobileNet and did transfer learning over [ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03.tar.gz). We trained it on Google Cloud TPUs with this [pipeline config](https://github.com/tensorflow/models/blob/master/research/object_detection/samples/configs/ssd_mobilenet_v1_0.75_depth_quantized_300x300_pets_sync.config). The whole process is described in [this post](https://medium.com/tensorflow/training-and-serving-a-realtime-mobile-object-detector-in-30-minutes-with-cloud-tpus-b78971cf1193).
 
 The training produced two files: [hardhat_detect.tflite](https://github.com/jacano/CameraTF/blob/master/src/Resources/hardhat/hardhat_detect.tflite) and [hardhat_labels_list.txt](https://github.com/jacano/CameraTF/blob/master/src/Resources/hardhat/hardhat_labels_list.txt).
 
 ## Camera setup
 
-The sample uses the Xamarin binding for `android.hardware.camera`, not the camera2 binding that the TailwindTraders app used. It gets one frame at a time.
+The sample uses the Xamarin binding for `android.hardware.camera`, not the camera2 binding the TailwindTraders app used, and it gets one frame at a time.
 
 CameraTF is an Android Activity. It shows a CameraSurfaceView with the preview. We used [FastAndroidCamera](https://github.com/jamesathey/FastAndroidCamera) to get each frame.
 
-We tested three devices: Nokia 6.1, Google Pixel XL and LG G4. On all of them the [OnPreviewFrame](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Camera/CameraEventsListener.cs) callback gave about 30 fps. The preview in [CameraSurfaceView](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/CameraSurfaceView.cs) stayed smooth.
+On the devices we tested (Nokia 6.1, Google Pixel XL, LG G4), the [OnPreviewFrame](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Camera/CameraEventsListener.cs) callback gave about 30 fps, and the preview in [CameraSurfaceView](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/CameraSurfaceView.cs) stayed smooth.
 
 [CameraController](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Camera/CameraController.cs) sets the preview format to NV21, and sets the fps range and the resolution with SetPreviewFpsRange and SetPreviewSize.
 

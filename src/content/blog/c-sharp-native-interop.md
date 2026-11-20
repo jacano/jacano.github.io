@@ -5,7 +5,7 @@ tag: 'C# / C++'
 excerpt: 'What I learned maintaining C# bindings for C and C++: choosing between P/Invoke and C++/CLI, avoiding unnecessary copies, owning native memory and packaging for the runtimes you support.'
 ---
 
-I have ten years of experience making C# call into C and C++. Three of those bindings are open source: Box2DCS, ManagedCrunch and ManagedXZLZMA. Exposing the first function was never the hard part. The hard part was keeping the boundary reliable while the code, the runtimes and the platforms changed.
+I have spent ten years making C# call into C and C++. Three of those bindings are open source: Box2DCS, ManagedCrunch and ManagedXZLZMA. The hard part was never exposing the first function; it was keeping the boundary reliable as the code, the runtimes and the platforms changed.
 
 These are the notes I keep coming back to.
 
@@ -15,15 +15,15 @@ These are the notes I keep coming back to.
 
 I start with the native library, not with the wrapper, because the shape of its API usually makes the choice obvious.
 
-- **P/Invoke** over a flat C API is simple and portable. It is the easy path when I control the library. Keep the boundary in `extern "C"` and keep classes out of it.
+- **P/Invoke** over a flat C API is simple and portable, and it is the easy path when I control the library. Keep the boundary in `extern "C"` and keep classes out of it.
 - **C++/CLI** wraps complex C++ quickly, and it locks the binding to Windows.
 - **DNNE and NativeAOT** are the modern path on .NET 7 and later.
 
-I choose before I write the wrapper. Changing direction after the wrapper exists is the expensive part.
+I choose before I write the wrapper, because changing direction once the wrapper exists is the expensive part.
 
 ## The boundary is the buffer copy
 
-A binding usually slows down in one place: the copies. I move big data with `Span<T>`, `Memory<T>` and `fixed` pointers. I copy once instead of twice.
+A binding usually slows down in one place: the copies. I move big data with `Span<T>`, `Memory<T>` and `fixed` pointers, and I copy once instead of twice.
 
 Then I measure, because instinct is a poor judge of a copy.
 
