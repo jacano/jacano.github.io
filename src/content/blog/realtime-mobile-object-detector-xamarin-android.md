@@ -1,11 +1,11 @@
 ---
-title: 'Realtime mobile object detector in Xamarin.Android'
+title: 'Real-time mobile object detector in Xamarin.Android'
 date: '2019-07-04'
 tag: 'Archive · Xamarin'
-excerpt: 'How a Xamarin.Android sample used TensorFlow Lite, native NV21-to-RGB conversion, and SkiaSharp to detect a hardhat at about 7 fps.'
+excerpt: 'How a Xamarin.Android sample used TensorFlow Lite, native NV21-to-RGB conversion and SkiaSharp to detect a hardhat, at about 7 fps on one test phone.'
 ---
 
-> **Archive note:** This article was first published on **July 4, 2019** at [geeks.ms/xamarinteam](https://geeks.ms/xamarinteam/2019/07/04/realtime-mobile-object-detector-in-xamarin-android/) (Plain Concepts Xamarin Team). It is republished here from the [Wayback Machine archive 2024-05-18](https://web.archive.org/web/20240518135953/https://geeks.ms/xamarinteam/2019/07/04/realtime-mobile-object-detector-in-xamarin-android/). Original author: **Juan Antonio Cano**. Code at [github.com/jacano/CameraTF](https://github.com/jacano/CameraTF).
+> **Archive note:** I first published this article on **July 4, 2019** at [geeks.ms/xamarinteam](https://geeks.ms/xamarinteam/2019/07/04/realtime-mobile-object-detector-in-xamarin-android/) (Plain Concepts Xamarin Team). I republish it here from the [Wayback Machine archive of May 18, 2024](https://web.archive.org/web/20240518135953/https://geeks.ms/xamarinteam/2019/07/04/realtime-mobile-object-detector-in-xamarin-android/). The code is at [github.com/jacano/CameraTF](https://github.com/jacano/CameraTF).
 
 In 2019, the Plain Concepts Xamarin team contributed to [TailwindTraders](https://github.com/Microsoft/TailwindTraders-Mobile), Microsoft Build reference samples for Xamarin.Forms.
 
@@ -13,9 +13,9 @@ Our demos focused on the main Xamarin.Forms features, especially Shell.
 
 TailwindTraders is a fictional DIY retailer. The app sells tools for work and gardening.
 
-One part of the app was an AR experience. It read the phone's rear camera in real time, detected a product, and showed its details with a purchase suggestion.
+One part of the app was an AR experience. It read the phone's rear camera, detected a product and showed its details with a purchase suggestion.
 
-On Android we used the Xamarin Binding of [android.hardware.camera2](https://developer.android.com/reference/android/hardware/camera2/package-summary) for the preview, and a custom version of [EmguTF](https://github.com/emgucv/emgutf) to detect the objects.
+On Android we used the Xamarin binding of [android.hardware.camera2](https://developer.android.com/reference/android/hardware/camera2/package-summary) for the preview, and a custom version of [EmguTF](https://github.com/emgucv/emgutf) to detect the objects.
 
 We selected three objects for detection, but the demo used one: a white hardhat.
 
@@ -25,9 +25,7 @@ This article presents [CameraTF](https://github.com/jacano/CameraTF), a Xamarin.
 
 The app runs an offline model. On a phone, speed matters more than accuracy, so we chose [TensorFlow Lite](https://www.tensorflow.org/lite).
 
-EmguTF is a C# binding for TensorFlow Lite, the C++ library for mobile and IoT. It reads a serialized model from FlatBuffer and runs the inference with the [Interpreter](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/lite/interpreter.h) class.
-
-The .NET Standard project `Emgu.TF.Lite` is a small version of EmguTF. You give it the input tensors, and it gives you the output tensors.
+EmguTF is a C# binding for TensorFlow Lite, the C++ library for mobile and IoT. It reads a serialized model from FlatBuffer and runs the inference with the [Interpreter](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/lite/interpreter.h) class. The app references its .NET Standard wrapper, `Emgu.TF.Lite`, with a local build change.
 
 For the model we used SSD MobileNet and did transfer learning over [ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03.tar.gz). We trained it on Google Cloud TPUs with this [pipeline config](https://github.com/tensorflow/models/blob/master/research/object_detection/samples/configs/ssd_mobilenet_v1_0.75_depth_quantized_300x300_pets_sync.config). The whole process is described in [this post](https://medium.com/tensorflow/training-and-serving-a-realtime-mobile-object-detector-in-30-minutes-with-cloud-tpus-b78971cf1193).
 
@@ -35,19 +33,21 @@ The training produced two files: [hardhat_detect.tflite](https://github.com/jaca
 
 ## Camera setup
 
-The sample uses the Xamarin Binding for android.hardware.camera. That keeps the camera code short and gives us one frame at a time.
+The sample uses the Xamarin binding for `android.hardware.camera`, not the camera2 binding the TailwindTraders app used, and it gets one frame at a time.
 
 CameraTF is an Android Activity. It shows a CameraSurfaceView with the preview. We used [FastAndroidCamera](https://github.com/jamesathey/FastAndroidCamera) to get each frame.
 
 On the devices we tested (Nokia 6.1, Google Pixel XL, LG G4), the [OnPreviewFrame](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Camera/CameraEventsListener.cs) callback gave about 30 fps, and the preview in [CameraSurfaceView](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/CameraSurfaceView.cs) stayed smooth.
 
-[CameraController](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Camera/CameraController.cs) sets the preview format to NV21, and the fps range and the resolution with SetPreviewFpsRange and SetPreviewSize.
+[CameraController](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Camera/CameraController.cs) sets the preview format to NV21, and sets the fps range and the resolution with SetPreviewFpsRange and SetPreviewSize.
 
 The step that makes real time possible is one: convert NV21 (YUV420sp) to RGB in native code. See [YuvHelper](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Helpers/YuvHelper.cs) and [yuv2rgb.cc](https://github.com/jacano/CameraTF/tree/master/src/CameraTF/Libs/YUV).
 
 ## From pixels to a detection
 
 [CameraAnalyzer](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Camera/CameraAnalyzer.cs) runs the stages. From the RGB frame, it scales to the model input (300×300) and rotates to fix the camera orientation. [SkiaSharp](https://github.com/mono/SkiaSharp) does the image work at native speed.
+
+![The CameraTF pipeline: camera2 previews NV21 frames at about 30 fps, native code converts them to RGB, SkiaSharp scales the frame to 300×300 and rotates it, and the TFLite interpreter with SSD MobileNet returns four tensors, bounding boxes, class index, confidence and object count. On a Pixel XL the whole path runs at about 7 fps, and the Nokia 6.1 and LG G4 were tested but not measured.](/blog/cameratf-pipeline.svg)
 
 Then it fills the input tensor, calls the interpreter and reads four output tensors:
 
@@ -56,6 +56,6 @@ Then it fills the input tensor, calls the interpreter and reads four output tens
 - the confidence of each object,
 - the number of objects.
 
-A screen recording on a Pixel XL showed about 7 fps for the processing task inside CameraAnalyzer.
+On a Pixel XL, a screen recording put the whole pipeline inside CameraAnalyzer (scale, rotate, inference, read the outputs) at about 7 fps. I did not measure the other two devices.
 
 The project is open for [pull requests](https://github.com/jacano/CameraTF/pulls) and issues.

@@ -2,127 +2,68 @@
 title: 'Grokking: the jump from memory to rule'
 date: '2026-10-05'
 tag: 'Machine Learning'
-excerpt: 'A small transformer memorizes 843 sums, fails almost every unseen sum for three thousand steps, and then learns to add. This is that run, and the single hyperparameter that decides it.'
-lang: 'en'
-pair: 'grokking-from-memory-to-rule'
+excerpt: 'A small neural network memorizes 843 sums and then learns to add.'
 ---
 
-A transformer with 56,640 parameters learns modular addition. After 1,000 steps it answers 98% of its training pairs correctly and 1.2% of the pairs it has never seen. Guessing would give it 1.9%. It has memorized 843 sums and learned nothing.
+A small neural network learns to add numbers below 53. Inside it there are 56,320 numbers, and training only changes those.
 
-It stays there for another two thousand steps. Training accuracy is already at its ceiling, so every summary of the run looks finished. Then, between step 3,500 and step 3,750, the accuracy on unseen pairs goes from 28% to 74%, and by step 5,000 it is 92%. The run ends at 97.3%, which is 1,912 of the 1,966 pairs it never saw.
+After 1,000 steps it answers 93% of the sums it trained on, and 32% of the sums it has never seen. Guessing would give 1.9%, because there are 53 possible answers. So the network has learned its training sums by heart and nothing about the rest.
 
-That delayed jump is **grokking**. The name comes from [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177) (Power et al., 2022), which reported it in small networks trained on small algorithmic datasets. The architecture is the transformer from [Attention Is All You Need](https://arxiv.org/abs/1706.03762) (Vaswani et al., 2017). The whole experiment is 329 lines of C# and takes 26 seconds on one core.
+Then the rest arrives. Between step 1,000 and step 3,000 the accuracy on the unseen sums goes from 32% to 94%; at step 5,000 it is 99%; and from step 7,500 it is 100%: 1,966 sums it never saw, all of them right.
+
+That late jump is **grokking**. The name comes from [Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177) (Power et al., 2022), which saw it in small networks trained on small algorithmic tasks. The network is a transformer with one layer, the same family as the models behind chat programs. The experiment is two C# files and takes about 90 seconds on one core.
 
 ## The task
 
-The modulus is 53. The model reads a sum and returns the result modulo 53, so every answer is a number from 0 to 52.
+The answer is always a number from 0 to 52. When a sum reaches 53 or more, subtract 53:
 
 ```
 12 + 35 = 47           already below 53
-40 + 30 = 70   →  17   70 - 53 = 17
-50 + 50 = 100  →  47   100 - 53 = 47
+40 + 30 = 70   →  17
+50 + 50 = 100  →  47
 ```
 
-There are 2,809 pairs in total. I train on 30% of them and hold back the rest, so the unseen pairs are the only evidence that the model learned arithmetic rather than a lookup table.
+The network reads five symbols — a start mark, the first number, `+`, the second number and `=` — and gives a score to each of the 53 possible answers. The highest score is the answer.
 
-| Property | Value |
-| --- | ---: |
-| Modulus | 53 |
-| Pairs | 2,809 |
-| Training pairs (30%) | 843 |
-| Unseen pairs (70%) | 1,966 |
-| Vocabulary | 56 tokens |
-| Document length | 6 tokens |
-| Prediction positions | 5 |
-| Parameters | 56,640 |
-| Accuracy by guessing | 1.9% |
+There are 2,809 sums, because each first number from 0 to 52 can go with each second number from 0 to 52. I train on 843 of them and keep the other 1,966 out of sight. A network can always repeat a sum it has seen, so the unseen sums are the only proof that it learned addition.
 
-The vocabulary is 56 entries: the 53 numbers, `+`, `=`, and a start token. Each number is one token, so an operand arrives whole instead of digit by digit.
+## The jump
 
-A document is a single sequence, and the model predicts every next token in it. Only the last prediction is the task:
+![Accuracy against the training step. Training accuracy reaches 93% at step 1,000, while unseen accuracy is at 32%. Unseen accuracy rises to 94% at step 3,000 and 99% at step 5,000, and both lines are at 100% from step 7,500.](/blog/grokking-cliff.svg)
 
-| Position | Token | Role |
-| ---: | :---: | --- |
-| 1 | `[START]` | start of the document |
-| 2 | `12` | first operand |
-| 3 | `+` | the operator |
-| 4 | `35` | second operand |
-| 5 | `=` | the input at the answer position |
-| 6 | `47` | **the target** |
+The blue line is the training sums, the red line the unseen ones. By step 1,000 the blue line is at 93% and the red line at 32%. Then the red line climbs, slowly at first and then fast, and the two lines meet near step 4,000.
 
-## The cliff
+The interesting part is what happens between step 1,000 and step 3,000. The network is not stuck: it already knows the answers for its own sums, and during those steps it is slowly replacing what it memorized with something that also works for the sums it has not seen.
 
-![Train and unseen accuracy against the training step. Train accuracy reaches 98% by step 1000 while unseen accuracy is at 1.2%. Unseen accuracy rises from 13% at step 3000 to 74% at step 3750 and reaches 97% by step 5000.](/blog/grokking-cliff.svg)
+## Why it happens
 
-The blue line is accuracy on the training pairs. The red line is accuracy on the unseen pairs.
+Two different solutions can explain the 843 training sums. The first is a table: store the answer to each of them. It is quick, and it says nothing about a sum that is not in the table. The second is addition itself, which answers every sum.
 
-Training accuracy reaches **98% at step 1,000** and never falls far below it again. Unseen accuracy is 1.2% at that point, and it stays between 1% and 28% for another 2,500 steps. Then it moves: **74% at step 3,750**, 82% at 4,000, 92% at 5,000, and 97.3% at the end.
+Both are possible, and the training has no preference between them. **Adam**, the usual optimizer, only pushes each answer to be a little less wrong at each step. What decides here is **weight decay**: at every step the training also pulls the numbers a little towards zero. A table needs big numbers, one for each stored answer, while addition needs smaller ones. So the table becomes more expensive as the run goes on, and the cheaper solution wins.
 
-The flat part of that curve is the part worth understanding. The model is not stuck. It is changing its mind.
+This figure shows it:
 
-Two figures show what that means for a sum the model never saw. At step 1,000, `12 + 35`:
+![Size of the numbers and accuracy against the training step, each on its own axis. The size falls from 18.9 to 8.8 in 250 steps, climbs to 11.0 while the network memorizes, then settles at 9.3. The accuracy on unseen sums rises from 1.8% to 100%.](/blog/grokking-norm.svg)
 
-![A bar chart of the 53 answers the model is considering for 12 + 35, after 1,000 steps. The bar for the correct answer, 47, reaches 0.3%, and the tallest bar, for the answer 6, reaches 40%.](/blog/grokking-probs-early.svg)
+The size falls from 18.9 to 8.8 in the first 250 steps, climbs to 11.0 while the network memorizes, and settles at 9.3 when addition takes over.
 
-The right answer gets 0.3%. The model is not undecided: it gives 40% to the answer 6 and 27% to 36. It has an opinion, and the opinion is wrong.
+## Where the decay goes
 
-At step 12,000, the same sum:
+The same decay gives different results depending on where it is applied. Here it is applied as part of the same update that each step makes. The other common way is to shrink the numbers after the step, and that is what the **AdamW** optimizer does. With AdamW this run never learns addition: it ends at 30.9% on the unseen sums, the same accuracy as the run with no decay at all, and the size of the numbers ends at about 56 instead of 9.3.
 
-![The same bar chart after 12,000 steps. The bar for the correct answer, 47, reaches 90%, and every other bar is close to zero.](/blog/grokking-probs-late.svg)
-
-47 gets 90%, and nothing else is close.
-
-**The loss is one number that says how wrong the model was, and it looks at one thing: the probability the model gave to the correct answer.** At 100% it is 0.0; at 50%, 0.7; at 10%, 2.3; at 1%, 4.6. The rule is called **cross-entropy**, and it never goes below zero, so the only way to reduce it is to give the correct answer more probability.
-
-The loss pays no attention to what the model believed instead. A wrong answer held with 40% confidence scores worse than a hesitant guess would, which is why accuracy on unseen pairs can sit below chance: the model is not hedging, it is confidently wrong.
-
-## What seems to cause the jump
-
-Two solutions fit the training data, and only one of them generalizes.
-
-The first is a lookup table: store each of the 843 pairs. It fits fast and says nothing about a pair that is not in it.
-
-The second is the arithmetic. It fits only once the model finds an internal representation that computes it, and then it answers the unseen pairs as well as the training ones.
-
-The optimizer knows about neither. It reduces a loss and nothing else. In this run, what tips the balance is **weight decay**: at every step, the optimizer also pulls each parameter slightly towards zero.
-
-A lookup table needs large parameters, one entry per stored answer. The structured solution needs less. So the table gets more expensive as the steps go by, and once the rule is the cheaper option, gradient descent drifts into it. Measured as one number for the whole model, the size of the parameters climbs from 19.1 to 22.3 while the model memorizes, then falls to 16.0 as the rule takes over:
-
-![Two curves against the training step, each on its own axis. On the left axis the size of the parameters rises from 19.1 to 22.3 while the model memorizes, then falls to 16.0. On the right axis the accuracy on unseen pairs stays near 1% for three thousand steps and then rises to 97%.](/blog/grokking-norm.svg)
-
-The loss tells the same story. The loss on the training pairs hits its floor early and stays there, while the loss on the unseen pairs sits near 3.9 for thousands of steps and then drops to 2.0 as the accuracy jumps:
-
-![Cross-entropy loss against the training step, on a log scale. The loss on the training pairs reaches its floor by step 1000, while the loss on the unseen pairs stays near 3.9, then falls to 2.0 as the unseen accuracy jumps.](/blog/grokking-loss.svg)
-
-For what the model ends up computing, the follow-up work on this task is worth reading: [Progress measures for grokking via mechanistic interpretability](https://arxiv.org/abs/2301.05217) (Nanda et al., 2023) takes the same toy problem apart and finds a small set of periodic features rather than a table.
+So weight decay means two different things, and one of them does nothing here.
 
 ## The control
 
-If decay is what selects the rule, removing it should break the run. It does.
-
-| step | decay | train acc | unseen acc | size |
-| ---: | :--- | ---: | ---: | ---: |
-| 2,000 | with | 94% | 3.4% | 21.5 |
-| 2,000 | without | 99.8% | 0.1% | 74.0 |
-| 4,000 | with | 99.6% | 82.2% | 17.0 |
-| 4,000 | without | 99.8% | 0.3% | 94.7 |
-| 12,000 | with | 100% | **97.3%** | 16.0 |
-| 12,000 | without | 100% | **0.2%** | 157.1 |
-| 60,000 | without | 100% | **0.5%** | 348.2 |
-
-Without decay the model memorizes the training pairs and answers 0.2% of the unseen ones. Five times the steps do not change the outcome: at 60,000 steps it is at 0.5%, which is a quarter of the 1.9% you get by guessing, and the size of the parameters has grown from 16 to 348 because nothing in the run charges for it.
-
-So the jump is not a slow learner arriving late. Without decay, nothing in this run prefers the cheaper solution, and more steps do not change that. They only make the table bigger.
+With the decay at zero the network memorizes the 843 sums and stops there. The accuracy on the unseen sums moves between 30.6% and 30.9% from step 2,000 to step 20,000, and the size of the numbers grows to 61 because nothing charges for them. With the decay, the same run ends at 100%, with a size of 9.3.
 
 ## The model
 
-The model is the one from [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95) by Andrej Karpathy: one layer, 64 dimensions, 8 heads, RMSNorm instead of LayerNorm, no biases, ReLU instead of GeLU. Attention lets each position read the earlier ones. The MLP transforms what it read. Both add their result back to their input, so the signal has a straight path through the layer.
-
-That is the whole architecture. The rest of the repository is the training loop, the dataset and the figures; TorchSharp supplies the automatic differentiation, so the model is 55 lines and the loop is 12. The repository also writes down the two settings that took me longest to get right.
+The network is the one from [microgpt](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95), by Andrej Karpathy: a transformer with one layer. TorchSharp works out how much to change each number after every answer, so the model is one class and the training loop is a handful of lines.
 
 ## Reproduce it
 
-You need the .NET SDK 10 or newer. The first build downloads PyTorch's native library, a few hundred megabytes.
+You need the .NET SDK 11 or newer. The first build downloads PyTorch's native library, a few hundred megabytes.
 
 ```bash
 git clone https://github.com/jacano/grokking-torchsharp
@@ -130,69 +71,26 @@ cd grokking-torchsharp
 make run
 ```
 
-`make` on its own compiles and checks the style. It does not ship with Windows, and every target has a `dotnet` form for that case: `dotnet run -c Release` where the target says `make run`.
+The run takes about 90 seconds and writes a CSV with one row per step and the figures of this article. The last 2,000 of its 20,000 steps make the changes smaller and smaller, down to zero, so the run stops on the solution it found instead of jumping around it.
 
-The run takes about half a minute and writes three things:
-
-| Where | What |
-| --- | --- |
-| `data/train.txt`, `data/test.txt` | the two splits, one pair per line: 843 lines and 1,966 lines |
-| `runs/grokking.csv` | the logged numbers of every step |
-| `figures/` | the figures in this article |
-
-Each row of the CSV has six columns:
-
-| Column | Meaning |
-| --- | --- |
-| `step` | training step |
-| `train_loss` | mean cross-entropy over 512 training pairs |
-| `train_acc` | exact match on those pairs |
-| `test_loss` | mean cross-entropy over all 1,966 unseen pairs |
-| `test_acc` | exact match on the unseen pairs |
-| `param_norm` | size of every parameter, as one number |
-
-The repository has a `Makefile` with one target per action. `make help` lists them, and the two worth knowing here are:
-
-| command | what it does |
-| --- | --- |
-| `make control` | the same run with the decay at zero, which never learns the rule |
-| `make run ARGS="--p 13 --steps 3000"` | another modulus, or another number of steps |
-
-## Ask the model a sum
-
-Training does not keep the model, so the first step is to write it to disk:
-
-```bash
-make save
-```
-
-That leaves `model.pt` in the repository folder. `make infer` loads it and asks for one sum:
+Once the network is trained, `make save` writes it to disk and `make infer` asks for a sum:
 
 ```bash
 make infer PAIR=12+35
 ```
 
 ```
-inference 12+35 = 47  [ok]  top: 47 (90%), 6 (5%), 17 (3%)
+inference 12+35 = 47  [ok]  top: 47 (89%), 21 (2%), 52 (2%)
 ```
 
-The model reads `[START, 12, +, 35, =]` and returns one probability for every answer it could give. The line prints the three highest. `12 + 35` is one of the pairs held back from training, so the 90% on `47` is the rule at work and not a stored answer.
+![The chance the network gives to each of the 53 possible answers for 12 + 35: answer 47 takes 89%, and every other answer stays close to 0%, so the network solves a sum it never trained on.](/blog/grokking-probabilities.svg)
 
-To see all 53 answers instead of three:
-
-```bash
-make explain PAIR=12+35
-```
-
-That writes them to `runs/probabilities.csv` and draws them in `figures/grokking-probabilities.svg`, which is the bar chart from the section above.
+`12 + 35` is one of the sums held back from training, so the 89% on `47` is addition at work, not a stored answer.
 
 ## What I take from this
 
-- **Training accuracy says very little on its own.** It reaches 100% here while the accuracy on unseen pairs sits at chance, and it stays there for two thousand steps.
-- **The run behaves like a transition between two answers.** One stores the pairs and needs large parameters; the other computes the rule and needs less.
-- **Weight decay is what tips it.** With decay the jump arrives; at zero it never does, at any number of steps I tried.
-- **The size of the parameters moved first,** in both directions: up while the model memorized, down as the rule took over.
+Accuracy on the training sums says little on its own. In this run, weight decay decides between a table and the rule.
 
-I am not a machine learning researcher. This is a small experiment I could reproduce from end to end, understand, and enjoy watching move. The code, the data and the logs are in
+I am not a machine learning researcher. This is a small experiment I could reproduce from end to end, understand and enjoy watching move. The code, the data and the logs are in
 [github.com/jacano/grokking-torchsharp](https://github.com/jacano/grokking-torchsharp),
-so that anyone who wants to see it happen can run it in half a minute.
+so that anyone who wants to see it happen can run it in a minute and a half.

@@ -2,12 +2,12 @@
 title: 'See every packet on your LAN from Windows'
 date: '2026-09-16'
 tag: 'Networking'
-excerpt: 'A lab guide to capturing traffic from an authorized device on a Windows LAN with Npcap, Wireshark, Scapy, and an ARP relay.'
+excerpt: 'A lab guide to capturing traffic from an authorized device on a Windows LAN with Npcap, Wireshark, Scapy and an ARP relay.'
 ---
 
 > **Run this only on your own network, or on a network where you have written permission.** ARP spoofing interrupts the traffic of another device. On a network that is not yours, it is a crime. This is a guide for your own lab.
 
-Cameras, plugs, and doorbells all talk to the internet. A switch normally keeps that traffic away from your computer, so you cannot inspect it directly.
+Cameras, plugs and doorbells all talk to the internet. A switch normally keeps that traffic away from your computer, so you cannot inspect it directly.
 
 A privacy policy tells you what a vendor says. A packet capture tells you what the device actually sends. This is how I captured traffic from one of my own cameras on Windows.
 
@@ -15,13 +15,13 @@ A privacy policy tells you what a vendor says. A packet capture tells you what t
 
 A network switch learns which device sits on each port, then sends each packet only to the required port. Your card receives your traffic, and nothing else.
 
-That is good for speed, and it is good for your neighbour. It is bad for inspection. To watch another device, you must first make it send its traffic to you.
+That is good for speed, and it is good for your neighbor. It is bad for inspection. To watch another device, you must first make it send its traffic to you.
 
 ## ARP trusts the first answer
 
 A device must find the MAC address of the next hop. The next hop is usually the router. So the device shouts into the network: "Who has 192.168.1.1?"
 
-Any device can answer. The response enters a small cache, and ARP does not authenticate its source. There is no signature, password, or additional check.
+Any device can answer. The response enters a small cache, and ARP does not authenticate its source. There is no signature, password or additional check.
 
 A false answer moves the traffic. One lie to the victim, one lie to the router, and the packets pass through the liar. This is **ARP spoofing**, and the seat in the middle is the **man in the middle**.
 
@@ -39,9 +39,9 @@ TLS keeps the content hidden. You read the envelope, not the letter. For many de
 
 That is why I built this tool. I have a Tapo camera at home. The vendor promises privacy, but I wanted evidence rather than a promise.
 
-So I put the camera in the middle of my own capture and I waited. When the camera was idle, it sent one small keepalive every 55 seconds. No image. No sound. When I opened the app, the traffic exploded to megabytes.
+So I captured traffic from my own camera and I waited. When the camera was idle, it sent one small keepalive every 55 seconds. No image. No sound. When I opened the app, the traffic exploded to megabytes.
 
-I did not find anything alarming. I only learned that by capturing its traffic.
+The app explained every destination I saw in that capture. That is a fact I could only get by capturing.
 
 ## The three tools
 
@@ -49,7 +49,7 @@ On Windows, you need three tools:
 
 - **Npcap** adds the packet driver and gives you `libpcap`.
 - **Wireshark** brings `tshark` and `dumpcap`, the tools that read a capture.
-- **Python and scapy** send the false answers and move the packets.
+- **Python and Scapy** send the false answers and move the packets.
 
 You need administrator rights. Use a separate lab network and devices you own or are authorized to test.
 
@@ -63,15 +63,15 @@ winget install --id WiresharkFoundation.Wireshark --silent
 
 The Wireshark package is an MSI, and the MSI does **not** include Npcap. Go to the next step.
 
-**Npcap**, from the official site [npcap.com](https://npcap.com/). The silent flag (`/S`) failed for me, so run the normal installer. In the wizard, mark **"Install Npcap in WinPcap API-compatible Mode"**. Without that mark, Python and scapy cannot find the driver.
+**Npcap**, from the official site [npcap.com](https://npcap.com/). The silent flag (`/S`) did not install the driver for me, so run the normal installer. In the wizard, mark **"Install Npcap in WinPcap API-compatible Mode"**, which is the mode Scapy uses to reach Npcap through `libpcap`.
 
-**scapy:**
+**Scapy:**
 
 ```powershell
 python -m pip install scapy
 ```
 
-Check that scapy sees the driver:
+Check that Scapy sees the driver:
 
 ```powershell
 python -c "from scapy.all import conf; conf.use_pcap=True; from scapy.arch.windows import get_windows_if_list; print([i['name'] for i in get_windows_if_list()])"
@@ -79,7 +79,7 @@ python -c "from scapy.all import conf; conf.use_pcap=True; from scapy.arch.windo
 
 ## Why not the Windows router
 
-The obvious approach is to enable IP forwarding in Windows and let the operating system relay the packets. In my single-interface test setup, that did not relay the traffic as needed. The companion script instead forwards Ethernet frames itself. Behavior can vary with Windows configuration, adapters and routing, so treat this as a report of that setup, not a general rule about Windows forwarding.
+The obvious approach is to enable IP forwarding in Windows and let the operating system relay the packets. In my setup, with one interface, it did not relay the traffic. The companion script instead forwards Ethernet frames itself. Behavior can vary with Windows configuration, adapters and routing, so treat this as a report of that setup, not a general rule about Windows forwarding.
 
 The script therefore relays the frames itself, at the Ethernet layer below IP. It swaps the destination MAC and sends the frame out again. The IP layer never moves, so the checksums stay valid and the connections stay alive.
 
@@ -99,7 +99,7 @@ It performs three tasks:
 
 - **Poison**: every 1.5 seconds it tells the victim that the router is at its MAC, and tells the router that the victim is at its MAC. It also answers the ARP requests of each side.
 - **Relay**: for each frame that arrives for it, it rewrites the destination MAC and sends the frame on.
-- **Capture**: it writes the victim traffic to a `.pcap` file, and it prints DNS names and TLS server names as they appear.
+- **Capture**: it writes the victim's traffic to a `.pcap` file, and it prints DNS names and TLS server names as they appear.
 
 ## Run it
 
@@ -119,7 +119,7 @@ Open the capture:
 tshark -r victim.pcap -n -q -z conv,tcp
 ```
 
-A good capture shows one clean stream. In my test, sequence numbers advanced without gaps and there were no retransmissions. The device did not detect the analyzer.
+A good capture shows one clean stream. In my test, sequence numbers advanced without gaps and there were no retransmissions. The device did not reconnect while the tool ran. I did not test whether the app or the vendor detects interception.
 
 ## What I learned
 
@@ -128,12 +128,12 @@ A good capture shows one clean stream. In my test, sequence numbers advanced wit
 - Npcap is the missing part on Windows. The Wireshark MSI does not install it.
 - The Windows IP router did not relay on a single interface, so the script relays at **layer 2**.
 - Rewriting only the MAC leaves the IP untouched, so the checksums stay valid.
-- The ARP cache is **restored** at the end, which is what makes the tool safe to stop.
+- Ctrl+C restores the ARP entries. If the process is killed instead, the false entries stay in both caches until they expire.
 
 ## Limits
 
-- TLS hides the content. You see the metadata only.
-- The tool is **fail-open**. If your machine stops, the poison stops, and the device returns to normal when the ARP entry expires.
+- TLS hides the content. You see only the metadata.
+- If the machine stops, the poisoning stops, but the false entries stay until they expire. Clear them with `arp -d <ip>` on both sides if you need them gone sooner.
 - Some networks block ARP spoofing. Managed switches can use DHCP snooping and dynamic ARP inspection.
 - IPv6 uses NDP, not ARP. This script is for IPv4.
 

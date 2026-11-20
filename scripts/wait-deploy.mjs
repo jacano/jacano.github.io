@@ -12,9 +12,14 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 /**
  * The run of the deploy workflow for one commit.
  *
+ * The workflow is named, because the repository runs more than one: without the
+ * filter the newest run can be a check of a pull request, and this script would
+ * follow that one and report its result as the deployment.
+ *
  * The commit matters: right after a push GitHub has not registered the new run
  * yet, and "the newest run" is still the previous one. Asking for the commit
- * removes that race. Without a commit the newest run is the only thing to ask for.
+ * removes that race. Without a commit the newest deploy run is the only thing
+ * to ask for.
  */
 function runFor(repo, commit) {
   const args = [
@@ -22,6 +27,8 @@ function runFor(repo, commit) {
     'list',
     '--repo',
     repo,
+    '--workflow',
+    'deploy.yml',
     '--limit',
     '1',
     '--json',
