@@ -5,7 +5,7 @@ tag: 'Archive · WASM'
 excerpt: 'A small 2019 sample showing .NET running in a browser through WebAssembly and Mono.WebAssembly.Sdk.'
 ---
 
-> **Archive note:** This article was first shared on **May 4, 2019** at [x.com/jacano35](https://x.com/jacano35/status/1124476690640572416). It is republished here in 2026. Original author: **Juan Antonio Cano**. Code at [github.com/jacano/WasmSample](https://github.com/jacano/WasmSample).
+> **Archive note:** I first shared this article on **May 4, 2019** at [x.com/jacano35](https://x.com/jacano35/status/1124476690640572416). I republish it here in 2026. The code is at [github.com/jacano/WasmSample](https://github.com/jacano/WasmSample).
 
 In 2019 I published [WasmSample](https://github.com/jacano/WasmSample), a small demonstration of .NET running in a browser as WebAssembly. No plugin required.
 
