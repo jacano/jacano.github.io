@@ -15,7 +15,7 @@ A privacy policy tells you what a vendor says. A packet capture tells you what t
 
 A network switch learns which device sits on each port, then sends each packet only to the required port. Your card receives your traffic, and nothing else.
 
-That is good for speed, and it is good for your neighbor. It is bad for inspection. To watch another device, you must first make it send its traffic to you.
+That is good for speed, and it is good for your neighbor's privacy. It is bad for inspection. To watch another device, you must first make it send its traffic to you.
 
 ## ARP trusts the first answer
 
@@ -37,9 +37,7 @@ TLS keeps the content hidden. You read the envelope, not the letter. For many de
 
 ## The camera I did not trust
 
-That is why I built this tool. I have a Tapo camera at home. The vendor promises privacy, but I wanted evidence rather than a promise.
-
-So I captured traffic from my own camera and I waited. When the camera was idle, it sent one small keepalive every 55 seconds. No image. No sound. When I opened the app, the traffic exploded to megabytes.
+I have a Tapo camera at home. The vendor promises privacy, but I wanted evidence rather than a promise. That is why I built this tool. With it I captured traffic from my own camera, and I waited. When the camera was idle, it sent one small keepalive every 55 seconds. No image. No sound. When I opened the app, the traffic exploded to megabytes.
 
 The app explained every destination I saw in that capture. That is a fact I could only get by capturing.
 
@@ -89,7 +87,7 @@ The full script is in the companion repository:
 
 <https://github.com/jacano/arp-mitm-windows>
 
-The diagram below shows the packet path. The victim and router each hold a false ARP entry that points to the analyzer. The analyzer relays Ethernet frames in both directions and captures a copy. It changes the destination MAC address for the next hop; the original IP endpoints remain the victim and router.
+The diagram below shows the packet path. The victim and router each hold a false ARP entry that points to the analyzer. The analyzer relays Ethernet frames in both directions and captures a copy. It changes the destination MAC address for the next hop. The original IP endpoints stay the victim and the router.
 
 ![Diagram of authorized IPv4 ARP interception in a lab: victim and router send Ethernet frames through the analyzer, which relays them and captures a copy; ARP cache entries are restored on exit.](/blog/arp-mitm-flow.svg)
 

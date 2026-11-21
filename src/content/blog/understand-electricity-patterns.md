@@ -7,11 +7,11 @@ excerpt: 'An unofficial Python client for the e-distribucion private area. It do
 
 A monthly bill tells you how much electricity you used, not when you used it. That makes tariff comparisons mostly guesswork.
 
-In Spain, the distributor holds the hourly readings, not the retailer. Each area has its own distributor. [e-distribucion](https://www.edistribucion.com/) covers part of Spain, and your bill tells you whether it is your distributor.
+In Spain, the distributor holds the hourly readings, not the retailer. Each area has its own distributor. [e-distribucion](https://www.edistribucion.com/) covers part of Spain. Your bill names your distributor.
 
 If e-distribucion is your distributor, its private area contains the readings. The portal displays them in small pieces, though, which makes the full year hard to inspect.
 
-I wrote a tool that reads the full history and produces one report for each CUPS.
+I wrote a tool that reads the full history and produces one report for each supply point (CUPS).
 
 ## The three periods
 
@@ -23,7 +23,7 @@ Since 2021, the standard home tariff has been [2.0TD](https://www.boe.es/buscar/
 
 ![A week of the 2.0TD tariff. From Monday to Friday, P1 peak runs from 10:00 to 14:00 and from 18:00 to 22:00; P2 flat covers 08:00 to 10:00, 14:00 to 18:00 and 22:00 to 24:00; P3 off-peak covers 00:00 to 08:00. Saturday and Sunday are off-peak all day, and a national holiday follows Sunday.](/blog/energy-2td-week.svg)
 
-Retailers sell the same energy at a different price for each period, so your bill is a mix of the three. The tool does the mix for you: it adds your hours into P1, P2 and P3.
+Retailers set a different energy price for each period, so your bill is a mix of the three. The tool does the mix for you: it adds your hours into P1, P2 and P3.
 
 ## Which tariff fits
 
@@ -31,7 +31,7 @@ Once you see the split, the choice becomes easier:
 
 - mostly **P3**: look for a low off-peak price,
 - a lot in **P1**: look for a low peak price, or a flat price,
-- the three periods close: a flat price is simpler.
+- the three periods have similar amounts: a flat price is simpler.
 
 One comparator is [luzfija.es](https://github.com/almax-es/luzfija.es), and its code is public. Copy the split into it and compare your numbers.
 

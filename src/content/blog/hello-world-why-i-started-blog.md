@@ -9,6 +9,6 @@ I have been building software for over a decade. I kept explaining the same less
 
 ![Before the blog, the same lesson was explained again in a conversation with each new teammate and nothing was written down. After it, one article holds the answer, is edited when it changes and is linked from the repository, so a teammate reads it when they need it.](/blog/hello-world-one-lesson.svg)
 
-I write about Web3 security, .NET, native interop and technical leadership: the parts of the job that took me longest to learn, written down once so the next teammate does not have to ask twice.
+I write about Web3 security, .NET, native interop and technical leadership. These are the parts of the job that took me longest to learn. I write each one down once, so the next teammate does not have to ask twice.
 
 The source for this site is at [github.com/jacano/jacano.github.io](https://github.com/jacano/jacano.github.io).

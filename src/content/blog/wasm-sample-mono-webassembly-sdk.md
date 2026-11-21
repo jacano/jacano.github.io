@@ -13,9 +13,9 @@ In 2019 I published [WasmSample](https://github.com/jacano/WasmSample), a small 
 
 ## Why WASM
 
-WebAssembly runs compiled code in the page, which let me keep the browser-side logic in C# instead of rewriting it in JavaScript.
+WebAssembly runs compiled code in the page. That let me keep the browser-side logic in C# instead of rewriting it in JavaScript.
 
-The project also closed a circle. In 2017 I added WASM support for five IL opcodes (`neg`, `not`, `switch`, `throw` and `nop`) to [dotnet/corert](https://github.com/dotnet/corert). This sample runs on a different toolchain, Mono, but the idea is the same: .NET compiled to the browser.
+The project also closed a circle. In 2017 I added WASM support for five IL opcodes (`neg`, `not`, `switch`, `throw` and `nop`) to [dotnet/corert](https://github.com/dotnet/corert). This sample uses a different toolchain, Mono, but the idea is the same: .NET compiled for the browser.
 
 ## What is inside
 
@@ -25,4 +25,4 @@ The project also closed a circle. In 2017 I added WASM support for five IL opcod
 
 ## Run it
 
-The sample targets the 2019 Mono toolchain, so a current SDK may refuse to build it. Serve the output over HTTP instead of opening the file, because browsers do not load WebAssembly from `file://`. The [README](https://github.com/jacano/WasmSample) has the steps as they were at the time.
+The sample targets the 2019 Mono toolchain, so a current SDK may refuse to build it. Serve the output over HTTP instead of opening the file. Browsers do not load WebAssembly from `file://`. The [README](https://github.com/jacano/WasmSample) has the steps as they were at the time.

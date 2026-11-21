@@ -9,9 +9,9 @@ excerpt: 'How a Xamarin.Android sample used TensorFlow Lite, native NV21-to-RGB 
 
 In 2019, the Plain Concepts Xamarin team contributed to [TailwindTraders](https://github.com/Microsoft/TailwindTraders-Mobile), Microsoft Build reference samples for Xamarin.Forms.
 
-Our demos focused on the main Xamarin.Forms features, especially Shell.
-
 TailwindTraders is a fictional DIY retailer. The app sells tools for work and gardening.
+
+Our demos focused on the main Xamarin.Forms features, especially Shell.
 
 One part of the app was an AR experience. It read the phone's rear camera, detected a product and showed its details with a purchase suggestion.
 
@@ -25,7 +25,7 @@ This article presents [CameraTF](https://github.com/jacano/CameraTF), a Xamarin.
 
 The app runs an offline model. On a phone, speed matters more than accuracy, so we chose [TensorFlow Lite](https://www.tensorflow.org/lite).
 
-EmguTF is a C# binding for TensorFlow Lite, the C++ library for mobile and IoT. It reads a serialized model from FlatBuffer and runs the inference with the [Interpreter](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/lite/interpreter.h) class. The app references its .NET Standard wrapper, `Emgu.TF.Lite`, with a local build change.
+EmguTF is a C# binding for TensorFlow Lite, the C++ library for mobile and IoT. It reads a serialized FlatBuffer model and runs the inference with the [Interpreter](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/lite/interpreter.h) class. The app references its .NET Standard wrapper, `Emgu.TF.Lite`, with a local build change.
 
 For the model we used SSD MobileNet and did transfer learning over [ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_0.75_depth_300x300_coco14_sync_2018_07_03.tar.gz). We trained it on Google Cloud TPUs with this [pipeline config](https://github.com/tensorflow/models/blob/master/research/object_detection/samples/configs/ssd_mobilenet_v1_0.75_depth_quantized_300x300_pets_sync.config). The whole process is described in [this post](https://medium.com/tensorflow/training-and-serving-a-realtime-mobile-object-detector-in-30-minutes-with-cloud-tpus-b78971cf1193).
 
@@ -41,7 +41,7 @@ On the devices we tested (Nokia 6.1, Google Pixel XL, LG G4), the [OnPreviewFram
 
 [CameraController](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Camera/CameraController.cs) sets the preview format to NV21, and sets the fps range and the resolution with SetPreviewFpsRange and SetPreviewSize.
 
-The step that makes real time possible is one: convert NV21 (YUV420sp) to RGB in native code. See [YuvHelper](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Helpers/YuvHelper.cs) and [yuv2rgb.cc](https://github.com/jacano/CameraTF/tree/master/src/CameraTF/Libs/YUV).
+One step makes real time possible: converting NV21 (YUV420sp) to RGB in native code. See [YuvHelper](https://github.com/jacano/CameraTF/blob/master/src/CameraTF/Helpers/YuvHelper.cs) and [yuv2rgb.cc](https://github.com/jacano/CameraTF/tree/master/src/CameraTF/Libs/YUV).
 
 ## From pixels to a detection
 
