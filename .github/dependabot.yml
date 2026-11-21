@@ -15,6 +15,12 @@ updates:
       npm:
         patterns: ['*']
         update-types: [minor, patch]
+    # A major waits for its toolchain. `astro check` runs TypeScript through
+    # Volar, which refuses version 7 until it is updated upstream (#13), so a
+    # pull request for it would only arrive red and stay red.
+    ignore:
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: github-actions
     directory: /
