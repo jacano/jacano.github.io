@@ -11,7 +11,7 @@ Read this before you change code.
 
 ## Stack
 
-- **Node** `>=24`, **npm** `>=11` (see `.nvmrc` and `package.json` `engines`). Workflow uses `actions/setup-node@v5` with `node-version: 24`.
+- **Node** `>=24`, **npm** `>=11` (see `.nvmrc` and `package.json` `engines`). Workflow uses `actions/setup-node@v7` with `node-version: 24`.
 - **Astro** `^7.3.1` (the lock file resolves 7.4.5), **@astrojs/rss** `^4.0.19`. Every package is a `devDependency`: the site has no runtime.
 - **Install scripts.** npm 11.16 warns and npm 12 blocks a lifecycle script unless `package.json` `allowScripts` names it. Astro 7.4 dropped `esbuild`, so the tree has no gated script and the field is gone. When a dependency brings one back, add it with its exact version; when Dependabot moves that package, update the key in the same pull request or the script silently stops running.
 - **Config:** `astro.config.mjs` has `site: 'https://jacano.github.io'` and `base: '/'`. Do not change the base. Read the origin from `Astro.site` or `context.site`, never from a literal in a page.
